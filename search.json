@@ -1,0 +1,149 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Epigenomics Data Analysis",
+    "section": "",
+    "text": "This is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2023.\nAuthors: Jacques Serizay [aut, cre]Version: 1.0.0Modified: 2023-06-14Compiled: 2023-06-27Environment: R version 4.3.0 (2023-04-21), Bioconductor 3.17License: MIT + file LICENSECopyright: J. Serizay\n\nThis course will introduce biologists and bioinformaticians to the field of regulatory epigenomics. We will cover a range of software and analysis workflows for processing of next-generation sequencing datasets and quantitative analysis ChIP-seq, ATAC-seq data and RNA-seq data. Towards the end of the workshop, a brief introduction to chromatin conformation capture (Hi-C) experiments and analysis will emphasize multi-omics data integration.\nWe will start by introducing general concepts about epigenomics. From there, we will then continue to describe the main analysis steps to go from raw sequencing data to processed and usable data. We will present classical analysis workflows, their output and the possible paths to investigate downstream of this.\nThroughout the workshop, bash tools and R/Bioconductor packages will be used to analyse datasets and learn new approaches.\n\n\nJuly 3 (Monday)\nJuly 5 (Wednesday)\nJuly 7 (Friday)\nJuly 17 (Monday)\nJuly 19 (Wednesday)\n\nThis course will be held online.\n\nThe course is structured in modules over five days. Each day will contain a mix of formal lectures, demonstration, and hands-on exercises.\n\nDuring the first half daily sessions, formal lectures and demonstrations will cover the key theory required to understand the principles of next-generation sequencing dataset processing and analysis. This will illustrate real-life processing and analysis workflows. At this stage, trainees will get acquainted with state-of-the-art Bioconductor ecosystem as well as the best coding practices in bioinformatics.\nDuring the second half of daily sessions, trainees will work by themselves. Guided exercise notebooks will be provided, including hints and solutions for each exercise. The exercises will mainly focus on specific concepts introduced earlier that day.\nOffice hours will take place during the last hour of the exercises. The instructor will be available to answer individual questions related to daily exercises.\n\nA Slack channel will be available so that Q&A are available for everybody.\n\nThe course is aimed at researchers interested in learning how to extract biological insights from genomics data, such as ChIP-seq, ATAC-seq or Hi-C.\nIt is primarily targeting researchers who are relatively new to the field of bioinformatics, with practical experience in the experimental side of epigenomics.\nAttendees should have a background in biology as well as be familiar with genomic data and common file formats from NGS sequencing experiments (fastq, BAM, BED).\nPractical exercises will use command-line Linux and R code and will be presented as notebooks to ensure reproducible coding.\n\nAt the end of this course, you should be able to:\n\nUnderstanding important genomic file formats\nProcess most types of genomic datasets (RNA-seq, ATAC-seq, Hi-C, ChIP-seq, …)\nAnalyzing processed datasets to extract relevant information and answer biological questions\nGood practices to avoid confounding variables and pitfalls in the processing.\nProper use of controls and normalization.\nIntegration of different sequencing “omics” datasets\nCharacterisation of the global 3D structures from the sequencing data\nDetection of regulatory interactions and quantification of their changes between conditions.\n\nThroughout the course, we will also have a focus on reproducible research, documented content and interactive reports.\n\nJacques Serizay"
+  },
+  {
+    "objectID": "content/program.html",
+    "href": "content/program.html",
+    "title": "Program",
+    "section": "",
+    "text": "Classes are from:"
+  },
+  {
+    "objectID": "content/program.html#day-1---next-generation-sequencing-data-processing",
+    "href": "content/program.html#day-1---next-generation-sequencing-data-processing",
+    "title": "Program",
+    "section": "Day 1 - Next-generation sequencing data processing",
+    "text": "Day 1 - Next-generation sequencing data processing\n\nLectures\n\nEpigenomics introduction\nGeneral processing of NGS data\nManaging worfklows: bash, Snakemake, Nextflow, …\n\n\n\nLabs\n\nStep-by-step processing of ChIP-seq data"
+  },
+  {
+    "objectID": "content/program.html#day-2---chip-seq-analysis",
+    "href": "content/program.html#day-2---chip-seq-analysis",
+    "title": "Program",
+    "section": "Day 2 - ChIP-seq analysis",
+    "text": "Day 2 - ChIP-seq analysis\n\nLectures\n\nIdentifying DNA-binding protein targets\nR/Bioconductor 101: Data import, manipulating genomic ranges, …\n\n\n\nLabs\n\nIdentification of TF-binding site or epigenomic histone modification using ChIP-seq peak calling\nIdentification of motifs and motif enrichment analysis"
+  },
+  {
+    "objectID": "content/program.html#day-3---rna-seq-analysis",
+    "href": "content/program.html#day-3---rna-seq-analysis",
+    "title": "Program",
+    "section": "Day 3 - RNA-seq analysis",
+    "text": "Day 3 - RNA-seq analysis\n\nLectures\n\nEstimating transcript abundance from RNA-seq\nR/Bioconductor 201: SummarizedExperiment\n\n\n\nLabs\n\nDifferential gene expression analysis between samples"
+  },
+  {
+    "objectID": "content/program.html#day-4---atac-seq",
+    "href": "content/program.html#day-4---atac-seq",
+    "title": "Program",
+    "section": "Day 4 - ATAC-seq",
+    "text": "Day 4 - ATAC-seq\n\nLectures\n\nPeak callers: ChIP-seq vs. ATAC-seq\nR/Bioconductor 301: Databases, resources, …\n\n\n\nLabs\n\nIdentification of ATAC-seq peaks on multiple samples using YAPC\nDifferential binding analysis and clustering of ATAC-seq peaks\nStudy of chromatin accessibility at promoters with V-plots"
+  },
+  {
+    "objectID": "content/program.html#day-5---integration-and-visualization-of-different-omics-data",
+    "href": "content/program.html#day-5---integration-and-visualization-of-different-omics-data",
+    "title": "Program",
+    "section": "Day 5 - Integration and visualization of different omics data",
+    "text": "Day 5 - Integration and visualization of different omics data\n\nLectures\n\nRegulatory states from histone marks\nIdentification of transcription factor target genes using RNA-seq and ChIP-seq\n\n\n\nLabs\n\nCrossing results from ATAC-seq with chromHMM\nIntegration of ChIP-seq data and RNA-seq data\nAnalysis with external databases: GO analysis, protein functional interactions, …"
+  },
+  {
+    "objectID": "content/Rstudio.html",
+    "href": "content/Rstudio.html",
+    "title": "RStudio",
+    "section": "",
+    "text": "Rstudio offers a graphical interface to facilitate the interaction between a user and an underlying programming language (this is sometimes called IDE, or integrated development environment). It can be very useful when a user is not necessarily proficent with command line-based computing. However, such graphical interfaces are not always able to connect to services such as AWS."
+  },
+  {
+    "objectID": "content/prerequisites.html",
+    "href": "content/prerequisites.html",
+    "title": "Prerequisites",
+    "section": "",
+    "text": "The course is intended for those who have basic familiarity with Unix and the R scripting language."
+  },
+  {
+    "objectID": "content/prerequisites.html#local-configuration",
+    "href": "content/prerequisites.html#local-configuration",
+    "title": "Prerequisites",
+    "section": "Local configuration",
+    "text": "Local configuration\n\nIdeally (though not strictly required), a configured SSH client (it should be already installed on Linux/Mac machines, PuTTY can be set up for Windows).\nIdeally (though not strictly required), a SSH ftp client (Forklift is excellent for Mac, although not free beyond the trial version; cyberduck can be used for Windows; FileZilla can be used for both Mac, Windows and Linux).\nComputer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).\nZoom visioconference software"
+  },
+  {
+    "objectID": "content/prerequisites.html#remote-configuration",
+    "href": "content/prerequisites.html#remote-configuration",
+    "title": "Prerequisites",
+    "section": "Remote configuration",
+    "text": "Remote configuration\nThe AWS machine is running with Ubuntu and has been set up as follows:\n## --- Clean up previous R installs\nsudo apt purge r-base* r-recommended r-cran-*\nsudo apt autoremove\nsudo apt update\nsudo apt upgrade\n\n## --- Libraries\nsudo apt update\nsudo apt install libc6 libicu60 -y \nsudo apt install -y \\\n    gcc g++ perl python3 python3-pip python-dev \\\n    automake make cmake less vim nano fort77 \\\n    wget git curl bsdtar bzip2 gfortran unzip ftp \\\n    libpng-dev libjpeg-dev \\\n    texlive-latex-base default-jre build-essential \\\n    libbz2-dev liblzma-dev libtool \\\n    libxml2 libxml2-dev zlib1g-dev \\\n    libdb-dev libglu1-mesa-dev zlib1g-dev  \\\n    libncurses5-dev libghc-zlib-dev libncurses-dev \\\n    libpcre3-dev libxml2-dev \\\n    libblas-dev libzmq3-dev libreadline-dev libssl-dev \\\n    libcurl4-openssl-dev libx11-dev libxt-dev \\\n    x11-common libcairo2-dev \\\n    libreadline6-dev libgsl0-dev \\\n    libeigen3-dev libboost-all-dev \\\n    libgtk2.0-dev xvfb xauth xfonts-base \\\n    apt-transport-https libhdf5-serial-dev \\\n    libudunits2-dev libgdal-dev libgeos-dev libproj-dev \\\n    libv8-dev \\\n    libmagick++-dev \\\n    libharfbuzz-dev libfribidi-dev \\\n    fftw3\n\n## --- R base install \nsudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'\nadd-apt-repository \"deb https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs` -cran40/\"\nsudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9\nsudo apt update\nsudo apt install r-base r-recommended r-base-core r-base-dev\nThe following packages have been installed (along with their many dependencies, of course!):\n## --- Install important R packages for single-cell RNA-seq projects\n## pak \nsudo Rscript -e 'install.packages(\"pak\", repos = sprintf(\"https://r-lib.github.io/p/pak/stable/%s/%s/%s\", .Platform$pkgType, R.Version()$os, R.Version()$arch))'\n\n## CRAN packages\nsudo Rscript -e 'pak::pkg_install(c(\"tidyverse\", \"devtools\", \"umap\", \"corrplot\", \"gam\", \"ggbeeswarm\", \"ggthemes\", \"Matrix\", \"zeallot\", \"fossil\", \"rgl\", \"BiocManager\", \"Seurat\", \"rliger\", \"Signac\", \"multtest\", \"metap\"))'\n\n## Bioconductor Packages\nsudo Rscript -e 'pak::pkg_install(c(\"SingleCellExperiment\", \"scran\", \"scater\", \"batchelor\", \"DropletUtils\", \"AUCell\", \"plyranges\", \"ggraph\", \"clustree\", \"celldex\", \"SingleR\", \"slingshot\", \"tradeSeq\", \"velociraptor\", \"BUSpaRse\", \"org.Mm.eg.db\", \"org.Hs.eg.db\", \"destiny\", \"TENxPBMCData\", \"scRNAseq\", \"scDblFinder\", \"chromVAR\", \"EnsDb.Hsapiens.v75\", \"LoomExperiment\", \"biovizBase\"))'\n\n## --- Install other softwares (fastQC, samtools, cellranger and cellranger indexes, ffq)\n\n# fastqc samtools\nsudo apt install fastqc samtools python3.8\n\n# cellranger\ncd /opt/\nsudo wget -O cellranger-7.1.0.tar.gz \"https://cf.10xgenomics.com/releases/cell-exp/cellranger-7.1.0.tar.gz?Expires=1685143014&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci03LjEuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2ODUxNDMwMTR9fX1dfQ__&Signature=aD0ZgbtDMNwI4C62fEuZ0ppBoTm-wAiQ~d9KWtWinvv5G9LdyRzJXED98eMrJg07yCHfnbCd8v7owzUVoZvDW1-pgmpOjpd2qLiaCQuaWsWGKgxJ4MtyPAl0Oi~0zRnGLwsFk1geDPxDBZVH9OBIrQsG3aNlApBxhxw4u6yYUT62PXtu2OjRQ-PieGlvH7TFbr-JjkpUpR-YEcQ6i0ORrdLxNt9HzeZX9s6s0dJ~NybRywBZI89KEoseyN6LZU13vtHl9BtPGIeA1Hwvpb2A1xsO5ueql3palHsT5Lnf7lY9QwXH4FECVAAoMCI8eP2dXHKtliJy0y~xLKVPEnSgGw__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA\"\nsudo tar -xzvf cellranger-7.1.0.tar.gz\nsudo ln -s /opt/cellranger-7.1.0/cellranger /usr/local/bin/cellranger\nsudo wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz\nsudo tar -xzvf refdata-gex-mm10-2020-A.tar.gz\n\n# ffq\nsudo apt install python3-distutils\nsudo pip install ffq\n\n# seqkit\ncd /opt/\nsudo wget -O seqkit_linux_amd64.tar.gz https://github.com/shenwei356/seqkit/releases/download/v2.4.0/seqkit_linux_amd64.tar.gz\nsudo tar -xzvf seqkit_linux_amd64.tar.gz\nsudo ln -s /opt/seqkit /usr/local/bin/seqkit\n\n# bcl2fastq\nsudo apt install alien\ncd /opt/\nwget http://support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2.17.1.14-Linux-x86_64.rpm\nsudo alien bcl2fastq2-v2.17.1.14-Linux-x86_64.rpm\nsudo dpkg -i bcl2fastq2_0v2.17.1.14-2_amd64.deb"
+  },
+  {
+    "objectID": "content/day1/Lecture1_introduction.html",
+    "href": "content/day1/Lecture1_introduction.html",
+    "title": "\n1  Lecture 1 - Introduction to epigenomics data analysis\n",
+    "section": "",
+    "text": "<div id=\"quarto-navigation-envelope\" class=\"hidden\">\n<p><span class=\"hidden\" data-render-id=\"quarto-int-sidebar-title\">Epigenomics Data Analysis</span> <span class=\"hidden\" data-render-id=\"quarto-int-navbar-title\">Epigenomics Data Analysis</span> <span class=\"hidden\" data-render-id=\"quarto-int-next\"><span class=\"chapter-number\">2</span>  <span class=\"chapter-title\">Lecture 2 - General processing of genome-wide epigenomic assays</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-prev\">Prerequisites</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/index.html\">Welcome</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/program.html\">Program</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/Rstudio.html\">RStudio</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/prerequisites.html\">Prerequisites</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-1\">Day 1</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/day1/Lecture1_introduction.html\"><span class=\"chapter-number\">1</span>  <span class=\"chapter-title\">Lecture 1 - Introduction to epigenomics data analysis</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/day1/Lecture2_processing.html\"><span class=\"chapter-number\">2</span>  <span class=\"chapter-title\">Lecture 2 - General processing of genome-wide epigenomic assays</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/day1/Demo1_MNase-seq_processing.html\"><span class=\"chapter-number\">3</span>  <span class=\"chapter-title\">Demo 1 - Processing of MNase-seq data</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-2\">Day 2</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-3\">Day 3</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-4\">Day 4</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-5\">Day 5</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/extra.html\">Extra resources</span> <span class=\"hidden\" data-render-id=\"footer-left\">Epigenomics Data Analysis |<br>\nJ. Serizay</span> <span class=\"hidden\" data-render-id=\"footer-right\">This book was built with <a href=\"https://quarto.org/\">Quarto</a>.</span></p>\n</div>\n<div id=\"quarto-meta-markdown\" class=\"hidden\">\n<p><span class=\"hidden\" data-render-id=\"quarto-metatitle\">Epigenomics Data Analysis - <span class=\"chapter-number\">1</span>  <span class=\"chapter-title\">Lecture 1 - Introduction to epigenomics data analysis</span></span> <span class=\"hidden\" data-render-id=\"quarto-twittercardtitle\">Epigenomics Data Analysis - <span class=\"chapter-number\">1</span>  <span class=\"chapter-title\">Lecture 1 - Introduction to epigenomics data analysis</span></span> <span class=\"hidden\" data-render-id=\"quarto-ogcardtitle\">Epigenomics Data Analysis - <span class=\"chapter-number\">1</span>  <span class=\"chapter-title\">Lecture 1 - Introduction to epigenomics data analysis</span></span> <span class=\"hidden\" data-render-id=\"quarto-metasitename\">Epigenomics Data Analysis</span></p>\n</div>"
+  },
+  {
+    "objectID": "content/day1/Lecture2_processing.html",
+    "href": "content/day1/Lecture2_processing.html",
+    "title": "\n2  Lecture 2 - General processing of genome-wide epigenomic assays\n",
+    "section": "",
+    "text": "<div id=\"quarto-navigation-envelope\" class=\"hidden\">\n<p><span class=\"hidden\" data-render-id=\"quarto-int-sidebar-title\">Epigenomics Data Analysis</span> <span class=\"hidden\" data-render-id=\"quarto-int-navbar-title\">Epigenomics Data Analysis</span> <span class=\"hidden\" data-render-id=\"quarto-int-next\"><span class=\"chapter-number\">3</span>  <span class=\"chapter-title\">Demo 1 - Processing of MNase-seq data</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-prev\"><span class=\"chapter-number\">1</span>  <span class=\"chapter-title\">Lecture 1 - Introduction to epigenomics data analysis</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/index.html\">Welcome</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/program.html\">Program</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/Rstudio.html\">RStudio</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/prerequisites.html\">Prerequisites</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-1\">Day 1</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/day1/Lecture1_introduction.html\"><span class=\"chapter-number\">1</span>  <span class=\"chapter-title\">Lecture 1 - Introduction to epigenomics data analysis</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/day1/Lecture2_processing.html\"><span class=\"chapter-number\">2</span>  <span class=\"chapter-title\">Lecture 2 - General processing of genome-wide epigenomic assays</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/day1/Demo1_MNase-seq_processing.html\"><span class=\"chapter-number\">3</span>  <span class=\"chapter-title\">Demo 1 - Processing of MNase-seq data</span></span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-2\">Day 2</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-3\">Day 3</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-4\">Day 4</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:quarto-sidebar-section-5\">Day 5</span> <span class=\"hidden\" data-render-id=\"quarto-int-sidebar:/content/extra.html\">Extra resources</span> <span class=\"hidden\" data-render-id=\"footer-left\">Epigenomics Data Analysis |<br>\nJ. Serizay</span> <span class=\"hidden\" data-render-id=\"footer-right\">This book was built with <a href=\"https://quarto.org/\">Quarto</a>.</span></p>\n</div>\n<div id=\"quarto-meta-markdown\" class=\"hidden\">\n<p><span class=\"hidden\" data-render-id=\"quarto-metatitle\">Epigenomics Data Analysis - <span class=\"chapter-number\">2</span>  <span class=\"chapter-title\">Lecture 2 - General processing of genome-wide epigenomic assays</span></span> <span class=\"hidden\" data-render-id=\"quarto-twittercardtitle\">Epigenomics Data Analysis - <span class=\"chapter-number\">2</span>  <span class=\"chapter-title\">Lecture 2 - General processing of genome-wide epigenomic assays</span></span> <span class=\"hidden\" data-render-id=\"quarto-ogcardtitle\">Epigenomics Data Analysis - <span class=\"chapter-number\">2</span>  <span class=\"chapter-title\">Lecture 2 - General processing of genome-wide epigenomic assays</span></span> <span class=\"hidden\" data-render-id=\"quarto-metasitename\">Epigenomics Data Analysis</span></p>\n</div>"
+  },
+  {
+    "objectID": "content/day1/Demo1_MNase-seq_processing.html",
+    "href": "content/day1/Demo1_MNase-seq_processing.html",
+    "title": "\n3  Demo 1 - Processing of MNase-seq data\n",
+    "section": "",
+    "text": "Aims\n\n\n\n\nFetching an MNase-seq dataset from GEO\nIndexing a genome with bowtie2\n\nMap paired-end reads with bowtie2\n\nGenerate sequencing-depth normalized track\nGenerate nucleosomes track"
+  },
+  {
+    "objectID": "content/day1/Demo1_MNase-seq_processing.html#getting-data",
+    "href": "content/day1/Demo1_MNase-seq_processing.html#getting-data",
+    "title": "\n3  Demo 1 - Processing of MNase-seq data\n",
+    "section": "\n3.1 Getting data",
+    "text": "3.1 Getting data\n\n3.1.1 Downloading reads from internet\nWe can download the paired-end reads (R1 and R2 fastq files) directly from the internet.\n\n\n\nsh\n\ncd ~/EpigenomicsDataAnalysis_2023\nmkdir data/\ncurl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_1.fastq.gz -o data/MNase_R1.fq.gz\ncurl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_2.fastq.gz -o data/MNase_R2.fq.gz\n\n\n\n3.1.2 FastQC reads\nfastqc program will run quick QCs on each fastq file separately.\n\n\n\nsh\n\nmkdir data/fastqc\nfastqc \\\n    --outdir data/fastqc \\\n    --noextract \\\n    --threads 12 \\\n    --adapters /home/rsg/repos/autobcl2fastq/adapters.txt \\\n    data/*fq.gz 1>&2"
+  },
+  {
+    "objectID": "content/day1/Demo1_MNase-seq_processing.html#pre-process-reads",
+    "href": "content/day1/Demo1_MNase-seq_processing.html#pre-process-reads",
+    "title": "\n3  Demo 1 - Processing of MNase-seq data\n",
+    "section": "\n3.2 Pre-process reads",
+    "text": "3.2 Pre-process reads\n\n3.2.1 Trimming reads with trim_galore\n\n\n\n\nsh\n\ntrim_galore \\\n    --cores 8 \\\n    --length 20 \\\n    --gzip \\\n    --paired \\\n    --output_dir data/trimmed/ \\\n    data/MNase_R1.fq.gz data/MNase_R2.fq.gz\n\n\n\n3.2.2 FastQC on trimmed reads\n\n\n\nsh\n\nfastqc \\\n    --outdir data/fastqc \\\n    --noextract \\\n    --threads 12 \\\n    --adapters /home/rsg/repos/autobcl2fastq/adapters.txt \\\n    data/trimmed/*fq.gz 1>&2"
+  },
+  {
+    "objectID": "content/day1/Demo1_MNase-seq_processing.html#align-reads-to-a-genome-reference",
+    "href": "content/day1/Demo1_MNase-seq_processing.html#align-reads-to-a-genome-reference",
+    "title": "\n3  Demo 1 - Processing of MNase-seq data\n",
+    "section": "\n3.3 Align reads to a genome reference",
+    "text": "3.3 Align reads to a genome reference\n\n3.3.1 Indexing sacCer3 genome\nGenome references for model systems can be fetched from iGenomes.\n\n\n\nsh\n\n## - Fetching data from iGenomes\nmkdir data/genome\ncurl -L http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Saccharomyces_cerevisiae_Ensembl_R64-1-1.tar.gz -o data/genome/R64-1-1.tar.gz\n\n## - Unpacking data \ntar -C data/genome/ -xzf data/genome/R64-1-1.tar.gz\ncp data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Sequence/WholeGenomeFasta/genome.fa data/genome/R64-1-1.fa\ncp data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Annotation/Genes/genes.gtf data/genome/R64-1-1.gtf\n\n## - Indexing genome\nbowtie2-build data/genome/R64-1-1.fa data/genome/R64-1-1\n\n\n\n3.3.2 Mapping paired-end trimmed reads\n\n\n\nsh\n\n## - Mapping fastq files to reference genome\nmkdir data/mapping\nbowtie2 \\\n    --threads 16 \\\n    -x data/genome/R64-1-1 \\\n    -1 data/trimmed/MNase_R1_val_1.fq.gz \\\n    -2 data/trimmed/MNase_R2_val_2.fq.gz \\\n    > data/mapping/MNase_R64-1-1.sam\n\n\n\n3.3.3 Filtering mapped fragments\n\n\n\nsh\n\n## - Fixing mates\n#| -m: \"Add mate score tag\"\nsamtools fixmate \\\n    -@ 16 --output-fmt bam \\\n    -m \\\n    data/mapping/MNase_R64-1-1.sam data/mapping/MNase_R64-1-1.bam\n\n## - Sorting read pairs\nsamtools sort \\\n    -@ 16 --output-fmt bam \\\n    data/mapping/MNase_R64-1-1.bam \\\n    -o data/mapping/MNase_R64-1-1_sorted.bam \n\n## - Removing PCR & optical duplicates\n#| -s: \"Report stats\"\n#| -r: \"Remove duplicate reads\"\nsamtools markdup \\\n    -@ 16 --output-fmt bam \\\n    -s -r \\\n    data/mapping/MNase_R64-1-1_sorted.bam \\\n    data/mapping/MNase_R64-1-1_sorted_noDups.bam \n\n## - Filter read pairs\n#| -f 0x001: \"Keep read paired\"\n#| -f 0x002: \"Keep read mapped in proper pair\"\n#| -F 0x004: \"Remove read unmapped\"\n#| -F 0x008: \"Remove mate unmapped\"\n#| -q 10: \"MAPQ > 20\"\n#| --fast: \"Use fast bam compression\"\nsamtools view \\\n    -@ 16 --output-fmt bam \\\n    -f 0x001 -f 0x002 -F 0x004 -F 0x008 -q 20 \\\n    --fast \\\n    data/mapping/MNase_R64-1-1_sorted_noDups.bam \\\n    -o data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam\n\n## - Sorting read pairs\n#| -l 9: \"Use best compression \"\nsamtools sort \\\n    -@ 16 --output-fmt bam \\\n    -l 9 \\\n    data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam \\\n    -o data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam\n\n## - Indexing bam file\nsamtools index -@ 16 data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam\n\n\n\n3.3.4 Create coverage track\n\n\n\nsh\n\n## - Generate coverage\nmkdir data/tracks\nbamCoverage \\\n    --bam data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam \\\n    --outFileName data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.CPM.bw \\\n    --binSize 1 \\\n    --numberOfProcessors 16 \\\n    --normalizeUsing CPM \\\n    --skipNonCoveredRegions \\\n    --extendReads\n\n\n\n3.3.5 Create nucleosome track\n\n\n\nsh\n\nbamCoverage \\\n    --bam data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam \\\n    --outFileName data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.135-160bp.CPM.bw \\\n    --binSize 1 \\\n    --numberOfProcessors 16 \\\n    --normalizeUsing CPM \\\n    --skipNonCoveredRegions \\\n    --extendReads 40 \\\n    --centerReads \\\n    --minFragmentLength 130 \\\n    --maxFragmentLength 165"
+  },
+  {
+    "objectID": "content/extra.html",
+    "href": "content/extra.html",
+    "title": "Extra resources",
+    "section": "",
+    "text": "Analyzing NGS data can be a complex process, especially with the rise of multi-omics approaches. Here is a list of resources we thought would be useful for people interested in going deeper in the analysis of NGS data."
+  },
+  {
+    "objectID": "content/extra.html#general-bioinformatics",
+    "href": "content/extra.html#general-bioinformatics",
+    "title": "Extra resources",
+    "section": "General bioinformatics",
+    "text": "General bioinformatics\n\nA comprehensive overview of the different types of bioinformatic analyses, divided in 4 fundamental modules: LINK"
+  },
+  {
+    "objectID": "content/extra.html#rbioconductor",
+    "href": "content/extra.html#rbioconductor",
+    "title": "Extra resources",
+    "section": "R/Bioconductor",
+    "text": "R/Bioconductor\n\nThe excellent R guide for beginners, by Emmanuel Paradis: PDF\nThe 150+ pages comprehensive book to learn everything about Bioconductor. This ebook has been published by Kasper D. Hansen and is freely available under the CC BY-NC-SA 4.0 license: Link to EPUB"
+  },
+  {
+    "objectID": "content/extra.html#scientific-readings",
+    "href": "content/extra.html#scientific-readings",
+    "title": "Extra resources",
+    "section": "Scientific readings",
+    "text": "Scientific readings\n\n2014 Nat. Methods paper from Bioconductor core team describing important object classes\nTo see from how far Bioc comes from..."
+  }
+]
