@@ -1,0 +1,149 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 2 - ATAC-seq downstream analysis
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Overlap ATAC-seq peaks with annotated REs
+- Check ATAC-seq fragment sizes
+- Overlap ATAC-seq peaks with annotated regulatory elements (REs)
+- Check tissue-specific enrichment of ATAC-seq peaks
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+- The set of ATAC-seq peaks identified with `yapc` as detailed in the demonstration. 
+- The two ATAC-seq `bam` files used to generate tracks and call peaks.
+- A set of regulatory elements identified across development, aging and tissues of *C. elegans*, available [here](https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx).
+:::
+
+## Import ATAC-seq peaks in R
+
+- Check documentation from the `rtacklayer` package to see how to import a `bed` file in `R`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(rtracklayer)
+peaks <- import('data/peaks/ATAC_WBcel235.bed', format = 'bed')
+peaks
+```
+:::
+
+## Import ATAC-seq fragments in R
+
+- Check documentation from the `Rsamtools` package to see how to create a connection to disk-stored `bam` files. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(Rsamtools)
+bamfiles <- BamFileList(list(
+    rep1 = BamFile('data/mapping/ATAC_rep1_WBcel235.bam'),
+    rep2 = BamFile('data/mapping/ATAC_rep2_WBcel235.bam') 
+))
+bamfiles
+```
+:::
+
+- Read `GenomicAlignments` package documentation to see how to import fragments from a `BamFile` connection. 
+- Import fragments from **paired-end** reads, in **proper pairs**, **no duplicates** and **no secondary alignments**, with a **MAPQ >= 20**. The important `bam` column to recover is `isize` (insert size).
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(GenomicAlignments)
+library(tidyverse)
+param <- ScanBamParam(
+    flag=scanBamFlag(
+        isPaired = TRUE,
+        isProperPair = TRUE,
+        isDuplicate = FALSE,
+        isSecondaryAlignment = FALSE
+    ), 
+    mapqFilter = 20, 
+    what = c("isize")
+)
+frags <- map(bamfiles, readGAlignmentPairs, param = param)
+frags
+```
+:::
+
+## Check distribution of ATAC fragment sizes
+
+- Coerce fragments to `GRanges` with the `as` function.
+- Subset fragments to retain those overlapping imported ATAC-seq `peaks`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(GenomicRanges)
+frags <- map(frags, as, "GRanges")
+frags <- map(frags, subsetByOverlaps, peaks)
+```
+:::
+
+- Plot the width distribution for filtered ATAC-seq fragments. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+df <- map_dfr(frags, as_tibble) |> 
+    group_by(width) |> 
+    tally()
+ggplot(df, aes(x = width, y = n)) + geom_line() + xlim(c(0, 600))
+```
+:::
+
+- How can you interpret the resulting distribution?
+
+## Import regulatory elements in R
+
+A comprehensive set of regulatory elements in *C. elegans* is provided [here: https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx](https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx).
+
+- Check documentation from the `readxl` package to see how to import a `xlsx` file in `R`.
+- Check documentation from the `GenomicRanges` package to see how to convert a `data.frame` into a `GRanges`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(readxl)
+download.file('https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx', 'data/WBcel235_REs.xlsx')
+REs <- read_xlsx('data/WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
+REs <- makeGRangesFromDataFrame(
+    REs, seqnames.field = 'chrom_ce11', 
+    start.field = 'start_ce11', end.field = 'end_ce11',
+    keep.extra.columns = TRUE
+)
+REs
+```
+:::
+
+The sequence names (or `seqlevels`) are not exactly the same in `REs` and `peaks`. 
+This can be modified by changing the `seqlevelsStyle` of one of the two objects.
+
+```{r, filename = 'R'}
+seqlevelsStyle(REs)
+seqlevelsStyle(peaks)
+seqlevelsStyle(REs) <- seqlevelsStyle(peaks)
+```
+:::
+
+## Compare peaks and REs
+
+- Now, check how many `peaks` overlap with `REs`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+table(peaks %over% REs)
+```
+:::
+
+- Check how many `peaks` overlap with **germline-specific** `REs`. Perform a `fisher.test` to evaluate whether this significantly overlaps. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+REs$is_germline_specific <- REs$Annotation == 'Germline'
+table(REs %over% peaks, REs$is_germline_specific) |> fisher.test()
+```
+:::

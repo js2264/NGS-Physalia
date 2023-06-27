@@ -1,0 +1,17 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Demo 3 - Processing of ChIP-seq data
+
+::: {.callout-note icon='true'}
+## Aims
+
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+:::

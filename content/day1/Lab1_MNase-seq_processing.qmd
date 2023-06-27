@@ -1,0 +1,232 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 1 - Processing of MNase-seq data
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Fetching an MNase-seq dataset from GEO 
+- Indexing a genome with `bowtie2`
+- Map paired-end reads with `bowtie2`
+- Generate sequencing-depth normalized track
+- Generate nucleosomes track
+- Check the relevance of filtering out duplicates
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+We will process a data from the Henikoff lab, generated in 2011 and published [in PNAS](https://doi.org/10.1073/pnas.1110731108).
+
+- [GSM754391](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM754391)
+:::
+
+## Getting data
+
+### Downloading reads from internet
+
+We can download the paired-end reads (`R1` and `R2` fastq files) directly 
+from the internet. 
+
+```{bash, filename = 'sh'}
+cd ~/EpigenomicsDataAnalysis_2023
+mkdir data/
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/003/SRR3193263/SRR3193263_1.fastq.gz -o data/MNase_2.5min_R1.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/003/SRR3193263/SRR3193263_2.fastq.gz -o data/MNase_2.5min_R2.fq.gz
+```
+
+### FastQC reads
+
+```{bash, filename = 'sh'}
+mkdir data/fastqc
+fastqc \
+    --outdir data/fastqc \
+    --noextract \
+    --threads 12 \
+    --adapters /home/rsg/repos/autobcl2fastq/adapters.txt \
+    data/*fq.gz 1>&2
+```
+
+## Pre-process reads 
+
+### Trimming reads with `trim_galore`
+
+```{bash, filename = 'sh'}
+trim_galore \
+    --cores 8 \
+    --length 20 \
+    --gzip \
+    --paired \
+    --output_dir data/trimmed/ \
+    data/MNase_2.5min_R1.fq.gz data/MNase_2.5min_R2.fq.gz
+```
+
+### FastQC on trimmed reads
+
+```{bash, filename = 'sh'}
+fastqc \
+    --outdir data/fastqc \
+    --noextract \
+    --threads 12 \
+    --adapters /home/rsg/repos/autobcl2fastq/adapters.txt \
+    data/trimmed/*fq.gz 1>&2
+```
+
+## Align reads to a genome reference 
+
+### Indexing sacCer3 genome 
+
+Genome references for model systems can be fetched [from iGenomes](https://emea.support.illumina.com/sequencing/sequencing_software/igenome.html).
+
+```{bash, filename = 'sh'}
+## - Fetching data from iGenomes
+mkdir data/genome
+curl -L http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Saccharomyces_cerevisiae_Ensembl_R64-1-1.tar.gz -o data/genome/R64-1-1.tar.gz
+
+## - Unpacking data 
+tar -C data/genome/ -xzf data/genome/R64-1-1.tar.gz
+cp data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Sequence/WholeGenomeFasta/genome.fa data/genome/R64-1-1.fa
+cp data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Annotation/Genes/genes.gtf data/genome/R64-1-1.gtf
+
+## - Indexing genome
+bowtie2-build data/genome/R64-1-1.fa data/genome/R64-1-1
+```
+
+### Mapping paired-end trimmed reads
+
+```{bash, filename = 'sh'}
+## - Mapping fastq files to reference genome
+mkdir data/mapping
+bowtie2 \
+    --threads 16 \
+    -x data/genome/R64-1-1 \
+    -1 data/trimmed/MNase_2.5min_R1_val_1.fq.gz \
+    -2 data/trimmed/MNase_2.5min_R2_val_2.fq.gz \
+    > data/mapping/MNase_2.5min_R64-1-1.sam
+```
+
+### Filtering mapped fragments
+
+```{bash, filename = 'sh'}
+## - Fixing mates
+#| -m: "Add mate score tag"
+samtools fixmate \
+    -@ 16 --output-fmt bam \
+    -m \
+    data/mapping/MNase_2.5min_R64-1-1.sam data/mapping/MNase_2.5min_R64-1-1.bam
+
+## - Sorting read pairs
+samtools sort \
+    -@ 16 --output-fmt bam \
+    data/mapping/MNase_2.5min_R64-1-1.bam \
+    -o data/mapping/MNase_2.5min_R64-1-1_sorted.bam 
+
+## - Removing PCR & optical duplicates
+#| -s: "Report stats"
+#| -r: "Remove duplicate reads"
+samtools markdup \
+    -@ 16 --output-fmt bam \
+    -s -r \
+    data/mapping/MNase_2.5min_R64-1-1_sorted.bam \
+    data/mapping/MNase_2.5min_R64-1-1_sorted_noDups.bam 
+
+## - Filter read pairs
+#| -f 0x001: "Keep read paired"
+#| -f 0x002: "Keep read mapped in proper pair"
+#| -F 0x004: "Remove read unmapped"
+#| -F 0x008: "Remove mate unmapped"
+#| -q 10: "MAPQ > 20"
+#| --fast: "Use fast bam compression"
+samtools view \
+    -@ 16 --output-fmt bam \
+    -f 0x001 -f 0x002 -F 0x004 -F 0x008 -q 20 \
+    --fast \
+    data/mapping/MNase_2.5min_R64-1-1_sorted_noDups.bam \
+    -o data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered.bam
+
+## - Sorting read pairs
+#| -l 9: "Use best compression "
+samtools sort \
+    -@ 16 --output-fmt bam \
+    -l 9 \
+    data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered.bam \
+    -o data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam
+
+## - Indexing bam file
+samtools index -@ 16 data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam
+```
+
+### Create coverage track
+
+```{bash, filename = 'sh'}
+## - Generate coverage
+mkdir data/tracks
+bamCoverage \
+    --bam data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam \
+    --outFileName data/tracks/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.CPM.bw \
+    --binSize 1 \
+    --numberOfProcessors 16 \
+    --normalizeUsing CPM \
+    --skipNonCoveredRegions \
+    --extendReads
+```
+
+### Create nucleosome track
+
+```{bash, filename = 'sh'}
+bamCoverage \
+    --bam data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam \
+    --outFileName data/tracks/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.135-160bp.CPM.bw \
+    --binSize 1 \
+    --numberOfProcessors 16 \
+    --normalizeUsing CPM \
+    --skipNonCoveredRegions \
+    --extendReads 40 \
+    --centerReads \
+    --minFragmentLength 130 \
+    --maxFragmentLength 165
+```
+
+### Create coverage track without removing duplicates
+
+```{bash, filename = 'sh'}
+## - Filter read pairs
+#| -f 0x001: "Keep read paired"
+#| -f 0x002: "Keep read mapped in proper pair"
+#| -F 0x004: "Remove read unmapped"
+#| -F 0x008: "Remove mate unmapped"
+#| -q 10: "MAPQ > 20"
+#| --fast: "Use fast bam compression"
+samtools view \
+    -@ 16 --output-fmt bam \
+    -f 0x001 -f 0x002 -F 0x004 -F 0x008 -q 20 \
+    --fast \
+    data/mapping/MNase_2.5min_R64-1-1_sorted.bam \
+    -o data/mapping/MNase_2.5min_R64-1-1_sorted_filtered.bam
+
+## - Sorting read pairs
+#| -l 9: "Use best compression "
+samtools sort \
+    -@ 16 --output-fmt bam \
+    -l 9 \
+    data/mapping/MNase_2.5min_R64-1-1_sorted_filtered.bam \
+    -o data/mapping/MNase_2.5min_R64-1-1_sorted_filtered_sorted.bam
+
+## - Indexing bam file
+samtools index -@ 16 data/mapping/MNase_2.5min_R64-1-1_sorted_filtered_sorted.bam
+
+## - Generate coverage
+mkdir data/tracks
+bamCoverage \
+    --bam data/mapping/MNase_2.5min_R64-1-1_sorted_filtered_sorted.bam \
+    --outFileName data/tracks/MNase_2.5min_R64-1-1_sorted_filtered_sorted.CPM.bw \
+    --binSize 1 \
+    --numberOfProcessors 16 \
+    --normalizeUsing CPM \
+    --skipNonCoveredRegions \
+    --extendReads
+```

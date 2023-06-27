@@ -1,0 +1,100 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Demo 2 - Processing of ATAC-seq data
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Fetching two ATAC-seq replicates from GEO 
+- Indexing a genome with `bowtie2`
+- Map paired-end reads with `bowtie2`
+- Generate sequencing-depth normalized track
+- Generate nucleosomes track
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+We will process an ATAC-seq dataset from a secret source (the origin/type of the dataset will be revealed later in the week). 
+The dataset has been generated from *C. elegans* and will be mapped to the corresponding genome reference `WBCel235`.
+:::
+
+## Align reads to a genome reference 
+
+### Indexing WBcel235 genome 
+
+Genome references for model systems can be fetched [from iGenomes](https://emea.support.illumina.com/sequencing/sequencing_software/igenome.html).
+
+```{bash, filename = 'sh'}
+## - Fetching data from iGenomes
+curl -L http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Caenorhabditis_elegans/Ensembl/WBcel235/Caenorhabditis_elegans_Ensembl_WBcel235.tar.gz -o data/genome/WBcel235.tar.gz
+
+## - Unpacking data 
+tar -C data/genome/ -xzf data/genome/WBcel235.tar.gz
+cp data/genome/Caenorhabditis_elegans//Ensembl/WBcel235/Sequence/WholeGenomeFasta/genome.fa data/genome/WBcel235.fa
+cp data/genome/Caenorhabditis_elegans//Ensembl/WBcel235/Annotation/Genes/genes.gtf data/genome/WBcel235.gtf
+
+## - Indexing genome
+bowtie2-build data/genome/WBcel235.fa data/genome/WBcel235
+```
+
+### Mapping paired-end reads
+
+```{bash, filename = 'sh'}
+for REP in rep1 rep2
+do
+    bowtie2 \
+        --threads 16 \
+        --maxins 2000 \
+        -x data/genome/WBcel235 \
+        -1 data/ATAC_"${REP}"_R1.fq.gz \
+        -2 data/ATAC_"${REP}"_R2.fq.gz \
+        > data/mapping/ATAC_"${REP}"_WBcel235.sam
+done
+```
+
+### Filtering mapped fragments
+
+```{bash filename = 'sh'}
+SAMTOOLS_OPTIONS="-@ 12 --output-fmt bam"
+
+for REP in rep1 rep2
+do
+    samtools fixmate "${SAMTOOLS_OPTIONS}" -m data/mapping/ATAC_"${REP}"_WBcel235.sam - | \
+        samtools sort "${SAMTOOLS_OPTIONS}" - | \
+        samtools markdup "${SAMTOOLS_OPTIONS}" -r - - | \
+        samtools view "${SAMTOOLS_OPTIONS}" -q 20 --fast -b - | \
+        samtools sort "${SAMTOOLS_OPTIONS}" -l 9 -o data/mapping/ATAC_"${REP}"_WBcel235.bam
+    samtools index -@ 12 data/mapping/ATAC_"${REP}"_WBcel235.bam
+done
+```
+
+### Get tracks
+
+```{bash filename = 'sh'}
+for REP in rep1 rep2
+do
+    bamCoverage \
+        --bam data/mapping/ATAC_"${REP}"_WBcel235.bam \
+        --outFileName data/tracks/ATAC_"${REP}"_WBcel235.bw \
+        --binSize 1 \
+        --numberOfProcessors 12 \
+        --normalizeUsing CPM \
+        --skipNonCoveredRegions \
+        --extendReads \
+        --ignoreDuplicates
+done
+```
+
+### Get peaks
+
+```{bash filename = 'sh'}
+mkdir data/peaks
+yapc data/peaks/ATAC_WBcel235 ATAC_WBcel235 data/tracks/ATAC_rep1_WBcel235.bw data/tracks/ATAC_rep2_WBcel235.bw
+head data/peaks/ATAC_WBcel235_0.05.bed
+cut -f1-6 data/peaks/ATAC_WBcel235_0.05.bed | sed '1d' > data/peaks/ATAC_WBcel235.bed
+```
