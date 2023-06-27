@@ -9,7 +9,7 @@ execute:
 ::: {.callout-note icon='true'}
 ## Aims
 
-- Fetching a dataset from GEO 
+- Fetching an MNase-seq dataset from GEO 
 - Indexing a genome with `bowtie2`
 - Map paired-end reads with `bowtie2`
 - Generate sequencing-depth normalized track

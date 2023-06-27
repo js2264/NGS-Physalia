@@ -1,3 +1,4 @@
+Package: NGS_Physalia
 Version: 1.0.0
 Date: 2023-06-14
 Authors@R:
@@ -8,3 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-4295-0624")))
 Description: Epigenomics Data Analysis
 License: MIT + file LICENSE
+Imports:
+    rmarkdown,
+    knitr, 
+    rebook
