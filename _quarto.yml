@@ -1,0 +1,54 @@
+project:
+  type: book
+  output-dir: docs
+
+IP: 35.89.32.86
+
+book:
+  title: "Epigenomics Data Analysis"
+  page-footer:
+    left: |
+      Epigenomics Data Analysis |  
+      J. Serizay
+    right: |
+      This book was built with <a href="https://quarto.org/">Quarto</a>.
+  site-url: https://js2264.github.io/NGS_Physalia_2023/
+  repo-url: https://github.com/js2264/NGS_Physalia_2023/
+  repo-branch: main
+  repo-actions: [edit, issue]
+  chapters:
+    - index.qmd
+    - content/program.qmd
+    - content/Rstudio.qmd
+    - content/prerequisites.qmd
+    - part: "Day 1"
+      chapters: 
+        - content/day1/Lecture1_introduction.qmd
+        - content/day1/Lecture2_processing.qmd
+        - content/day1/Demo1_ChIP-seq_processing.qmd
+    - part: "Day 2"
+    - part: "Day 3"
+    - part: "Day 4"
+    - part: "Day 5"
+    - content/extra.qmd
+
+format:
+  html:
+    default-image-extension: pdf
+    theme:
+      - yeti
+      - theme.scss
+    code-link: true
+    author-meta: "J. Serizay"
+    highlight-style: atom-one-dark.theme
+    citations-hover: true
+    toc: true
+    toc-float: 
+      collapsed: false
+    toc-depth: 3
+    website: 
+      sidebar: 
+        search: true
+        collapse-level: 5
+
+editor: visual

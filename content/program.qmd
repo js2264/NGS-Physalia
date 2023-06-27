@@ -1,0 +1,79 @@
+---
+format:
+  html:
+    toc: false
+---
+
+# Program {-}
+
+Classes are from: 
+
+- 2 to 8 pm Paris time.
+- 1 to 7 pm London time.
+- 8 am to 2 pm NY time.
+- 5 am to 11 am SF time.
+
+## Day 1 - Next-generation sequencing data processing
+
+### Lectures
+
+* Epigenomics introduction
+* General processing of NGS data
+* Managing worfklows: bash, Snakemake, Nextflow, ...
+
+### Labs
+
+* Step-by-step processing of ChIP-seq data
+
+## Day 2 - ChIP-seq analysis
+
+### Lectures
+
+* Identifying DNA-binding protein targets
+* R/Bioconductor 101: Data import, manipulating genomic ranges, ...
+
+### Labs
+
+* Identification of TF-binding site or epigenomic histone modification using 
+  ChIP-seq peak calling
+* Identification of motifs and motif enrichment analysis
+
+## Day 3 - RNA-seq analysis
+
+### Lectures
+
+* Estimating transcript abundance from RNA-seq
+* R/Bioconductor 201: SummarizedExperiment
+
+### Labs
+
+* Differential gene expression analysis between samples
+
+## Day 4 - ATAC-seq
+
+### Lectures
+
+* Peak callers: ChIP-seq vs. ATAC-seq
+* R/Bioconductor 301: Databases, resources, ...
+
+### Labs
+
+* Identification of ATAC-seq peaks on multiple samples using YAPC
+* Differential binding analysis and clustering of ATAC-seq peaks 
+* Study of chromatin accessibility at promoters with V-plots
+
+## Day 5 -  Integration and visualization of different omics data
+
+### Lectures
+
+* Regulatory states from histone marks
+* Identification of transcription factor target genes using RNA-seq and 
+  ChIP-seq
+
+### Labs
+
+* Crossing results from ATAC-seq with chromHMM
+* Integration of ChIP-seq data and RNA-seq data
+* Analysis with external databases: 
+  GO analysis, protein functional interactions, ...
+

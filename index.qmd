@@ -1,0 +1,85 @@
+# Welcome {-}
+
+```{r echo=FALSE}
+.gh_url <- file.path('https://github.com', rmarkdown::metadata[['github-repo']])
+```
+
+This is the landing page for the **"Epigenomics Data Analysis"** 
+workshop, ed. 2023.  
+
+`r rebook::openingDetails(Copyright='J. Serizay', Source=.gh_url)`
+
+## What {-}
+
+This course will introduce biologists and bioinformaticians to the field of 
+regulatory epigenomics. We will cover a range of software and analysis 
+workflows for processing of next-generation sequencing datasets and 
+quantitative analysis ChIP-seq, ATAC-seq data and RNA-seq data. Towards the end of the workshop, 
+a brief introduction to chromatin conformation capture (Hi-C) experiments and analysis 
+will emphasize multi-omics data integration.
+
+We will start by introducing general concepts about epigenomics. 
+From there, we will then continue to describe the main analysis steps to go 
+from raw sequencing data to processed and usable data. We will present 
+classical analysis workflows, their output and the possible paths to 
+investigate downstream of this.  
+
+Throughout the workshop, `bash` tools and `R/Bioconductor` packages will 
+be used to analyse datasets and learn new approaches. 
+
+## When {-}
+
+- July 3 (Monday)
+- July 5 (Wednesday)
+- July 7 (Friday)
+- July 17 (Monday)
+- July 19 (Wednesday)
+
+## Where {-}
+
+This course will be held online.
+
+## How {-}
+
+The course is structured in modules over five days. Each day will contain a mix of formal lectures, demonstration, and hands-on exercises. 
+
+- During the first half daily sessions, formal lectures and demonstrations will cover the key theory required to understand the principles of next-generation sequencing dataset processing and analysis. This will illustrate real-life processing and analysis workflows. At this stage, trainees will get acquainted with state-of-the-art `Bioconductor` ecosystem as well as the best coding practices in bioinformatics. 
+- During the second half of daily sessions, trainees will work by themselves. Guided exercise notebooks will be provided, including hints and solutions for each exercise. The exercises will mainly focus on specific concepts introduced earlier that day. 
+- Office hours will take place during the last hour of the exercises. The instructor will be available to answer individual questions related to daily exercises. 
+
+A Slack channel will be available so that Q&A are available for everybody.
+
+## Who {-}
+
+The course is aimed at researchers interested in learning how to extract 
+biological insights from genomics data, such as ChIP-seq, ATAC-seq or Hi-C.  
+
+It is primarily targeting researchers who are relatively new to the field 
+of bioinformatics, with practical experience in the experimental side of 
+epigenomics. 
+
+Attendees should have a background in biology as well as be familiar with 
+genomic data and common file formats from NGS sequencing experiments 
+(fastq, BAM, BED).
+
+Practical exercises will use command-line Linux and R code and will be presented 
+as notebooks to ensure reproducible coding.
+
+## Why {-}
+
+At the end of this course, you should be able to:
+
+- Understanding important genomic file formats
+- Process most types of genomic datasets (RNA-seq, ATAC-seq, Hi-C, ChIP-seq, ...)
+- Analyzing processed datasets to extract relevant information and answer biological questions
+- Good practices to avoid confounding variables and pitfalls in the processing.
+- Proper use of controls and normalization.
+- Integration of different sequencing "omics" datasets
+- Characterisation of the global 3D structures from the sequencing data
+- Detection of regulatory interactions and quantification of their changes between conditions.
+
+Throughout the course, we will also have a focus on reproducible research, documented content and interactive reports.
+
+## Instructors {-}
+
+[Jacques Serizay](mailto:jacques.serizay@pasteur.fr)
