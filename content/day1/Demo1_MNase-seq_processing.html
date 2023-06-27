@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.3.433">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 <meta name="author" content="J. Serizay">
+
 <title>Epigenomics Data Analysis - 3&nbsp; Demo 1 - Processing of MNase-seq data</title>
 <style>
 code{white-space: pre-wrap;}
@@ -15,9 +18,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -44,44 +48,15 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
@@ -100,7 +75,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -116,137 +92,163 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
+
+
 </head>
+
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">
-<span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span>
-</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/day1/Lecture1_introduction.html">Day 1</a></li><li class="breadcrumb-item"><a href="../../content/day1/Demo1_MNase-seq_processing.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Epigenomics Data Analysis</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/js2264/NGS_Physalia_2023/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/js2264/NGS-Physalia/" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../index.html" class="sidebar-item-text sidebar-link">Welcome</a>
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/program.html" class="sidebar-item-text sidebar-link">Program</a>
+  <a href="../../content/program.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Program</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/Rstudio.html" class="sidebar-item-text sidebar-link">RStudio</a>
+  <a href="../../content/Rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RStudio</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/prerequisites.html" class="sidebar-item-text sidebar-link">Prerequisites</a>
+  <a href="../../content/prerequisites.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prerequisites</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Day 1</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Day 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/day1/Lecture1_introduction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Lecture 1 - Introduction to epigenomics data analysis</span></a>
+  <a href="../../content/day1/Lecture1_introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Lecture 1 - Introduction to epigenomics data analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/day1/Lecture2_processing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Lecture 2 - General processing of genome-wide epigenomic assays</span></a>
+  <a href="../../content/day1/Lecture2_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Lecture 2 - General processing of genome-wide epigenomic assays</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/day1/Demo1_MNase-seq_processing.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></a>
+  <a href="../../content/day1/Demo1_MNase-seq_processing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></span></a>
   </div>
 </li>
       </ul>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">Day 2</span>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">Day 3</span>
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Day 2</span></span>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">Day 4</span>
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Day 3</span></span>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">Day 5</span>
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Day 4</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Day 5</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/extra.html" class="sidebar-item-text sidebar-link">Extra resources</a>
+  <a href="../../content/extra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extra resources</span></a>
   </div>
 </li>
     </ul>
-</div>
-</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li>
-<a href="#getting-data" id="toc-getting-data" class="nav-link active" data-scroll-target="#getting-data"><span class="toc-section-number">3.1</span>  Getting data</a>
+  <li><a href="#getting-data" id="toc-getting-data" class="nav-link active" data-scroll-target="#getting-data"><span class="header-section-number">3.1</span> Getting data</a>
   <ul class="collapse">
-<li><a href="#downloading-reads-from-internet" id="toc-downloading-reads-from-internet" class="nav-link" data-scroll-target="#downloading-reads-from-internet"><span class="toc-section-number">3.1.1</span>  Downloading reads from internet</a></li>
-  <li><a href="#fastqc-reads" id="toc-fastqc-reads" class="nav-link" data-scroll-target="#fastqc-reads"><span class="toc-section-number">3.1.2</span>  FastQC reads</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#pre-process-reads" id="toc-pre-process-reads" class="nav-link" data-scroll-target="#pre-process-reads"><span class="toc-section-number">3.2</span>  Pre-process reads</a>
+  <li><a href="#downloading-reads-from-internet" id="toc-downloading-reads-from-internet" class="nav-link" data-scroll-target="#downloading-reads-from-internet"><span class="header-section-number">3.1.1</span> Downloading reads from internet</a></li>
+  <li><a href="#fastqc-reads" id="toc-fastqc-reads" class="nav-link" data-scroll-target="#fastqc-reads"><span class="header-section-number">3.1.2</span> FastQC reads</a></li>
+  </ul></li>
+  <li><a href="#pre-process-reads" id="toc-pre-process-reads" class="nav-link" data-scroll-target="#pre-process-reads"><span class="header-section-number">3.2</span> Pre-process reads</a>
   <ul class="collapse">
-<li><a href="#trimming-reads-with-trim_galore" id="toc-trimming-reads-with-trim_galore" class="nav-link" data-scroll-target="#trimming-reads-with-trim_galore"><span class="toc-section-number">3.2.1</span>  Trimming reads with <code>trim_galore</code></a></li>
-  <li><a href="#fastqc-on-trimmed-reads" id="toc-fastqc-on-trimmed-reads" class="nav-link" data-scroll-target="#fastqc-on-trimmed-reads"><span class="toc-section-number">3.2.2</span>  FastQC on trimmed reads</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#align-reads-to-a-genome-reference" id="toc-align-reads-to-a-genome-reference" class="nav-link" data-scroll-target="#align-reads-to-a-genome-reference"><span class="toc-section-number">3.3</span>  Align reads to a genome reference</a>
+  <li><a href="#trimming-reads-with-trim_galore" id="toc-trimming-reads-with-trim_galore" class="nav-link" data-scroll-target="#trimming-reads-with-trim_galore"><span class="header-section-number">3.2.1</span> Trimming reads with <code>trim_galore</code></a></li>
+  <li><a href="#fastqc-on-trimmed-reads" id="toc-fastqc-on-trimmed-reads" class="nav-link" data-scroll-target="#fastqc-on-trimmed-reads"><span class="header-section-number">3.2.2</span> FastQC on trimmed reads</a></li>
+  </ul></li>
+  <li><a href="#align-reads-to-a-genome-reference" id="toc-align-reads-to-a-genome-reference" class="nav-link" data-scroll-target="#align-reads-to-a-genome-reference"><span class="header-section-number">3.3</span> Align reads to a genome reference</a>
   <ul class="collapse">
-<li><a href="#indexing-saccer3-genome" id="toc-indexing-saccer3-genome" class="nav-link" data-scroll-target="#indexing-saccer3-genome"><span class="toc-section-number">3.3.1</span>  Indexing sacCer3 genome</a></li>
-  <li><a href="#mapping-paired-end-trimmed-reads" id="toc-mapping-paired-end-trimmed-reads" class="nav-link" data-scroll-target="#mapping-paired-end-trimmed-reads"><span class="toc-section-number">3.3.2</span>  Mapping paired-end trimmed reads</a></li>
-  <li><a href="#filtering-mapped-fragments" id="toc-filtering-mapped-fragments" class="nav-link" data-scroll-target="#filtering-mapped-fragments"><span class="toc-section-number">3.3.3</span>  Filtering mapped fragments</a></li>
-  <li><a href="#create-coverage-track" id="toc-create-coverage-track" class="nav-link" data-scroll-target="#create-coverage-track"><span class="toc-section-number">3.3.4</span>  Create coverage track</a></li>
-  <li><a href="#create-nucleosome-track" id="toc-create-nucleosome-track" class="nav-link" data-scroll-target="#create-nucleosome-track"><span class="toc-section-number">3.3.5</span>  Create nucleosome track</a></li>
+  <li><a href="#indexing-saccer3-genome" id="toc-indexing-saccer3-genome" class="nav-link" data-scroll-target="#indexing-saccer3-genome"><span class="header-section-number">3.3.1</span> Indexing sacCer3 genome</a></li>
+  <li><a href="#mapping-paired-end-trimmed-reads" id="toc-mapping-paired-end-trimmed-reads" class="nav-link" data-scroll-target="#mapping-paired-end-trimmed-reads"><span class="header-section-number">3.3.2</span> Mapping paired-end trimmed reads</a></li>
+  <li><a href="#filtering-mapped-fragments" id="toc-filtering-mapped-fragments" class="nav-link" data-scroll-target="#filtering-mapped-fragments"><span class="header-section-number">3.3.3</span> Filtering mapped fragments</a></li>
+  <li><a href="#create-coverage-track" id="toc-create-coverage-track" class="nav-link" data-scroll-target="#create-coverage-track"><span class="header-section-number">3.3.4</span> Create coverage track</a></li>
+  <li><a href="#create-nucleosome-track" id="toc-create-nucleosome-track" class="nav-link" data-scroll-target="#create-nucleosome-track"><span class="header-section-number">3.3.5</span> Create nucleosome track</a></li>
+  </ul></li>
   </ul>
-</li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/js2264/NGS_Physalia_2023/edit/main/content/day1/Demo1_MNase-seq_processing.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/js2264/NGS_Physalia_2023/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/js2264/NGS-Physalia/edit/main/content/day1/Demo1_MNase-seq_processing.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/js2264/NGS-Physalia/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title d-none d-lg-block">
-<span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span>
-</h1>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></h1>
 </div>
 
 
@@ -254,37 +256,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title-meta">
 
     
+  
     
   </div>
   
 
-</header><div class="callout-note callout callout-style-default callout-captioned">
+</header>
+
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Aims
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ul>
 <li>Fetching an MNase-seq dataset from GEO</li>
-<li>Indexing a genome with <code>bowtie2</code>
-</li>
-<li>Map paired-end reads with <code>bowtie2</code>
-</li>
+<li>Indexing a genome with <code>bowtie2</code></li>
+<li>Map paired-end reads with <code>bowtie2</code></li>
 <li>Generate sequencing-depth normalized track</li>
 <li>Generate nucleosomes track</li>
 </ul>
 </div>
 </div>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Datasets
 </div>
 </div>
@@ -295,10 +298,10 @@ Datasets
 </ul>
 </div>
 </div>
-<section id="getting-data" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="getting-data">
-<span class="header-section-number">3.1</span> Getting data</h2>
-<section id="downloading-reads-from-internet" class="level3" data-number="3.1.1"><h3 data-number="3.1.1" class="anchored" data-anchor-id="downloading-reads-from-internet">
-<span class="header-section-number">3.1.1</span> Downloading reads from internet</h3>
+<section id="getting-data" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="getting-data"><span class="header-section-number">3.1</span> Getting data</h2>
+<section id="downloading-reads-from-internet" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="downloading-reads-from-internet"><span class="header-section-number">3.1.1</span> Downloading reads from internet</h3>
 <p>We can download the paired-end reads (<code>R1</code> and <code>R2</code> fastq files) directly from the internet.</p>
 <div class="cell">
 <div class="code-with-filename">
@@ -311,8 +314,9 @@ Datasets
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_2.fastq.gz <span class="at">-o</span> data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section><section id="fastqc-reads" class="level3" data-number="3.1.2"><h3 data-number="3.1.2" class="anchored" data-anchor-id="fastqc-reads">
-<span class="header-section-number">3.1.2</span> FastQC reads</h3>
+</section>
+<section id="fastqc-reads" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="fastqc-reads"><span class="header-section-number">3.1.2</span> FastQC reads</h3>
 <p><code>fastqc</code> program will run quick QCs on each fastq file separately.</p>
 <div class="cell">
 <div class="code-with-filename">
@@ -328,11 +332,12 @@ Datasets
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    data/<span class="pp">*</span>fq.gz <span class="dv">1</span><span class="op">&gt;&amp;</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section></section><section id="pre-process-reads" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="pre-process-reads">
-<span class="header-section-number">3.2</span> Pre-process reads</h2>
-<section id="trimming-reads-with-trim_galore" class="level3" data-number="3.2.1"><h3 data-number="3.2.1" class="anchored" data-anchor-id="trimming-reads-with-trim_galore">
-<span class="header-section-number">3.2.1</span> Trimming reads with <code>trim_galore</code>
-</h3>
+</section>
+</section>
+<section id="pre-process-reads" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="pre-process-reads"><span class="header-section-number">3.2</span> Pre-process reads</h2>
+<section id="trimming-reads-with-trim_galore" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="trimming-reads-with-trim_galore"><span class="header-section-number">3.2.1</span> Trimming reads with <code>trim_galore</code></h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -347,8 +352,9 @@ Datasets
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    data/MNase_R1.fq.gz data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section><section id="fastqc-on-trimmed-reads" class="level3" data-number="3.2.2"><h3 data-number="3.2.2" class="anchored" data-anchor-id="fastqc-on-trimmed-reads">
-<span class="header-section-number">3.2.2</span> FastQC on trimmed reads</h3>
+</section>
+<section id="fastqc-on-trimmed-reads" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="fastqc-on-trimmed-reads"><span class="header-section-number">3.2.2</span> FastQC on trimmed reads</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -362,10 +368,12 @@ Datasets
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    data/trimmed/<span class="pp">*</span>fq.gz <span class="dv">1</span><span class="op">&gt;&amp;</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section></section><section id="align-reads-to-a-genome-reference" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="align-reads-to-a-genome-reference">
-<span class="header-section-number">3.3</span> Align reads to a genome reference</h2>
-<section id="indexing-saccer3-genome" class="level3" data-number="3.3.1"><h3 data-number="3.3.1" class="anchored" data-anchor-id="indexing-saccer3-genome">
-<span class="header-section-number">3.3.1</span> Indexing sacCer3 genome</h3>
+</section>
+</section>
+<section id="align-reads-to-a-genome-reference" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="align-reads-to-a-genome-reference"><span class="header-section-number">3.3</span> Align reads to a genome reference</h2>
+<section id="indexing-saccer3-genome" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="indexing-saccer3-genome"><span class="header-section-number">3.3.1</span> Indexing sacCer3 genome</h3>
 <p>Genome references for model systems can be fetched <a href="https://emea.support.illumina.com/sequencing/sequencing_software/igenome.html">from iGenomes</a>.</p>
 <div class="cell">
 <div class="code-with-filename">
@@ -385,8 +393,9 @@ Datasets
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2-build</span> data/genome/R64-1-1.fa data/genome/R64-1-1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section><section id="mapping-paired-end-trimmed-reads" class="level3" data-number="3.3.2"><h3 data-number="3.3.2" class="anchored" data-anchor-id="mapping-paired-end-trimmed-reads">
-<span class="header-section-number">3.3.2</span> Mapping paired-end trimmed reads</h3>
+</section>
+<section id="mapping-paired-end-trimmed-reads" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="mapping-paired-end-trimmed-reads"><span class="header-section-number">3.3.2</span> Mapping paired-end trimmed reads</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -402,8 +411,9 @@ Datasets
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> data/mapping/MNase_R64-1-1.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section><section id="filtering-mapped-fragments" class="level3" data-number="3.3.3"><h3 data-number="3.3.3" class="anchored" data-anchor-id="filtering-mapped-fragments">
-<span class="header-section-number">3.3.3</span> Filtering mapped fragments</h3>
+</section>
+<section id="filtering-mapped-fragments" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="filtering-mapped-fragments"><span class="header-section-number">3.3.3</span> Filtering mapped fragments</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -457,8 +467,9 @@ Datasets
 <span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section><section id="create-coverage-track" class="level3" data-number="3.3.4"><h3 data-number="3.3.4" class="anchored" data-anchor-id="create-coverage-track">
-<span class="header-section-number">3.3.4</span> Create coverage track</h3>
+</section>
+<section id="create-coverage-track" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="create-coverage-track"><span class="header-section-number">3.3.4</span> Create coverage track</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -476,8 +487,9 @@ Datasets
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--extendReads</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-</section><section id="create-nucleosome-track" class="level3" data-number="3.3.5"><h3 data-number="3.3.5" class="anchored" data-anchor-id="create-nucleosome-track">
-<span class="header-section-number">3.3.5</span> Create nucleosome track</h3>
+</section>
+<section id="create-nucleosome-track" class="level3" data-number="3.3.5">
+<h3 data-number="3.3.5" class="anchored" data-anchor-id="create-nucleosome-track"><span class="header-section-number">3.3.5</span> Create nucleosome track</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -498,7 +510,11 @@ Datasets
 </div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -525,9 +541,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -539,7 +569,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -575,27 +622,133 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../../content/day1/Lecture2_processing.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Lecture 2 - General processing of genome-wide epigenomic assays</span></span>
       </a>          
@@ -607,12 +760,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">Epigenomics Data Analysis |<br>
 J. Serizay</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
     <div class="nav-footer-right">This book was built with <a href="https://quarto.org/">Quarto</a>.</div>
   </div>
 </footer>
+
 
 
 </body></html>
