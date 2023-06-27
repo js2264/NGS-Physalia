@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -223,7 +189,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#local-configuration" id="toc-local-configuration" class="nav-link active" data-scroll-target="#local-configuration">Local configuration</a></li>
-  <li><a href="#remote-configuration" id="toc-remote-configuration" class="nav-link" data-scroll-target="#remote-configuration">Remote configuration</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/js2264/NGS-Physalia/edit/main/content/prerequisites.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/js2264/NGS-Physalia/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -257,94 +222,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="local-configuration" class="level2">
 <h2 class="anchored" data-anchor-id="local-configuration">Local configuration</h2>
 <ul>
-<li>Ideally (though not strictly required), a configured SSH client (it should be already installed on Linux/Mac machines, <code>PuTTY</code> can be set up for Windows).</li>
-<li>Ideally (though not strictly required), a SSH ftp client (<code>Forklift</code> is excellent for Mac, although not free beyond the trial version; <code>cyberduck</code> can be used for Windows; <code>FileZilla</code> can be used for both Mac, Windows and Linux).</li>
-<li>Computer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).</li>
-<li>Zoom visioconference software</li>
+<li><p>Computer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).</p></li>
+<li><p>Zoom visioconference software</p></li>
+<li><p><strong>For Windows users: PLEASE INSTALL WSL 2</strong>. Instructions are here: <a href="https://learn.microsoft.com/en-us/windows/wsl/install">learn.microsoft.com/en-us/windows/wsl/install</a></p></li>
 </ul>
-</section>
-<section id="remote-configuration" class="level2">
-<h2 class="anchored" data-anchor-id="remote-configuration">Remote configuration</h2>
-<p>The AWS machine is running with <code>Ubuntu</code> and has been set up as follows:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## --- Clean up previous R installs</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt purge r-base<span class="pp">*</span> r-recommended r-cran-<span class="pp">*</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt autoremove</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt upgrade</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">## --- Libraries</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libc6 libicu60 <span class="at">-y</span> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> <span class="dt">\</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    gcc g++ perl python3 python3-pip python-dev <span class="dt">\</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    automake make cmake less vim nano fort77 <span class="dt">\</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    wget git curl bsdtar bzip2 gfortran unzip ftp <span class="dt">\</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    libpng-dev libjpeg-dev <span class="dt">\</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    texlive-latex-base default-jre build-essential <span class="dt">\</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    libbz2-dev liblzma-dev libtool <span class="dt">\</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    libxml2 libxml2-dev zlib1g-dev <span class="dt">\</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    libdb-dev libglu1-mesa-dev zlib1g-dev  <span class="dt">\</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    libncurses5-dev libghc-zlib-dev libncurses-dev <span class="dt">\</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    libpcre3-dev libxml2-dev <span class="dt">\</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    libblas-dev libzmq3-dev libreadline-dev libssl-dev <span class="dt">\</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    libcurl4-openssl-dev libx11-dev libxt-dev <span class="dt">\</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    x11-common libcairo2-dev <span class="dt">\</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    libreadline6-dev libgsl0-dev <span class="dt">\</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    libeigen3-dev libboost-all-dev <span class="dt">\</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    libgtk2.0-dev xvfb xauth xfonts-base <span class="dt">\</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    apt-transport-https libhdf5-serial-dev <span class="dt">\</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    libudunits2-dev libgdal-dev libgeos-dev libproj-dev <span class="dt">\</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    libv8-dev <span class="dt">\</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    libmagick++-dev <span class="dt">\</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    libharfbuzz-dev libfribidi-dev <span class="dt">\</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    fftw3</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">## --- R base install </span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> add-apt-repository <span class="st">'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ex">add-apt-repository</span> <span class="st">"deb https://cloud.r-project.org/bin/linux/ubuntu </span><span class="kw">`</span><span class="ex">lsb_release</span> <span class="at">-cs</span><span class="kw">`</span><span class="st"> -cran40/"</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-key adv <span class="at">--keyserver</span> keyserver.ubuntu.com <span class="at">--recv-keys</span> E298A3A825C0D65DFD57CBB651716619E084DAB9</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install r-base r-recommended r-base-core r-base-dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The following packages have been installed (along with their many dependencies, of course!):</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## --- Install important R packages for single-cell RNA-seq projects</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">## pak </span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> Rscript <span class="at">-e</span> <span class="st">'install.packages("pak", repos = sprintf("https://r-lib.github.io/p/pak/stable/%s/%s/%s", .Platform$pkgType, R.Version()$os, R.Version()$arch))'</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">## CRAN packages</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> Rscript <span class="at">-e</span> <span class="st">'pak::pkg_install(c("tidyverse", "devtools", "umap", "corrplot", "gam", "ggbeeswarm", "ggthemes", "Matrix", "zeallot", "fossil", "rgl", "BiocManager", "Seurat", "rliger", "Signac", "multtest", "metap"))'</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">## Bioconductor Packages</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> Rscript <span class="at">-e</span> <span class="st">'pak::pkg_install(c("SingleCellExperiment", "scran", "scater", "batchelor", "DropletUtils", "AUCell", "plyranges", "ggraph", "clustree", "celldex", "SingleR", "slingshot", "tradeSeq", "velociraptor", "BUSpaRse", "org.Mm.eg.db", "org.Hs.eg.db", "destiny", "TENxPBMCData", "scRNAseq", "scDblFinder", "chromVAR", "EnsDb.Hsapiens.v75", "LoomExperiment", "biovizBase"))'</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">## --- Install other softwares (fastQC, samtools, cellranger and cellranger indexes, ffq)</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># fastqc samtools</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install fastqc samtools python3.8</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># cellranger</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt/</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> wget <span class="at">-O</span> cellranger-7.1.0.tar.gz <span class="st">"https://cf.10xgenomics.com/releases/cell-exp/cellranger-7.1.0.tar.gz?Expires=1685143014&amp;Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci03LjEuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2ODUxNDMwMTR9fX1dfQ__&amp;Signature=aD0ZgbtDMNwI4C62fEuZ0ppBoTm-wAiQ~d9KWtWinvv5G9LdyRzJXED98eMrJg07yCHfnbCd8v7owzUVoZvDW1-pgmpOjpd2qLiaCQuaWsWGKgxJ4MtyPAl0Oi~0zRnGLwsFk1geDPxDBZVH9OBIrQsG3aNlApBxhxw4u6yYUT62PXtu2OjRQ-PieGlvH7TFbr-JjkpUpR-YEcQ6i0ORrdLxNt9HzeZX9s6s0dJ~NybRywBZI89KEoseyN6LZU13vtHl9BtPGIeA1Hwvpb2A1xsO5ueql3palHsT5Lnf7lY9QwXH4FECVAAoMCI8eP2dXHKtliJy0y~xLKVPEnSgGw__&amp;Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-xzvf</span> cellranger-7.1.0.tar.gz</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-s</span> /opt/cellranger-7.1.0/cellranger /usr/local/bin/cellranger</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-xzvf</span> refdata-gex-mm10-2020-A.tar.gz</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># ffq</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install python3-distutils</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> pip install ffq</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># seqkit</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt/</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> wget <span class="at">-O</span> seqkit_linux_amd64.tar.gz https://github.com/shenwei356/seqkit/releases/download/v2.4.0/seqkit_linux_amd64.tar.gz</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-xzvf</span> seqkit_linux_amd64.tar.gz</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-s</span> /opt/seqkit /usr/local/bin/seqkit</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># bcl2fastq</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install alien</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt/</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> http://support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2.17.1.14-Linux-x86_64.rpm</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> alien bcl2fastq2-v2.17.1.14-Linux-x86_64.rpm</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> bcl2fastq2_0v2.17.1.14-2_amd64.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<!-- ::: {.callout-important icon='true'}
+## Docker image
+If trainees are familiar with `docker` and prefer using a pre-compiled image, see here. 
+::: -->
+<ul>
+<li><p>IGV software installed</p></li>
+<li><p>Several system dependencies</p>
+<ul>
+<li><code>R &gt;= 4.1</code></li>
+<li><code>fastqc</code></li>
+<li><code>trim_galore</code></li>
+<li><code>bowtie2</code></li>
+<li><code>deepTools</code></li>
+<li><code>macs2</code></li>
+<li><code>yapc</code></li>
+</ul></li>
+<li><p>Several R packages</p></li>
+</ul>
 
 
 </section>

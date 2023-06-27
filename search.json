@@ -60,35 +60,35 @@
     "href": "content/program.html#day-1---next-generation-sequencing-data-processing",
     "title": "Program",
     "section": "Day 1 - Next-generation sequencing data processing",
-    "text": "Day 1 - Next-generation sequencing data processing\n\nLectures\n\nEpigenomics introduction\nGeneral processing of NGS data\nManaging worfklows: bash, Snakemake, Nextflow, …\n\n\n\nLabs\n\nStep-by-step processing of ChIP-seq data"
+    "text": "Day 1 - Next-generation sequencing data processing\n\nLectures\n\nEpigenomics introduction\nGeneral processing of NGS data\n\n\n\nDemo\n\n\nLabs"
   },
   {
-    "objectID": "content/program.html#day-2---chip-seq-analysis",
-    "href": "content/program.html#day-2---chip-seq-analysis",
+    "objectID": "content/program.html#day-2---atac-seq",
+    "href": "content/program.html#day-2---atac-seq",
     "title": "Program",
-    "section": "Day 2 - ChIP-seq analysis",
-    "text": "Day 2 - ChIP-seq analysis\n\nLectures\n\nIdentifying DNA-binding protein targets\nR/Bioconductor 101: Data import, manipulating genomic ranges, …\n\n\n\nLabs\n\nIdentification of TF-binding site or epigenomic histone modification using ChIP-seq peak calling\nIdentification of motifs and motif enrichment analysis"
+    "section": "Day 2 - ATAC-seq",
+    "text": "Day 2 - ATAC-seq\n\nLectures\n\nNGS worfklows: bash, Snakemake, Nextflow, …\nATAC-seq processing\nR/Bioconductor 101: Data import, manipulating genomic ranges, …\n\n\n\nDemo\n\n\nLabs"
   },
   {
-    "objectID": "content/program.html#day-3---rna-seq-analysis",
-    "href": "content/program.html#day-3---rna-seq-analysis",
+    "objectID": "content/program.html#day-3---chip-seq-analysis",
+    "href": "content/program.html#day-3---chip-seq-analysis",
     "title": "Program",
-    "section": "Day 3 - RNA-seq analysis",
-    "text": "Day 3 - RNA-seq analysis\n\nLectures\n\nEstimating transcript abundance from RNA-seq\nR/Bioconductor 201: SummarizedExperiment\n\n\n\nLabs\n\nDifferential gene expression analysis between samples"
+    "section": "Day 3 - ChIP-seq analysis",
+    "text": "Day 3 - ChIP-seq analysis\n\nLectures\n\nChIP-seq methods\nR/Bioconductor 201: SummarizedExperiment\n\n\n\nDemo\n\n\nLabs"
   },
   {
-    "objectID": "content/program.html#day-4---atac-seq",
-    "href": "content/program.html#day-4---atac-seq",
+    "objectID": "content/program.html#day-4---rna-seq-analysis",
+    "href": "content/program.html#day-4---rna-seq-analysis",
     "title": "Program",
-    "section": "Day 4 - ATAC-seq",
-    "text": "Day 4 - ATAC-seq\n\nLectures\n\nPeak callers: ChIP-seq vs. ATAC-seq\nR/Bioconductor 301: Databases, resources, …\n\n\n\nLabs\n\nIdentification of ATAC-seq peaks on multiple samples using YAPC\nDifferential binding analysis and clustering of ATAC-seq peaks\nStudy of chromatin accessibility at promoters with V-plots"
+    "section": "Day 4 - RNA-seq analysis",
+    "text": "Day 4 - RNA-seq analysis\n\nLectures\n\nEstimating transcript abundance from RNA-seq\nR/Bioconductor 301: Databases, resources, …\n\n\n\nDemo\n\n\nLabs"
   },
   {
-    "objectID": "content/program.html#day-5---integration-and-visualization-of-different-omics-data",
-    "href": "content/program.html#day-5---integration-and-visualization-of-different-omics-data",
+    "objectID": "content/program.html#day-5---multi-omics",
+    "href": "content/program.html#day-5---multi-omics",
     "title": "Program",
-    "section": "Day 5 - Integration and visualization of different omics data",
-    "text": "Day 5 - Integration and visualization of different omics data\n\nLectures\n\nRegulatory states from histone marks\nIdentification of transcription factor target genes using RNA-seq and ChIP-seq\n\n\n\nLabs\n\nCrossing results from ATAC-seq with chromHMM\nIntegration of ChIP-seq data and RNA-seq data\nAnalysis with external databases: GO analysis, protein functional interactions, …"
+    "section": "Day 5 - Multi-omics",
+    "text": "Day 5 - Multi-omics\n\nLectures\n\nHi-C processing\n\n\n\nDemo\n\n\nLabs"
   },
   {
     "objectID": "content/Rstudio.html",
@@ -102,14 +102,7 @@
     "href": "content/prerequisites.html#local-configuration",
     "title": "Prerequisites",
     "section": "Local configuration",
-    "text": "Local configuration\n\nIdeally (though not strictly required), a configured SSH client (it should be already installed on Linux/Mac machines, PuTTY can be set up for Windows).\nIdeally (though not strictly required), a SSH ftp client (Forklift is excellent for Mac, although not free beyond the trial version; cyberduck can be used for Windows; FileZilla can be used for both Mac, Windows and Linux).\nComputer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).\nZoom visioconference software"
-  },
-  {
-    "objectID": "content/prerequisites.html#remote-configuration",
-    "href": "content/prerequisites.html#remote-configuration",
-    "title": "Prerequisites",
-    "section": "Remote configuration",
-    "text": "Remote configuration\nThe AWS machine is running with Ubuntu and has been set up as follows:\n## --- Clean up previous R installs\nsudo apt purge r-base* r-recommended r-cran-*\nsudo apt autoremove\nsudo apt update\nsudo apt upgrade\n\n## --- Libraries\nsudo apt update\nsudo apt install libc6 libicu60 -y \nsudo apt install -y \\\n    gcc g++ perl python3 python3-pip python-dev \\\n    automake make cmake less vim nano fort77 \\\n    wget git curl bsdtar bzip2 gfortran unzip ftp \\\n    libpng-dev libjpeg-dev \\\n    texlive-latex-base default-jre build-essential \\\n    libbz2-dev liblzma-dev libtool \\\n    libxml2 libxml2-dev zlib1g-dev \\\n    libdb-dev libglu1-mesa-dev zlib1g-dev  \\\n    libncurses5-dev libghc-zlib-dev libncurses-dev \\\n    libpcre3-dev libxml2-dev \\\n    libblas-dev libzmq3-dev libreadline-dev libssl-dev \\\n    libcurl4-openssl-dev libx11-dev libxt-dev \\\n    x11-common libcairo2-dev \\\n    libreadline6-dev libgsl0-dev \\\n    libeigen3-dev libboost-all-dev \\\n    libgtk2.0-dev xvfb xauth xfonts-base \\\n    apt-transport-https libhdf5-serial-dev \\\n    libudunits2-dev libgdal-dev libgeos-dev libproj-dev \\\n    libv8-dev \\\n    libmagick++-dev \\\n    libharfbuzz-dev libfribidi-dev \\\n    fftw3\n\n## --- R base install \nsudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'\nadd-apt-repository \"deb https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs` -cran40/\"\nsudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9\nsudo apt update\nsudo apt install r-base r-recommended r-base-core r-base-dev\nThe following packages have been installed (along with their many dependencies, of course!):\n## --- Install important R packages for single-cell RNA-seq projects\n## pak \nsudo Rscript -e 'install.packages(\"pak\", repos = sprintf(\"https://r-lib.github.io/p/pak/stable/%s/%s/%s\", .Platform$pkgType, R.Version()$os, R.Version()$arch))'\n\n## CRAN packages\nsudo Rscript -e 'pak::pkg_install(c(\"tidyverse\", \"devtools\", \"umap\", \"corrplot\", \"gam\", \"ggbeeswarm\", \"ggthemes\", \"Matrix\", \"zeallot\", \"fossil\", \"rgl\", \"BiocManager\", \"Seurat\", \"rliger\", \"Signac\", \"multtest\", \"metap\"))'\n\n## Bioconductor Packages\nsudo Rscript -e 'pak::pkg_install(c(\"SingleCellExperiment\", \"scran\", \"scater\", \"batchelor\", \"DropletUtils\", \"AUCell\", \"plyranges\", \"ggraph\", \"clustree\", \"celldex\", \"SingleR\", \"slingshot\", \"tradeSeq\", \"velociraptor\", \"BUSpaRse\", \"org.Mm.eg.db\", \"org.Hs.eg.db\", \"destiny\", \"TENxPBMCData\", \"scRNAseq\", \"scDblFinder\", \"chromVAR\", \"EnsDb.Hsapiens.v75\", \"LoomExperiment\", \"biovizBase\"))'\n\n## --- Install other softwares (fastQC, samtools, cellranger and cellranger indexes, ffq)\n\n# fastqc samtools\nsudo apt install fastqc samtools python3.8\n\n# cellranger\ncd /opt/\nsudo wget -O cellranger-7.1.0.tar.gz \"https://cf.10xgenomics.com/releases/cell-exp/cellranger-7.1.0.tar.gz?Expires=1685143014&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci03LjEuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2ODUxNDMwMTR9fX1dfQ__&Signature=aD0ZgbtDMNwI4C62fEuZ0ppBoTm-wAiQ~d9KWtWinvv5G9LdyRzJXED98eMrJg07yCHfnbCd8v7owzUVoZvDW1-pgmpOjpd2qLiaCQuaWsWGKgxJ4MtyPAl0Oi~0zRnGLwsFk1geDPxDBZVH9OBIrQsG3aNlApBxhxw4u6yYUT62PXtu2OjRQ-PieGlvH7TFbr-JjkpUpR-YEcQ6i0ORrdLxNt9HzeZX9s6s0dJ~NybRywBZI89KEoseyN6LZU13vtHl9BtPGIeA1Hwvpb2A1xsO5ueql3palHsT5Lnf7lY9QwXH4FECVAAoMCI8eP2dXHKtliJy0y~xLKVPEnSgGw__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA\"\nsudo tar -xzvf cellranger-7.1.0.tar.gz\nsudo ln -s /opt/cellranger-7.1.0/cellranger /usr/local/bin/cellranger\nsudo wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz\nsudo tar -xzvf refdata-gex-mm10-2020-A.tar.gz\n\n# ffq\nsudo apt install python3-distutils\nsudo pip install ffq\n\n# seqkit\ncd /opt/\nsudo wget -O seqkit_linux_amd64.tar.gz https://github.com/shenwei356/seqkit/releases/download/v2.4.0/seqkit_linux_amd64.tar.gz\nsudo tar -xzvf seqkit_linux_amd64.tar.gz\nsudo ln -s /opt/seqkit /usr/local/bin/seqkit\n\n# bcl2fastq\nsudo apt install alien\ncd /opt/\nwget http://support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2.17.1.14-Linux-x86_64.rpm\nsudo alien bcl2fastq2-v2.17.1.14-Linux-x86_64.rpm\nsudo dpkg -i bcl2fastq2_0v2.17.1.14-2_amd64.deb"
+    "text": "Local configuration\n\nComputer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).\nZoom visioconference software\nFor Windows users: PLEASE INSTALL WSL 2. Instructions are here: learn.microsoft.com/en-us/windows/wsl/install\n\n\n\nIGV software installed\nSeveral system dependencies\n\nR &gt;= 4.1\nfastqc\ntrim_galore\nbowtie2\ndeepTools\nmacs2\nyapc\n\nSeveral R packages"
   },
   {
     "objectID": "content/day1/Lecture1_introduction.html",
