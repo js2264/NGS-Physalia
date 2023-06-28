@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Epigenomics Data Analysis",
     "section": "",
-    "text": "Welcome\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2023.\nAuthors: Jacques Serizay [aut, cre] Version: 1.0.0 Modified: 2023-06-14 Compiled: 2023-06-27 Environment: R version 4.3.1 (2023-06-16), Bioconductor 3.17 License: MIT + file LICENSE Copyright: J. Serizay"
+    "text": "Welcome\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2023.\nAuthors: Jacques Serizay [aut, cre] Version: 1.0.0 Modified: 2023-06-14 Compiled: 2023-06-28 Environment: R version 4.3.1 (2023-06-16), Bioconductor 3.17 License: MIT + file LICENSE Copyright: J. Serizay"
   },
   {
     "objectID": "index.html#what",
@@ -102,7 +102,7 @@
     "href": "content/prerequisites.html#local-configuration",
     "title": "Prerequisites",
     "section": "Local configuration",
-    "text": "Local configuration\n\nComputer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).\nZoom visioconference software\nFor Windows users: PLEASE INSTALL WSL 2. Instructions are here: learn.microsoft.com/en-us/windows/wsl/install\n\n\n\nIGV software installed\nSeveral system dependencies\n\nR &gt;= 4.1\nfastqc\ntrim_galore\nbowtie2\ndeepTools\nmacs2\nyapc\n\nSeveral R packages"
+    "text": "Local configuration\n\nComputer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).\nZoom visioconference software\nFor Windows users: PLEASE INSTALL WSL 2. Instructions are here: learn.microsoft.com/en-us/windows/wsl/install\n\n\n\nIGV software installed\nSeveral system dependencies\n\nR&gt;=4.1: https://cloud.r-project.org/\nfastqc: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/\ncutadapt: https://cutadapt.readthedocs.io/en/stable/installation.html\ntrim_galore: https://github.com/FelixKrueger/TrimGalore\nbowtie2: https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml#obtaining-bowtie-2\ndeepTools: https://deeptools.readthedocs.io/en/develop/content/installation.html\nmacs2: https://github.com/macs3-project/MACS/wiki/Install-macs2#easy-installation-through-pypi\nmeme: https://meme-suite.org/meme/doc/install.html?man_type=web\nsubread: https://subread.sourceforge.net/\n\nSeveral R packages, the main ones being:\n\nSummarizedExperiment\nrtracklayer\nGenomicRanges\nGenomicAlignments\nGenomicFeatures\nDESeq2\ngprofiler2"
   },
   {
     "objectID": "content/day1/Lecture1_introduction.html",
