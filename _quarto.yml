@@ -26,7 +26,13 @@ book:
         - content/day1/Lecture1_introduction.qmd
         - content/day1/Lecture2_processing.qmd
         - content/day1/Demo1_MNase-seq_processing.qmd
+        - content/day1/Lab1_MNase-seq_processing.qmd
     - part: "Day 2"
+        - content/day2/Lecture3_workflows.qmd
+        - content/day2/Lecture4_ATACseq.qmd
+        - content/day2/Lecture5_R-101.qmd
+        - content/day2/Demo2_ATAC-seq_processing.qmd
+        - content/day2/Lab2_ATAC-seq_analysis.qmd
     - part: "Day 3"
     - part: "Day 4"
     - part: "Day 5"
