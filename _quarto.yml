@@ -28,6 +28,7 @@ book:
         - content/day1/Demo1_MNase-seq_processing.qmd
         - content/day1/Lab1_MNase-seq_processing.qmd
     - part: "Day 2"
+      chapters:
         - content/day2/Lecture3_workflows.qmd
         - content/day2/Lecture4_ATACseq.qmd
         - content/day2/Lecture5_R-101.qmd
