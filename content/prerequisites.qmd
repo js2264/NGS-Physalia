@@ -24,13 +24,22 @@ If trainees are familiar with `docker` and prefer using a pre-compiled image, se
 
 * Several system dependencies
 
-    - `R >= 4.1`
-    - `fastqc` 
-    - `trim_galore` 
-    - `bowtie2` 
-    - `deepTools` 
-    - `macs2` 
-    - `yapc` 
+    - `R>=4.1`: https://cloud.r-project.org/
+    - `fastqc`: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+    - `cutadapt`: https://cutadapt.readthedocs.io/en/stable/installation.html
+    - `trim_galore`: https://github.com/FelixKrueger/TrimGalore
+    - `bowtie2`: https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml#obtaining-bowtie-2
+    - `deepTools`: https://deeptools.readthedocs.io/en/develop/content/installation.html
+    - `macs2`: https://github.com/macs3-project/MACS/wiki/Install-macs2#easy-installation-through-pypi
+    - `meme`: https://meme-suite.org/meme/doc/install.html?man_type=web
+    - `subread`: https://subread.sourceforge.net/
 
-* Several R packages
+* Several R packages, the main ones being: 
 
+    - `SummarizedExperiment`
+    - `rtracklayer`
+    - `GenomicRanges`
+    - `GenomicAlignments`
+    - `GenomicFeatures`
+    - `DESeq2`
+    - `gprofiler2`
