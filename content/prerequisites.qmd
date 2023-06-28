@@ -10,7 +10,7 @@ the R scripting language.
 
 ## Local configuration 
 
-* Computer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine). 
+* Computer with high-speed internet access 
 * Zoom visioconference software
 
 * **For Windows users: PLEASE INSTALL WSL 2**. Instructions are here: [learn.microsoft.com/en-us/windows/wsl/install](https://learn.microsoft.com/en-us/windows/wsl/install)
