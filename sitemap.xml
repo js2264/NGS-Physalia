@@ -2,34 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/index.html</loc>
-    <lastmod>2023-06-28T14:19:21.369Z</lastmod>
+    <lastmod>2023-06-28T17:11:59.875Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/program.html</loc>
-    <lastmod>2023-06-28T14:19:21.377Z</lastmod>
+    <lastmod>2023-06-28T17:11:59.887Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/Rstudio.html</loc>
-    <lastmod>2023-06-28T14:19:21.385Z</lastmod>
+    <lastmod>2023-06-28T17:11:59.891Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/prerequisites.html</loc>
-    <lastmod>2023-06-28T14:19:21.389Z</lastmod>
+    <lastmod>2023-06-28T17:11:59.907Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Lecture1_introduction.html</loc>
-    <lastmod>2023-06-28T14:19:21.397Z</lastmod>
+    <lastmod>2023-06-28T17:11:59.915Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Lecture2_processing.html</loc>
-    <lastmod>2023-06-28T14:19:21.401Z</lastmod>
+    <lastmod>2023-06-28T17:11:59.919Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Demo1_MNase-seq_processing.html</loc>
-    <lastmod>2023-06-28T14:19:21.421Z</lastmod>
+    <lastmod>2023-06-28T17:11:59.947Z</lastmod>
+  </url>
+  <url>
+    <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Lab1_MNase-seq_processing.html</loc>
+    <lastmod>2023-06-28T17:11:59.987Z</lastmod>
+  </url>
+  <url>
+    <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lecture3_workflows.html</loc>
+    <lastmod>2023-06-28T17:11:59.995Z</lastmod>
+  </url>
+  <url>
+    <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lecture4_ATACseq.html</loc>
+    <lastmod>2023-06-28T17:12:00.003Z</lastmod>
+  </url>
+  <url>
+    <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lecture5_R-101.html</loc>
+    <lastmod>2023-06-28T17:12:00.007Z</lastmod>
+  </url>
+  <url>
+    <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Demo2_ATAC-seq_processing.html</loc>
+    <lastmod>2023-06-28T17:12:00.023Z</lastmod>
+  </url>
+  <url>
+    <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lab2_ATAC-seq_analysis.html</loc>
+    <lastmod>2023-06-28T17:12:00.055Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/extra.html</loc>
-    <lastmod>2023-06-28T14:19:21.429Z</lastmod>
+    <lastmod>2023-06-28T17:12:00.063Z</lastmod>
   </url>
 </urlset>

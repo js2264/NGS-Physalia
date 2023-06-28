@@ -8,7 +8,7 @@
 
 <meta name="author" content="J. Serizay">
 
-<title>Epigenomics Data Analysis - 3&nbsp; Demo 1 - Processing of MNase-seq data</title>
+<title>Epigenomics Data Analysis - 4&nbsp; Lab 1 - Processing of MNase-seq data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,8 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/day1/Lab1_MNase-seq_processing.html" rel="next">
-<link href="../../content/day1/Lecture2_processing.html" rel="prev">
+<link href="../../content/day2/Lecture3_workflows.html" rel="next">
+<link href="../../content/day1/Demo1_MNase-seq_processing.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/day1/Lecture1_introduction.html">Day 1</a></li><li class="breadcrumb-item"><a href="../../content/day1/Demo1_MNase-seq_processing.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/day1/Lecture1_introduction.html">Day 1</a></li><li class="breadcrumb-item"><a href="../../content/day1/Lab1_MNase-seq_processing.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Lab 1 - Processing of MNase-seq data</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -184,13 +184,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/day1/Demo1_MNase-seq_processing.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../content/day1/Demo1_MNase-seq_processing.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/day1/Lab1_MNase-seq_processing.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/day1/Lab1_MNase-seq_processing.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Lab 1 - Processing of MNase-seq data</span></span></a>
   </div>
 </li>
@@ -265,33 +265,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#getting-data" id="toc-getting-data" class="nav-link active" data-scroll-target="#getting-data"><span class="header-section-number">3.1</span> Getting data</a>
+  <li><a href="#getting-data" id="toc-getting-data" class="nav-link active" data-scroll-target="#getting-data"><span class="header-section-number">4.1</span> Getting data</a>
   <ul class="collapse">
-  <li><a href="#downloading-reads-from-internet" id="toc-downloading-reads-from-internet" class="nav-link" data-scroll-target="#downloading-reads-from-internet"><span class="header-section-number">3.1.1</span> Downloading reads from internet</a></li>
-  <li><a href="#fastqc-reads" id="toc-fastqc-reads" class="nav-link" data-scroll-target="#fastqc-reads"><span class="header-section-number">3.1.2</span> FastQC reads</a></li>
+  <li><a href="#downloading-reads-from-internet" id="toc-downloading-reads-from-internet" class="nav-link" data-scroll-target="#downloading-reads-from-internet"><span class="header-section-number">4.1.1</span> Downloading reads from internet</a></li>
+  <li><a href="#fastqc-reads" id="toc-fastqc-reads" class="nav-link" data-scroll-target="#fastqc-reads"><span class="header-section-number">4.1.2</span> FastQC reads</a></li>
   </ul></li>
-  <li><a href="#pre-process-reads" id="toc-pre-process-reads" class="nav-link" data-scroll-target="#pre-process-reads"><span class="header-section-number">3.2</span> Pre-process reads</a>
+  <li><a href="#pre-process-reads" id="toc-pre-process-reads" class="nav-link" data-scroll-target="#pre-process-reads"><span class="header-section-number">4.2</span> Pre-process reads</a>
   <ul class="collapse">
-  <li><a href="#trimming-reads-with-trim_galore" id="toc-trimming-reads-with-trim_galore" class="nav-link" data-scroll-target="#trimming-reads-with-trim_galore"><span class="header-section-number">3.2.1</span> Trimming reads with <code>trim_galore</code></a></li>
-  <li><a href="#fastqc-on-trimmed-reads" id="toc-fastqc-on-trimmed-reads" class="nav-link" data-scroll-target="#fastqc-on-trimmed-reads"><span class="header-section-number">3.2.2</span> FastQC on trimmed reads</a></li>
+  <li><a href="#trimming-reads-with-trim_galore" id="toc-trimming-reads-with-trim_galore" class="nav-link" data-scroll-target="#trimming-reads-with-trim_galore"><span class="header-section-number">4.2.1</span> Trimming reads with <code>trim_galore</code></a></li>
+  <li><a href="#fastqc-on-trimmed-reads" id="toc-fastqc-on-trimmed-reads" class="nav-link" data-scroll-target="#fastqc-on-trimmed-reads"><span class="header-section-number">4.2.2</span> FastQC on trimmed reads</a></li>
   </ul></li>
-  <li><a href="#align-reads-to-a-genome-reference" id="toc-align-reads-to-a-genome-reference" class="nav-link" data-scroll-target="#align-reads-to-a-genome-reference"><span class="header-section-number">3.3</span> Align reads to a genome reference</a>
+  <li><a href="#align-reads-to-a-genome-reference" id="toc-align-reads-to-a-genome-reference" class="nav-link" data-scroll-target="#align-reads-to-a-genome-reference"><span class="header-section-number">4.3</span> Align reads to a genome reference</a>
   <ul class="collapse">
-  <li><a href="#indexing-saccer3-genome" id="toc-indexing-saccer3-genome" class="nav-link" data-scroll-target="#indexing-saccer3-genome"><span class="header-section-number">3.3.1</span> Indexing sacCer3 genome</a></li>
-  <li><a href="#mapping-paired-end-trimmed-reads" id="toc-mapping-paired-end-trimmed-reads" class="nav-link" data-scroll-target="#mapping-paired-end-trimmed-reads"><span class="header-section-number">3.3.2</span> Mapping paired-end trimmed reads</a></li>
-  <li><a href="#filtering-mapped-fragments" id="toc-filtering-mapped-fragments" class="nav-link" data-scroll-target="#filtering-mapped-fragments"><span class="header-section-number">3.3.3</span> Filtering mapped fragments</a></li>
-  <li><a href="#create-coverage-track" id="toc-create-coverage-track" class="nav-link" data-scroll-target="#create-coverage-track"><span class="header-section-number">3.3.4</span> Create coverage track</a></li>
-  <li><a href="#create-nucleosome-track" id="toc-create-nucleosome-track" class="nav-link" data-scroll-target="#create-nucleosome-track"><span class="header-section-number">3.3.5</span> Create nucleosome track</a></li>
+  <li><a href="#indexing-saccer3-genome" id="toc-indexing-saccer3-genome" class="nav-link" data-scroll-target="#indexing-saccer3-genome"><span class="header-section-number">4.3.1</span> Indexing sacCer3 genome</a></li>
+  <li><a href="#mapping-paired-end-trimmed-reads" id="toc-mapping-paired-end-trimmed-reads" class="nav-link" data-scroll-target="#mapping-paired-end-trimmed-reads"><span class="header-section-number">4.3.2</span> Mapping paired-end trimmed reads</a></li>
+  <li><a href="#filtering-mapped-fragments" id="toc-filtering-mapped-fragments" class="nav-link" data-scroll-target="#filtering-mapped-fragments"><span class="header-section-number">4.3.3</span> Filtering mapped fragments</a></li>
+  <li><a href="#create-coverage-track" id="toc-create-coverage-track" class="nav-link" data-scroll-target="#create-coverage-track"><span class="header-section-number">4.3.4</span> Create coverage track</a></li>
+  <li><a href="#create-nucleosome-track" id="toc-create-nucleosome-track" class="nav-link" data-scroll-target="#create-nucleosome-track"><span class="header-section-number">4.3.5</span> Create nucleosome track</a></li>
+  <li><a href="#create-coverage-track-without-removing-duplicates" id="toc-create-coverage-track-without-removing-duplicates" class="nav-link" data-scroll-target="#create-coverage-track-without-removing-duplicates"><span class="header-section-number">4.3.6</span> Create coverage track without removing duplicates</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/js2264/NGS-Physalia/edit/main/content/day1/Demo1_MNase-seq_processing.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/js2264/NGS-Physalia/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/js2264/NGS-Physalia/edit/main/content/day1/Lab1_MNase-seq_processing.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/js2264/NGS-Physalia/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Lab 1 - Processing of MNase-seq data</span></h1>
 </div>
 
 
@@ -322,6 +323,7 @@ Aims
 <li>Map paired-end reads with <code>bowtie2</code></li>
 <li>Generate sequencing-depth normalized track</li>
 <li>Generate nucleosomes track</li>
+<li>Check the relevance of filtering out duplicates</li>
 </ul>
 </div>
 </div>
@@ -337,14 +339,14 @@ Datasets
 <div class="callout-body-container callout-body">
 <p>We will process a data from the Henikoff lab, generated in 2011 and published <a href="https://doi.org/10.1073/pnas.1110731108">in PNAS</a>.</p>
 <ul>
-<li><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM754390">GSM754390</a></li>
+<li><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM754391">GSM754391</a></li>
 </ul>
 </div>
 </div>
-<section id="getting-data" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="getting-data"><span class="header-section-number">3.1</span> Getting data</h2>
-<section id="downloading-reads-from-internet" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="downloading-reads-from-internet"><span class="header-section-number">3.1.1</span> Downloading reads from internet</h3>
+<section id="getting-data" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="getting-data"><span class="header-section-number">4.1</span> Getting data</h2>
+<section id="downloading-reads-from-internet" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="downloading-reads-from-internet"><span class="header-section-number">4.1.1</span> Downloading reads from internet</h3>
 <p>We can download the paired-end reads (<code>R1</code> and <code>R2</code> fastq files) directly from the internet.</p>
 <div class="cell">
 <div class="code-with-filename">
@@ -353,14 +355,13 @@ Datasets
 </div>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/EpigenomicsDataAnalysis_2023</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_1.fastq.gz <span class="at">-o</span> data/MNase_R1.fq.gz</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_2.fastq.gz <span class="at">-o</span> data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/003/SRR3193263/SRR3193263_1.fastq.gz <span class="at">-o</span> data/MNase_2.5min_R1.fq.gz</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/003/SRR3193263/SRR3193263_2.fastq.gz <span class="at">-o</span> data/MNase_2.5min_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
-<section id="fastqc-reads" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="fastqc-reads"><span class="header-section-number">3.1.2</span> FastQC reads</h3>
-<p><code>fastqc</code> program will run quick QCs on each fastq file separately.</p>
+<section id="fastqc-reads" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="fastqc-reads"><span class="header-section-number">4.1.2</span> FastQC reads</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -377,10 +378,10 @@ Datasets
 </div>
 </section>
 </section>
-<section id="pre-process-reads" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="pre-process-reads"><span class="header-section-number">3.2</span> Pre-process reads</h2>
-<section id="trimming-reads-with-trim_galore" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="trimming-reads-with-trim_galore"><span class="header-section-number">3.2.1</span> Trimming reads with <code>trim_galore</code></h3>
+<section id="pre-process-reads" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="pre-process-reads"><span class="header-section-number">4.2</span> Pre-process reads</h2>
+<section id="trimming-reads-with-trim_galore" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="trimming-reads-with-trim_galore"><span class="header-section-number">4.2.1</span> Trimming reads with <code>trim_galore</code></h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -392,12 +393,12 @@ Datasets
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--gzip</span> <span class="dt">\</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--paired</span> <span class="dt">\</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--output_dir</span> data/trimmed/ <span class="dt">\</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    data/MNase_R1.fq.gz data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    data/MNase_2.5min_R1.fq.gz data/MNase_2.5min_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
-<section id="fastqc-on-trimmed-reads" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="fastqc-on-trimmed-reads"><span class="header-section-number">3.2.2</span> FastQC on trimmed reads</h3>
+<section id="fastqc-on-trimmed-reads" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="fastqc-on-trimmed-reads"><span class="header-section-number">4.2.2</span> FastQC on trimmed reads</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -413,10 +414,10 @@ Datasets
 </div>
 </section>
 </section>
-<section id="align-reads-to-a-genome-reference" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="align-reads-to-a-genome-reference"><span class="header-section-number">3.3</span> Align reads to a genome reference</h2>
-<section id="indexing-saccer3-genome" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="indexing-saccer3-genome"><span class="header-section-number">3.3.1</span> Indexing sacCer3 genome</h3>
+<section id="align-reads-to-a-genome-reference" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="align-reads-to-a-genome-reference"><span class="header-section-number">4.3</span> Align reads to a genome reference</h2>
+<section id="indexing-saccer3-genome" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="indexing-saccer3-genome"><span class="header-section-number">4.3.1</span> Indexing sacCer3 genome</h3>
 <p>Genome references for model systems can be fetched <a href="https://emea.support.illumina.com/sequencing/sequencing_software/igenome.html">from iGenomes</a>.</p>
 <div class="cell">
 <div class="code-with-filename">
@@ -437,8 +438,8 @@ Datasets
 </div>
 </div>
 </section>
-<section id="mapping-paired-end-trimmed-reads" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="mapping-paired-end-trimmed-reads"><span class="header-section-number">3.3.2</span> Mapping paired-end trimmed reads</h3>
+<section id="mapping-paired-end-trimmed-reads" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="mapping-paired-end-trimmed-reads"><span class="header-section-number">4.3.2</span> Mapping paired-end trimmed reads</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -449,14 +450,14 @@ Datasets
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2</span> <span class="dt">\</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--threads</span> 16 <span class="dt">\</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">-x</span> data/genome/R64-1-1 <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">-1</span> data/trimmed/MNase_R1_val_1.fq.gz <span class="dt">\</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">-2</span> data/trimmed/MNase_R2_val_2.fq.gz <span class="dt">\</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> data/mapping/MNase_R64-1-1.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">-1</span> data/trimmed/MNase_2.5min_R1_val_1.fq.gz <span class="dt">\</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">-2</span> data/trimmed/MNase_2.5min_R2_val_2.fq.gz <span class="dt">\</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> data/mapping/MNase_2.5min_R64-1-1.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
-<section id="filtering-mapped-fragments" class="level3" data-number="3.3.3">
-<h3 data-number="3.3.3" class="anchored" data-anchor-id="filtering-mapped-fragments"><span class="header-section-number">3.3.3</span> Filtering mapped fragments</h3>
+<section id="filtering-mapped-fragments" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="filtering-mapped-fragments"><span class="header-section-number">4.3.3</span> Filtering mapped fragments</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -467,13 +468,13 @@ Datasets
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> fixmate <span class="dt">\</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">-m</span> <span class="dt">\</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1.sam data/mapping/MNase_R64-1-1.bam</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1.sam data/mapping/MNase_2.5min_R64-1-1.bam</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">## - Sorting read pairs</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1.bam <span class="dt">\</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted.bam </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_2.5min_R64-1-1_sorted.bam </span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">## - Removing PCR &amp; optical duplicates</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#| -s: "Report stats"</span></span>
@@ -481,8 +482,8 @@ Datasets
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> markdup <span class="dt">\</span></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">-s</span> <span class="at">-r</span> <span class="dt">\</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted.bam <span class="dt">\</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted_noDups.bam </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1_sorted.bam <span class="dt">\</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1_sorted_noDups.bam </span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">## - Filter read pairs</span></span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#| -f 0x001: "Keep read paired"</span></span>
@@ -495,24 +496,24 @@ Datasets
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">-f</span> 0x001 <span class="at">-f</span> 0x002 <span class="at">-F</span> 0x004 <span class="at">-F</span> 0x008 <span class="at">-q</span> 20 <span class="dt">\</span></span>
 <span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">--fast</span> <span class="dt">\</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted_noDups.bam <span class="dt">\</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1_sorted_noDups.bam <span class="dt">\</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered.bam</span>
 <span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">## - Sorting read pairs</span></span>
 <span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| -l 9: "Use best compression "</span></span>
 <span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
 <span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
 <span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">-l</span> 9 <span class="dt">\</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam <span class="dt">\</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered.bam <span class="dt">\</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam</span>
 <span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co">## - Indexing bam file</span></span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
-<section id="create-coverage-track" class="level3" data-number="3.3.4">
-<h3 data-number="3.3.4" class="anchored" data-anchor-id="create-coverage-track"><span class="header-section-number">3.3.4</span> Create coverage track</h3>
+<section id="create-coverage-track" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="create-coverage-track"><span class="header-section-number">4.3.4</span> Create coverage track</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -521,8 +522,8 @@ Datasets
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">## - Generate coverage</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/tracks</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bam</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outFileName</span> data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.CPM.bw <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bam</span> data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outFileName</span> data/tracks/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.CPM.bw <span class="dt">\</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
@@ -531,16 +532,16 @@ Datasets
 </div>
 </div>
 </section>
-<section id="create-nucleosome-track" class="level3" data-number="3.3.5">
-<h3 data-number="3.3.5" class="anchored" data-anchor-id="create-nucleosome-track"><span class="header-section-number">3.3.5</span> Create nucleosome track</h3>
+<section id="create-nucleosome-track" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="create-nucleosome-track"><span class="header-section-number">4.3.5</span> Create nucleosome track</h3>
 <div class="cell">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bam</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outFileName</span> data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.135-160bp.CPM.bw <span class="dt">\</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bam</span> data/mapping/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outFileName</span> data/tracks/MNase_2.5min_R64-1-1_sorted_noDups_filtered_sorted.135-160bp.CPM.bw <span class="dt">\</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
@@ -549,6 +550,51 @@ Datasets
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--centerReads</span> <span class="dt">\</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--minFragmentLength</span> 130 <span class="dt">\</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">--maxFragmentLength</span> 165</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="create-coverage-track-without-removing-duplicates" class="level3" data-number="4.3.6">
+<h3 data-number="4.3.6" class="anchored" data-anchor-id="create-coverage-track-without-removing-duplicates"><span class="header-section-number">4.3.6</span> Create coverage track without removing duplicates</h3>
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>sh</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">## - Filter read pairs</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| -f 0x001: "Keep read paired"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| -f 0x002: "Keep read mapped in proper pair"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| -F 0x004: "Remove read unmapped"</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#| -F 0x008: "Remove mate unmapped"</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| -q 10: "MAPQ &gt; 20"</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#| --fast: "Use fast bam compression"</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="dt">\</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">-f</span> 0x001 <span class="at">-f</span> 0x002 <span class="at">-F</span> 0x004 <span class="at">-F</span> 0x008 <span class="at">-q</span> 20 <span class="dt">\</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">--fast</span> <span class="dt">\</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1_sorted.bam <span class="dt">\</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_2.5min_R64-1-1_sorted_filtered.bam</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">## - Sorting read pairs</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#| -l 9: "Use best compression "</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">-l</span> 9 <span class="dt">\</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_2.5min_R64-1-1_sorted_filtered.bam <span class="dt">\</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_2.5min_R64-1-1_sorted_filtered_sorted.bam</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">## - Indexing bam file</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/MNase_2.5min_R64-1-1_sorted_filtered_sorted.bam</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">## - Generate coverage</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/tracks</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="ex">bamCoverage</span> <span class="dt">\</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bam</span> data/mapping/MNase_2.5min_R64-1-1_sorted_filtered_sorted.bam <span class="dt">\</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outFileName</span> data/tracks/MNase_2.5min_R64-1-1_sorted_filtered_sorted.CPM.bw <span class="dt">\</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">--extendReads</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 
@@ -792,13 +838,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/day1/Lecture2_processing.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Lecture 2 - General processing of genome-wide epigenomic assays</span></span>
+      <a href="../../content/day1/Demo1_MNase-seq_processing.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Demo 1 - Processing of MNase-seq data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/day1/Lab1_MNase-seq_processing.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Lab 1 - Processing of MNase-seq data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/day2/Lecture3_workflows.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Lecture 3 - NGS processing workflows</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
