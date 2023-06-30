@@ -1,0 +1,27 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 4 - RNA-seq downstream analysis
+
+::: {.callout-note icon='true'}
+## Aims
+
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+:::
+
+## Process the two replicates of a heat-shock RNA-seq data 
+
+
+## Differential expression analysis
+
+
+## Gene ontology over-enrichment analysis
+
+

@@ -1,0 +1,248 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 3 - ChIP-seq downstream analysis
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Find motifs enriched in a set of ChIP-seq peaks
+- Import a dozen of ChIP-seq peak sets in R
+- Check distribution of peaks comapred to genomic features
+- Check peak occurrence over tissue-specific regulatory elements
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+- modENCODE/modERN TF ChIP-seq database, available [here](https://www.encodeproject.org/search/?type=Experiment&control_type!=*&status=released&replicates.library.biosample.donor.organism.scientific_name=Caenorhabditis+elegans&biosample_ontology.term_name=whole+organism&assay_title=TF+ChIP-seq&biosample_ontology.classification=whole%20organisms)
+:::
+
+## Download peaks from ENCODE database
+
+Check out the [modENCODE/modERN TF ChIP-seq database](https://www.encodeproject.org/search/?type=Experiment&control_type!=*&status=released&replicates.library.biosample.donor.organism.scientific_name=Caenorhabditis+elegans&biosample_ontology.term_name=whole+organism&assay_title=TF+ChIP-seq&biosample_ontology.classification=whole%20organisms). 
+
+Inspect the available datasets, by filtering e.g. using the following criteria: 
+
+- Assay title: `TF ChIP-seq`
+- Organism: `C. elegans`
+- Genome assembly: `ce11`
+- Project: `modENCODE`
+
+Peak files for 12 ChIP-seq datasets have been already downloaded from this database. 
+
+## Find motifs enriched in `xnd-1` ChIP-seq
+
+- Check the [`meme` website](https://meme-suite.org/) to identify which tool is best suited to identify a motif *de novo* in a set of peaks from a ChIP-seq experiment. 
+- What do you need to run `xstreme` on a set of peaks? 
+
+### Preparing `meme` input
+
+- Import `xnd-1` peaks in R as a `GRanges` object.
+- Recover `ce11` genome sequence using the `BSgenome.Celegans.UCSC.ce11` package.
+- Extract sequence over `xnd-1` peaks with the `Biostrings` package.
+- Export the sequences as a `fasta` file. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(rtracklayer)
+library(Biostrings)
+library(BSgenome.Celegans.UCSC.ce11)
+xnd1 <- import('data/peaks/modENCODE/xnd-1.bed')
+genome <- BSgenome.Celegans.UCSC.ce11
+xnd1_seq <- getSeq(genome, xnd1)
+names(xnd1_seq) <- as.character(xnd1)
+writeXStringSet(xnd1_seq, 'data/peaks/modENCODE/xnd-1.fa')
+```
+:::
+
+### Running `meme`
+
+- Identify motifs enriched in `xnd-1` peaks with `xstreme` using the following options: 
+
+    - Zero or one occurence per sequence at most for `meme`
+    - At most 3 motifs
+    - A min motif width of 6 for `meme`
+    - A max motif width of 15 for `meme`
+    - No `streme` motifs
+    - Over multiple processors in parallel
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{bash filename = 'sh'}
+xstreme \
+    --p data/peaks/modENCODE/xnd-1.fa \
+    --o data/meme/ \
+    -minw 12 \
+    -maxw 16 \
+    --meme-nmotifs 3 \
+    --meme-p 12 \
+    --meme-mod zoops \
+    --streme-nmotifs 0
+```
+:::
+
+- Check the results. Do they make sense in the light of recent publications? (see [here](https://www.science.org/doi/10.1126/sciadv.abo4082))
+
+## Compare all peaks to genomic features
+
+### Import all peaks in R
+
+- In R, list all the `bed` files available for the peaks. 
+- Import each file as a `GRanges` object. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(rtracklayer)
+library(tidyverse)
+bedfiles <- list.files('data/peaks/modENCODE/', pattern = '*bed')
+peaks <- map(bedfiles, ~ import(file.path('data/peaks/modENCODE/', .x)))
+names(peaks) <- str_replace(bedfiles, '.bed', '')
+```
+:::
+
+### Define genomic features in `ce11`
+
+Genomic features can be easily annotated from a set of gene features. 
+`ChIPseeker` facilitates the annotation of ChIP-seq peaks using gene annotations 
+directly provided in R by `TxDb` gene annotation packages, e.g. `TxDb.Celegans.UCSC.ce11.ensGene`
+
+- Install the `TxDb.Celegans.UCSC.ce11.ensGene` package in R
+- Install `ChIPseeker`
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'r'}
+BiocManager::install('TxDb.Celegans.UCSC.ce11.ensGene')
+BiocManager::install('ChIPseeker')
+library(ChIPseeker)
+library(TxDb.Celegans.UCSC.ce11.ensGene)
+```
+:::
+
+### ChIP-seq peak overlaps with genomic features 
+
+- Use `ChIPseeker` to annotate ChIP-seq peaks for a single ChIP-seq experiment. 
+- Extract 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'r'}
+ceh48 <- peaks[[1]]
+annots_ceh48 <- annotatePeak(ceh48, TxDb = TxDb.Celegans.UCSC.ce11.ensGene)
+getAnnoStat(annots_ceh48)
+```
+:::
+
+- Iterate over all the peak sets to compile their annotations across *C. elegans* genome. To iterate over each set of peaks in the `peaks` list and return an aggregate `data.frame`, use the `imap_dfr`. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'r'}
+annots <- imap_dfr(peaks, ~ annotatePeak(.x, TxDb = TxDb.Celegans.UCSC.ce11.ensGene) |> 
+    getAnnoStat() |> 
+    mutate(TF = .y)
+)
+annots
+```
+:::
+
+- Generate a barplot to represent the % of peaks in each type of genomic features, for the 12 TFs. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'r'}
+ggplot(annots, aes(x = TF, y = Frequency, fill = Feature)) + 
+    geom_col() + 
+    guides(x =  guide_axis(angle = 90))
+```
+:::
+
+- Comment on the distribution of the 12 sets of peaks over genomic features. 
+
+### Peaks occurrence over tissue-specific regulatory elements
+
+- Import regulatory elements annotated in *C. elegans* in R, as seen in previous Lab. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(readxl)
+download.file('https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx', 'data/WBcel235_REs.xlsx')
+REs <- read_xlsx('data/WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
+REs <- makeGRangesFromDataFrame(
+    REs, seqnames.field = 'chrom_ce11', 
+    start.field = 'start_ce11', end.field = 'end_ce11',
+    keep.extra.columns = TRUE
+)
+REs
+```
+:::
+
+- Check for overlap of each regulatory element with `xnd-1` peaks. 
+- Check the overlap of germline-specific regulatory element with `xnd-1` peaks. 
+- Check the **enrichment** of germline-specific regulatory element over `xnd-1` peaks. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+table(REs %over% peaks[['xnd-1']])
+table(REs %over% peaks[['xnd-1']], REs$Annotation)
+table(REs %over% peaks[['xnd-1']], REs$Annotation == 'Germline') 
+table(REs %over% peaks[['xnd-1']], REs$Annotation == 'Germline') |> fisher.test()
+```
+:::
+
+- For each tissue (`Germline`, `Neurons`, `Muscle`, `Hypod.` and `Intest.`), check whether the tissue-specific REs are enriched in `xnd-1` peak.
+
+::: {.callout-tip icon='true'}
+- You can iterate over each `tissue` and return an aggregated `data.frame` using `map_dfr`. 
+- For each iteration, you can transform the result of `fisher.test()` into a `tibble` with the `glance` function from `broom` package. 
+:::
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+tissues <- c("Germline", "Neurons", "Muscle", "Hypod.", "Intest.")
+df <- map_dfr(tissues, function(tissue) {
+    fisher.test(
+        REs %over% peaks[['xnd-1']], 
+        REs$Annotation == tissue
+    ) |> 
+        broom::glance() |> 
+        mutate(tissue = tissue, TF = 'xnd-1') |> 
+        dplyr::select(tissue, TF, estimate, p.value)
+})
+```
+:::
+
+- Perform the same operation by iterating over each peak set in the list of imported peaks. 
+
+::: {.callout-tip icon='true'}
+- You can use two nested `map_dfr`, iterating first over each TF then over each tissue. 
+:::
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+TFs <- names(peaks)
+tissues <- c("Germline", "Neurons", "Muscle", "Hypod.", "Intest.")
+df <- map_dfr(TFs, function(TF) {
+    map_dfr(tissues, function(tissue) {
+        fisher.test(
+            REs %over% peaks[[TF]], 
+            REs$Annotation == tissue
+        ) |> 
+            broom::glance() |> 
+            mutate(tissue = tissue, TF = TF) |> 
+            dplyr::select(tissue, TF, estimate, p.value)
+    })
+})
+```
+:::
+
+- For each TF, filter the tissues in which it is preferentially enriched (odds ratio >= 2, p.value <= 0.05)
+- Find TFs enriched over Intestine REs
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+filter(df, estimate >= 2, p.value <= 0.05)
+filter(df, estimate >= 2, p.value <= 0.05, tissue == "Intest.")
+```
+:::
+
+- Check the [STRING DB website](https://string-db.org/cgi/input?input_page_active_form=multiple_identifiers) to assess whether these TFs have been shown to interact together. Comment. 

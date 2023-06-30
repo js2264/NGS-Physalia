@@ -2,31 +2,30 @@
 
 ## Day 1: MNase-seq
 
-- Download reads from GEO 
+- Download reads from GEO (Henikoff 2011, MNase 20 min, `GSM754390`)
 - Process manually: Map them with bowtie2
 - bamCoverage: CPM, only 135-160bp
 
 ## Day 2: ATAC-seq 
 
-- C. elegans germline dataset
+- C. elegans germline dataset (Serizay et al 2020)
 - Process with Nextflow
 - manual peak calling with YAPC
 - Comparison
 
 ## Day 3: ChIP-seq
 
-- Process manually: map Scc1 ChIP-seq
+- Process manually: map Scc1 ChIP-seq (eLife 2014 Marston lab, `SRR1103930`)
 - bamCoverage: IP/input ratios
 - Call peaks
-- Find motifs
 
-## Day 4: RNA-seq
+## **Day 4: RNA-seq**
 
-- map yeast stranded RNA 
+- map yeast stranded RNA (WT 30C, Nuño-Cabanes et al. 2020 Scientific Data)
 - check strandness
 - Count reads 
 
-## Day 5: Hi-C
+## **Day 5: Hi-C**
 
 - Process HiC with hicstuff
 - G2 and overlap with Scc1 peaks
@@ -42,24 +41,23 @@
 
 ## Day 2: ATAC-seq
 
-* in R: Overlap ATAC peaks with annotated REs
+* in R: Overlap ATAC peaks with annotated REs (Serizay et al 2020)
 * in R: Check fragment sizes
 * in R: Check tissue-specific ATAC peak enrichment in dataset
 
 ## Day 3: ChIP-seq
 
-* bash: Fetch peaks from modENCODE
+* bash: Fetch peaks (modENCODE)
 * bash: Find motifs for Xnd-1
 * in R, check distribution ~ genomic features
-* in R, get co-occurrences of peaks
 
-## Day 4: RNA-seq
+## **Day 4: RNA-seq**
 
-* bash: Processing of a mutant
+* bash: Processing of a mutant (WT heat-shock 39C, Nuño-Cabanes et al. 2020 Scientific Data)
 * in R: Differential gene expression analysis between samples
 * in R: GO enrichment
 
-## Day 5: multi-omics
+## **Day 5: multi-omics**
 
 * IGV: check results from MNase, Scc1 ChIP-seq and RNA-seq
 * in R: plot profiles MNase @ TSSs

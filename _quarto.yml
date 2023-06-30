@@ -35,7 +35,17 @@ book:
         - content/day2/Demo2_ATAC-seq_processing.qmd
         - content/day2/Lab2_ATAC-seq_analysis.qmd
     - part: "Day 3"
+      chapters:
+        - content/day3/Lecture6_ChIPseq.qmd
+        - content/day3/Lecture7_R-201.qmd
+        - content/day3/Demo3_ChIP-seq_processing.qmd
+        - content/day3/Lab3_ChIP-seq_analysis.qmd
     - part: "Day 4"
+      chapters:
+        - content/day4/Lecture8_RNAseq.qmd
+        - content/day4/Lecture9_R-301.qmd
+        - content/day4/Demo4_RNA-seq_processing.qmd
+        - content/day4/Lab4_RNA-seq_analysis.qmd
     - part: "Day 5"
     - content/extra.qmd
 

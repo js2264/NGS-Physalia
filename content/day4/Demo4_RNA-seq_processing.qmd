@@ -1,0 +1,108 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Demo 4 - Processing of RNA-seq data
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Manually process RNA-seq reads
+- Generate stranded RNA-seq tracks with `bamCoverage`
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+RNA-seq data was published in [Wery et al., Mol. Cell 2016](https://www.cell.com/molecular-cell/pdf/S1097-2765(15)00976-4.pdf)
+
+- RNA-seq: `SRR2045244`
+:::
+
+## Mapping RNA-seq on R64-1-1
+
+```{bash, filename = 'sh'}
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/004/SRR2045244/SRR2045244_1.fastq.gz -o data/RNAseq_rep1_R1.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/004/SRR2045244/SRR2045244_2.fastq.gz -o data/RNAseq_rep1_R2.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_1.fastq.gz -o data/RNAseq_rep1_R1.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_2.fastq.gz -o data/RNAseq_rep1_R2.fq.gz
+
+for REP in rep1 rep2
+do 
+
+    bowtie2 \
+        --threads 16 \
+        -x data/genome/R64-1-1 \
+        -1 data/RNAseq_"${REP}"_R1.fq.gz \
+        -2 data/RNAseq_"${REP}"_R2.fq.gz \
+        > data/mapping/RNAseq_"${REP}"_R64-1-1.sam
+
+    STAR \
+        --runThreadN 12 \
+        --runMode genomeGenerate \
+        --genomeDir data/genome/ \
+        --genomeFastaFiles data/genome/R64-1-1.fa \
+        --sjdbGTFfile data/genome/R64-1-1.gtf \
+        --sjdbOverhang 99
+
+    STAR \
+        --genomeDir data/genome \
+        --runThreadN 12 \
+        --readFilesIn <(gunzip -k data/RNAseq_"${REP}"_R1.fq.gz) <(gunzip -k data/RNAseq_"${REP}"_R2.fq.gz) \
+        --outFileNamePrefix data/mapping/RNAseq_"${REP}" \
+        --outSAMtype BAM SortedByCoordinate \
+        --outSAMunmapped None \
+        --outSAMattributes Standard 
+
+    samtools fixmate -@ 16 --output-fmt bam -m data/mapping/RNAseq_"${REP}"_R64-1-1.sam - \
+        | samtools sort -@ 16 --output-fmt bam - \
+        | samtools markdup -@ 16 --output-fmt bam -r - - \
+        | samtools view -@ 16 --output-fmt bam -f 0x001 -f 0x002 -F 0x004 -F 0x008 -q 20 -1 -b - \
+        | samtools sort -@ 16 --output-fmt bam -l 9 -o data/mapping/RNAseq_"${REP}"_R64-1-1.bam
+
+    samtools index -@ 16 data/mapping/RNAseq_"${REP}"_R64-1-1.bam
+
+    bamCoverage \
+        --bam data/mapping/RNAseq_"${REP}"_R64-1-1.bam \
+        --outFileName data/mapping/RNAseq_"${REP}"_R64-1-1.unstranded.CPM.bw \
+        --binSize 1 \
+        --numberOfProcessors 16 \
+        --normalizeUsing CPM \
+        --skipNonCoveredRegions \
+        --extendReads \
+        --ignoreDuplicates
+
+    bamCoverage \
+        --bam data/mapping/RNAseq_"${REP}"_R64-1-1.bam \
+        --outFileName data/mapping/RNAseq_"${REP}"_R64-1-1.fwd.CPM.bw \
+        --binSize 1 \
+        --numberOfProcessors 16 \
+        --normalizeUsing CPM \
+        --skipNonCoveredRegions \
+        --extendReads \
+        --ignoreDuplicates \
+        --filterRNAstrand forward
+
+    bamCoverage \
+        --bam data/mapping/RNAseq_"${REP}"_R64-1-1.bam \
+        --outFileName data/mapping/RNAseq_"${REP}"_R64-1-1.rev.CPM.bw \
+        --binSize 1 \
+        --numberOfProcessors 16 \
+        --normalizeUsing CPM \
+        --skipNonCoveredRegions \
+        --extendReads \
+        --ignoreDuplicates \
+        --filterRNAstrand reverse
+
+done
+```
+
+## Counting reads over gene annotations
+
+```{bash, filename = 'sh'}
+
+```
+
+

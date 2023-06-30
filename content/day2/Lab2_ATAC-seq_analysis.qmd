@@ -127,7 +127,6 @@ seqlevelsStyle(REs)
 seqlevelsStyle(peaks)
 seqlevelsStyle(REs) <- seqlevelsStyle(peaks)
 ```
-:::
 
 ## Compare peaks and REs
 
@@ -139,7 +138,9 @@ table(peaks %over% REs)
 ```
 :::
 
-- Check how many `peaks` overlap with **germline-specific** `REs`. Perform a `fisher.test` to evaluate whether this significantly overlaps. 
+- Check how many `peaks` overlap with **germline-specific** `REs`. 
+- Perform a `fisher.test` to evaluate whether this significantly overlaps. 
+- Can you speculate on the origin of the ATAC-seq dataset?
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}

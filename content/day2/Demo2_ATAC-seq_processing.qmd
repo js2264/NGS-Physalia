@@ -19,7 +19,7 @@ execute:
 ::: {.callout-tip icon='true'}
 ## Datasets
 
-We will process an ATAC-seq dataset from a secret source (the origin/type of the dataset will be revealed later in the week). 
+We will process an ATAC-seq dataset from a secret source (the origin/type of the dataset will be revealed later). 
 The dataset has been generated from *C. elegans* and will be mapped to the corresponding genome reference `WBCel235`.
 :::
 

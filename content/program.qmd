@@ -51,7 +51,7 @@ Classes are from:
 
 ### Lectures
 
-* Estimating transcript abundance from RNA-seq
+* **Estimating transcript abundance from RNA-seq**
 * R/Bioconductor 301: Databases, resources, ...
 
 ### Demo
@@ -64,7 +64,7 @@ Classes are from:
 
 ### Lectures
 
-* Hi-C processing
+* **Hi-C processing**
 
 ### Demo
 

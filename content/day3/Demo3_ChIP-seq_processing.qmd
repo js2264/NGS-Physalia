@@ -9,9 +9,117 @@ execute:
 ::: {.callout-note icon='true'}
 ## Aims
 
+- Manually process Scc1 ChIP-seq reads
+- Generate IP/input ratios with `bamCoverage`
+- Call peaks and inspect them visually
 :::
 
 ::: {.callout-tip icon='true'}
 ## Datasets
 
+Cohesin (Scc1) ChIP-seq data was published in [Verzijlbergen et al., eLife 2014](https://doi.org/10.7554/elife.01374)
+
+- Scc1 ChIP-seq IP: `SRR1103930`
+- Scc1 ChIP-seq input: `SRR1103928`
 :::
+
+## Getting data
+
+### Downloading reads from internet
+
+We can download the single-end reads directly from the internet. 
+
+```{bash, filename = 'sh'}
+cd ~/EpigenomicsDataAnalysis_2023
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/000/SRR1103930/SRR1103930.fastq.gz -o data/Scc1_IP.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/008/SRR1103928/SRR1103928.fastq.gz -o data/Scc1_Inp.fq.gz
+```
+
+### FastQC reads
+
+`fastqc` program will run quick QCs on each fastq file separately. 
+
+```{bash, filename = 'sh'}
+fastqc \
+    --outdir data/fastqc \
+    --noextract \
+    --threads 12 \
+    --adapters /home/rsg/repos/autobcl2fastq/adapters.txt \
+    data/Scc1*fq.gz 1>&2
+```
+
+## Align reads to a genome reference 
+
+### Mapping single-end IP and input reads
+
+```{bash, filename = 'sh'}
+for FILE in IP Inp
+do
+    bowtie2 \
+        --threads 16 \
+        -x data/genome/R64-1-1 \
+        -r data/Scc1_"${FILE}".fq.gz \
+        > data/mapping/Scc1_"${FILE}"_R64-1-1.sam
+done
+```
+
+### Filtering mapped fragments
+
+```{bash, filename = 'sh'}
+SAMTOOLS_OPTIONS="-@ 12 --output-fmt bam"
+
+for FILE in IP Inp
+do
+    samtools sort "${SAMTOOLS_OPTIONS}" data/mapping/Scc1_"${FILE}"_R64-1-1.sam | \
+        samtools markdup "${SAMTOOLS_OPTIONS}" -r - - | \
+        samtools view "${SAMTOOLS_OPTIONS}" -q 20 --fast -b - | \
+        samtools sort "${SAMTOOLS_OPTIONS}" -l 9 -o data/mapping/Scc1_"${FILE}"_R64-1-1.bam
+    samtools index -@ 12 data/mapping/Scc1_"${FILE}"_R64-1-1.bam
+done
+```
+
+### Create coverage track
+
+```{bash, filename = 'sh'}
+for FILE in IP Inp
+do
+    bamCoverage \
+        --bam data/mapping/Scc1_"${FILE}"_R64-1-1.bam \
+        --outFileName data/tracks/Scc1_"${FILE}"_R64-1-1.CPM.bw \
+        --binSize 1 \
+        --numberOfProcessors 16 \
+        --normalizeUsing CPM \
+        --skipNonCoveredRegions \
+        --extendReads 220
+done
+```
+
+### Create IP/inp track
+
+```{bash, filename = 'sh'}
+bamCompare \
+    -b1 data/mapping/Scc1_IP_R64-1-1.bam \
+    -b2 data/mapping/Scc1_Inp_R64-1-1.bam \
+    --outFileName data/tracks/Scc1_IP-vs-Inp.log2.bw \
+    --scaleFactorsMethod readCount \
+    --operation log2 \
+    --skipZeroOverZero \
+    --skipNonCoveredRegions \
+    --skipNAs \
+    --numberOfProcessors 16 \
+    --binSize 1 \
+    --extendReads 220 
+```
+
+### Call peaks with macs2
+
+```{bash, filename = 'sh'}
+macs2 callpeak \
+    -t data/mapping/Scc1_IP_R64-1-1.bam \
+    -c data/mapping/Scc1_Inp_R64-1-1.bam \
+    --format BAM \
+    --nomodel --extsize 220 \
+    --gsize 13000000 \
+    --outdir data/peaks/ \
+    --name Scc1_IP-vs-Inp
+```

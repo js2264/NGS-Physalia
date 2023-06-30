@@ -1,4 +1,4 @@
-# Lecture 3 - ChIP-seq processing and analyis
+# Lecture 6 - ChIP-seq processing and analyis
 
 ```{r, echo=FALSE}
 slides <- xfun::with_ext(knitr::current_input(), "qmd") |> stringr::str_replace('.qmd', '.pdf')
