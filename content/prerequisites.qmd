@@ -1,3 +1,9 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
 # Prerequisites {-}
 
 The course is intended for those who have basic familiarity with Unix and 
