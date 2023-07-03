@@ -48,7 +48,7 @@ If trainees are familiar with `docker` and prefer using a pre-compiled image, se
 
 To install `micromamba` and system dependencies listed hereabove, use the following: 
 
-```{shell, filename = 'sh'}
+```{bash, filename = 'sh'}
 curl micro.mamba.pm/install.sh | bash
 bash
 micromamba create -n epigenomics
