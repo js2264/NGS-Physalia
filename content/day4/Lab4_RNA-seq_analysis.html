@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -293,7 +327,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#process-the-two-replicates-of-a-heat-shock-rna-seq-data" id="toc-process-the-two-replicates-of-a-heat-shock-rna-seq-data" class="nav-link active" data-scroll-target="#process-the-two-replicates-of-a-heat-shock-rna-seq-data"><span class="header-section-number">17.1</span> Process the two replicates of a heat-shock RNA-seq data</a></li>
+  <li><a href="#counting-mapped-fragments-over-a-set-of-gene-annotations" id="toc-counting-mapped-fragments-over-a-set-of-gene-annotations" class="nav-link active" data-scroll-target="#counting-mapped-fragments-over-a-set-of-gene-annotations"><span class="header-section-number">17.1</span> Counting mapped fragments over a set of gene annotations</a></li>
   <li><a href="#differential-expression-analysis" id="toc-differential-expression-analysis" class="nav-link" data-scroll-target="#differential-expression-analysis"><span class="header-section-number">17.2</span> Differential expression analysis</a></li>
   <li><a href="#gene-ontology-over-enrichment-analysis" id="toc-gene-ontology-over-enrichment-analysis" class="nav-link" data-scroll-target="#gene-ontology-over-enrichment-analysis"><span class="header-section-number">17.3</span> Gene ontology over-enrichment analysis</a></li>
   </ul>
@@ -345,8 +379,69 @@ Datasets
 
 </div>
 </div>
-<section id="process-the-two-replicates-of-a-heat-shock-rna-seq-data" class="level2" data-number="17.1">
-<h2 data-number="17.1" class="anchored" data-anchor-id="process-the-two-replicates-of-a-heat-shock-rna-seq-data"><span class="header-section-number">17.1</span> Process the two replicates of a heat-shock RNA-seq data</h2>
+<section id="counting-mapped-fragments-over-a-set-of-gene-annotations" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="counting-mapped-fragments-over-a-set-of-gene-annotations"><span class="header-section-number">17.1</span> Counting mapped fragments over a set of gene annotations</h2>
+<ul>
+<li><p>Create a tibble containing the following information for the four RNA-seq samples (bam files provided in the shared Google Drive):</p>
+<ul>
+<li>Path to local <code>bam</code> file</li>
+<li>The biological sample it corresponds to (e.g.&nbsp;<code>RNAseq</code>, <code>RNAseq-37C</code>)</li>
+<li>The biological replicate it corresponds to (e.g.&nbsp;<code>rep1</code>, <code>rep2</code>, …)</li>
+</ul></li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">bam =</span> <span class="fu">list.files</span>(<span class="st">'data/mapping'</span>, <span class="at">pattern =</span> <span class="st">'RNAseq_rep[12]_R64-1-1.bam$'</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample =</span> <span class="fu">basename</span>(bam), </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">separate</span>(sample, <span class="at">sep =</span> <span class="st">'_'</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">'sample'</span>, <span class="st">'rep'</span>, <span class="st">'genome'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Check the <code>summarizeOverlaps()</code> function from the <code>GenomicAlignments</code> package.</li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicAlignments)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="differential-expression-analysis" class="level2" data-number="17.2">
 <h2 data-number="17.2" class="anchored" data-anchor-id="differential-expression-analysis"><span class="header-section-number">17.2</span> Differential expression analysis</h2>

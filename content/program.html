@@ -317,7 +317,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#demo-3" id="toc-demo-3" class="nav-link" data-scroll-target="#demo-3">Demo</a></li>
   <li><a href="#labs-3" id="toc-labs-3" class="nav-link" data-scroll-target="#labs-3">Labs</a></li>
   </ul></li>
-  <li><a href="#day-5---multi-omics" id="toc-day-5---multi-omics" class="nav-link" data-scroll-target="#day-5---multi-omics">Day 5 - Multi-omics</a>
+  <li><a href="#day-5---data-integration-and-multi-omics" id="toc-day-5---data-integration-and-multi-omics" class="nav-link" data-scroll-target="#day-5---data-integration-and-multi-omics">Day 5 - Data integration and multi-omics</a>
   <ul class="collapse">
   <li><a href="#lectures-4" id="toc-lectures-4" class="nav-link" data-scroll-target="#lectures-4">Lectures</a></li>
   <li><a href="#demo-4" id="toc-demo-4" class="nav-link" data-scroll-target="#demo-4">Demo</a></li>
@@ -358,15 +358,30 @@ ul.task-list li input[type="checkbox"] {
 <section id="lectures" class="level3">
 <h3 class="anchored" data-anchor-id="lectures">Lectures</h3>
 <ul>
-<li>Epigenomics introduction</li>
-<li>General processing of NGS data</li>
+<li>Lecture 1: Epigenomics introduction</li>
+<li>Lecture 2: General processing of NGS data</li>
 </ul>
 </section>
 <section id="demo" class="level3">
 <h3 class="anchored" data-anchor-id="demo">Demo</h3>
+<ul>
+<li>Fetching an MNase-seq dataset from GEO</li>
+<li>Indexing a genome with <code>bowtie2</code></li>
+<li>Map paired-end reads with <code>bowtie2</code></li>
+<li>Generate sequencing-depth normalized track</li>
+<li>Generate nucleosomes track</li>
+</ul>
 </section>
 <section id="labs" class="level3">
 <h3 class="anchored" data-anchor-id="labs">Labs</h3>
+<ul>
+<li>Fetching an MNase-seq dataset from GEO</li>
+<li>Indexing a genome with <code>bowtie2</code></li>
+<li>Map paired-end reads with <code>bowtie2</code></li>
+<li>Generate sequencing-depth normalized track</li>
+<li>Generate nucleosomes track</li>
+<li>Check the relevance of filtering out duplicates</li>
+</ul>
 </section>
 </section>
 <section id="day-2---atac-seq" class="level2">
@@ -374,16 +389,29 @@ ul.task-list li input[type="checkbox"] {
 <section id="lectures-1" class="level3">
 <h3 class="anchored" data-anchor-id="lectures-1">Lectures</h3>
 <ul>
-<li>NGS worfklows: bash, Snakemake, Nextflow, …</li>
-<li>ATAC-seq processing</li>
-<li>R/Bioconductor 101: Data import, manipulating genomic ranges, …</li>
+<li>Lecture 3: NGS worfklows: bash, Snakemake, Nextflow, …</li>
+<li>Lecture 4: ATAC-seq processing</li>
+<li>Lecture 5: R/Bioconductor 101: Data import, manipulating genomic ranges, …</li>
 </ul>
 </section>
 <section id="demo-1" class="level3">
 <h3 class="anchored" data-anchor-id="demo-1">Demo</h3>
+<ul>
+<li>Fetching two ATAC-seq replicates from GEO</li>
+<li>Indexing a genome with <code>bowtie2</code></li>
+<li>Map paired-end reads with <code>bowtie2</code></li>
+<li>Generate sequencing-depth normalized track</li>
+<li>Calling peaks form ATAC-seq data</li>
+</ul>
 </section>
 <section id="labs-1" class="level3">
 <h3 class="anchored" data-anchor-id="labs-1">Labs</h3>
+<ul>
+<li>Overlap ATAC-seq peaks with annotated REs</li>
+<li>Check ATAC-seq fragment sizes</li>
+<li>Overlap ATAC-seq peaks with annotated regulatory elements (REs)</li>
+<li>Check tissue-specific enrichment of ATAC-seq peaks</li>
+</ul>
 </section>
 </section>
 <section id="day-3---chip-seq-analysis" class="level2">
@@ -391,15 +419,26 @@ ul.task-list li input[type="checkbox"] {
 <section id="lectures-2" class="level3">
 <h3 class="anchored" data-anchor-id="lectures-2">Lectures</h3>
 <ul>
-<li>ChIP-seq methods</li>
-<li>R/Bioconductor 201: SummarizedExperiment</li>
+<li>Lecture 6: ChIP-seq processing</li>
+<li>Lecture 7: R/Bioconductor 201: Rle, SummarizedExperiment, …</li>
 </ul>
 </section>
 <section id="demo-2" class="level3">
 <h3 class="anchored" data-anchor-id="demo-2">Demo</h3>
+<ul>
+<li>Manually process Scc1 ChIP-seq reads</li>
+<li>Generate IP/input ratios with <code>bamCoverage</code></li>
+<li>Call peaks and inspect them visually</li>
+</ul>
 </section>
 <section id="labs-2" class="level3">
 <h3 class="anchored" data-anchor-id="labs-2">Labs</h3>
+<ul>
+<li>Find motifs enriched in a set of ChIP-seq peaks</li>
+<li>Import a dozen of ChIP-seq peak sets in R</li>
+<li>Check distribution of peaks comapred to genomic features</li>
+<li>Check peak occurrence over tissue-specific regulatory elements</li>
+</ul>
 </section>
 </section>
 <section id="day-4---rna-seq-analysis" class="level2">
@@ -407,30 +446,42 @@ ul.task-list li input[type="checkbox"] {
 <section id="lectures-3" class="level3">
 <h3 class="anchored" data-anchor-id="lectures-3">Lectures</h3>
 <ul>
-<li><strong>Estimating transcript abundance from RNA-seq</strong></li>
-<li>R/Bioconductor 301: Databases, resources, …</li>
+<li>Lecture 8: RNA-seq processing</li>
+<li>Lecture 9: R/Bioconductor 301: Databases, resources, …</li>
 </ul>
 </section>
 <section id="demo-3" class="level3">
 <h3 class="anchored" data-anchor-id="demo-3">Demo</h3>
+<ul>
+<li>Manually process RNA-seq reads</li>
+<li>Generate stranded RNA-seq tracks with <code>bamCoverage</code></li>
+<li>Estimate transcript abundance with <code>featureCounts</code></li>
+</ul>
 </section>
 <section id="labs-3" class="level3">
 <h3 class="anchored" data-anchor-id="labs-3">Labs</h3>
+<ul>
+<li>Manually process RNA-seq reads</li>
+<li>Generate stranded RNA-seq tracks with <code>bamCoverage</code></li>
+<li>Estimate transcript abundance with <code>summarizeOverlaps</code></li>
+</ul>
 </section>
 </section>
-<section id="day-5---multi-omics" class="level2">
-<h2 class="anchored" data-anchor-id="day-5---multi-omics">Day 5 - Multi-omics</h2>
+<section id="day-5---data-integration-and-multi-omics" class="level2">
+<h2 class="anchored" data-anchor-id="day-5---data-integration-and-multi-omics">Day 5 - Data integration and multi-omics</h2>
 <section id="lectures-4" class="level3">
 <h3 class="anchored" data-anchor-id="lectures-4">Lectures</h3>
 <ul>
-<li><strong>Hi-C processing</strong></li>
+<li>Lecture 10: Hi-C processing</li>
 </ul>
 </section>
 <section id="demo-4" class="level3">
 <h3 class="anchored" data-anchor-id="demo-4">Demo</h3>
+<p>TBD</p>
 </section>
 <section id="labs-4" class="level3">
 <h3 class="anchored" data-anchor-id="labs-4">Labs</h3>
+<p>TBD</p>
 
 
 </section>
