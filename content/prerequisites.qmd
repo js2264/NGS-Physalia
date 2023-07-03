@@ -34,8 +34,28 @@ If trainees are familiar with `docker` and prefer using a pre-compiled image, se
     - `meme`: https://meme-suite.org/meme/doc/install.html?man_type=web
     - `subread`: https://subread.sourceforge.net/
 
+::: {.callout-tip icon='true'}
+### Installing system dependencies with `micromamba` 
+
+`micromamba` is a blazing-fast flavour of `conda`, a software manager available in Mac and Linux. 
+`micromamba` sets up *environments*, directories in your computer in which `micromamba` installs softwares **only available upon environment activation**. 
+
+To install `micromamba` and system dependencies listed hereabove, use the following: 
+
+```{shell, filename = 'sh'}
+curl micro.mamba.pm/install.sh | bash
+bash
+micromamba create -n epigenomics
+micromamba activate epigenomics
+
+micromamba install -c bioconda -c conda-forge \
+    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread
+```
+:::
+
 * Several R packages, the main ones being: 
 
+    - `BiocManager`
     - `SummarizedExperiment`
     - `rtracklayer`
     - `GenomicRanges`
