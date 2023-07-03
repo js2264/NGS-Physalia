@@ -11,63 +11,98 @@ Classes are from:
 
 ### Lectures
 
-* Epigenomics introduction
-* General processing of NGS data
+* Lecture 1: Epigenomics introduction
+* Lecture 2: General processing of NGS data
 
 ### Demo
 
+- Fetching an MNase-seq dataset from GEO 
+- Indexing a genome with `bowtie2`
+- Map paired-end reads with `bowtie2`
+- Generate sequencing-depth normalized track
+- Generate nucleosomes track
 
 ### Labs
 
+- Fetching an MNase-seq dataset from GEO 
+- Indexing a genome with `bowtie2`
+- Map paired-end reads with `bowtie2`
+- Generate sequencing-depth normalized track
+- Generate nucleosomes track
+- Check the relevance of filtering out duplicates
 
 ## Day 2 - ATAC-seq
 
 ### Lectures
 
-* NGS worfklows: bash, Snakemake, Nextflow, ...
-* ATAC-seq processing
-* R/Bioconductor 101: Data import, manipulating genomic ranges, ...
+* Lecture 3: NGS worfklows: bash, Snakemake, Nextflow, ...
+* Lecture 4: ATAC-seq processing
+* Lecture 5: R/Bioconductor 101: Data import, manipulating genomic ranges, ...
 
 ### Demo
 
+- Fetching two ATAC-seq replicates from GEO 
+- Indexing a genome with `bowtie2`
+- Map paired-end reads with `bowtie2`
+- Generate sequencing-depth normalized track
+- Calling peaks form ATAC-seq data
 
 ### Labs
 
+- Overlap ATAC-seq peaks with annotated REs
+- Check ATAC-seq fragment sizes
+- Overlap ATAC-seq peaks with annotated regulatory elements (REs)
+- Check tissue-specific enrichment of ATAC-seq peaks
 
 ## Day 3 - ChIP-seq analysis
 
 ### Lectures
 
-* ChIP-seq methods
-* R/Bioconductor 201: SummarizedExperiment
+* Lecture 6: ChIP-seq processing
+* Lecture 7: R/Bioconductor 201: Rle, SummarizedExperiment, ...
 
 ### Demo
 
+- Manually process Scc1 ChIP-seq reads
+- Generate IP/input ratios with `bamCoverage`
+- Call peaks and inspect them visually
 
 ### Labs
 
+- Find motifs enriched in a set of ChIP-seq peaks
+- Import a dozen of ChIP-seq peak sets in R
+- Check distribution of peaks comapred to genomic features
+- Check peak occurrence over tissue-specific regulatory elements
 
 ## Day 4 - RNA-seq analysis
 
 ### Lectures
 
-* **Estimating transcript abundance from RNA-seq**
-* R/Bioconductor 301: Databases, resources, ...
+* Lecture 8: RNA-seq processing
+* Lecture 9: R/Bioconductor 301: Databases, resources, ...
 
 ### Demo
 
+- Manually process RNA-seq reads
+- Generate stranded RNA-seq tracks with `bamCoverage`
+- Estimate transcript abundance with `featureCounts`
 
 ### Labs
 
+- Manually process RNA-seq reads
+- Generate stranded RNA-seq tracks with `bamCoverage`
+- Estimate transcript abundance with `summarizeOverlaps`
 
-## Day 5 - Multi-omics
+## Day 5 - Data integration and multi-omics
 
 ### Lectures
 
-* **Hi-C processing**
+* Lecture 10: Hi-C processing
 
 ### Demo
 
+TBD
 
 ### Labs
 
+TBD

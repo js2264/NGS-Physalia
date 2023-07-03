@@ -16,8 +16,32 @@ execute:
 
 :::
 
-## Process the two replicates of a heat-shock RNA-seq data 
+## Counting mapped fragments over a set of gene annotations 
 
+- Create a tibble containing the following information for the four RNA-seq samples (bam files provided in the shared Google Drive): 
+
+    - Path to local `bam` file 
+    - The biological sample it corresponds to (e.g. `RNAseq`, `RNAseq-37C`)
+    - The biological replicate it corresponds to (e.g. `rep1`, `rep2`, ...)
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(tidyverse)
+samples <- tibble(
+    bam = list.files('data/mapping', pattern = 'RNAseq_rep[12]_R64-1-1.bam$', full.names = TRUE), 
+    sample = basename(bam), 
+) |> separate(sample, sep = '_', into = c('sample', 'rep', 'genome'))
+```
+:::
+
+- Check the `summarizeOverlaps()` function from the `GenomicAlignments` package. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(GenomicAlignments)
+
+```
+:::
 
 ## Differential expression analysis
 

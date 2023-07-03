@@ -18,55 +18,60 @@ execute:
 
 RNA-seq data was published in [Wery et al., Mol. Cell 2016](https://www.cell.com/molecular-cell/pdf/S1097-2765(15)00976-4.pdf)
 
-- RNA-seq: `SRR2045244`
+- WT RNA-seq @ 30C: `SRR2045244` & `SRR2045244`
+- WT RNA-seq @ 37C: `SRR2045248` & `SRR2045249`
 :::
+
+## Indexing genome for STAR index
+
+```{bash, filename = 'sh'}
+STAR \
+    --runThreadN 12 \
+    --runMode genomeGenerate \
+    --genomeDir data/genome/ \
+    --genomeFastaFiles data/genome/R64-1-1.fa \
+    --sjdbGTFfile data/genome/R64-1-1.gtf \
+    --sjdbOverhang 99
+```
 
 ## Mapping RNA-seq on R64-1-1
 
 ```{bash, filename = 'sh'}
 curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/004/SRR2045244/SRR2045244_1.fastq.gz -o data/RNAseq_rep1_R1.fq.gz
 curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/004/SRR2045244/SRR2045244_2.fastq.gz -o data/RNAseq_rep1_R2.fq.gz
-curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_1.fastq.gz -o data/RNAseq_rep1_R1.fq.gz
-curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_2.fastq.gz -o data/RNAseq_rep1_R2.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_1.fastq.gz -o data/RNAseq_rep2_R1.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_2.fastq.gz -o data/RNAseq_rep2_R2.fq.gz
+## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/008/SRR2045248/SRR2045248_1.fastq.gz -o data/RNAseq-37C_rep1_R1.fq.gz
+## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/008/SRR2045248/SRR2045248_2.fastq.gz -o data/RNAseq-37C_rep1_R2.fq.gz
+## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/009/SRR2045249/SRR2045249_1.fastq.gz -o data/RNAseq-37C_rep2_R1.fq.gz
+## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/009/SRR2045249/SRR2045249_2.fastq.gz -o data/RNAseq-37C_rep2_R2.fq.gz
 
-for REP in rep1 rep2
+for REP in _rep1 _rep2 ##-37C_rep1 -37C_rep2
 do 
 
-    bowtie2 \
-        --threads 16 \
-        -x data/genome/R64-1-1 \
-        -1 data/RNAseq_"${REP}"_R1.fq.gz \
-        -2 data/RNAseq_"${REP}"_R2.fq.gz \
-        > data/mapping/RNAseq_"${REP}"_R64-1-1.sam
-
-    STAR \
-        --runThreadN 12 \
-        --runMode genomeGenerate \
-        --genomeDir data/genome/ \
-        --genomeFastaFiles data/genome/R64-1-1.fa \
-        --sjdbGTFfile data/genome/R64-1-1.gtf \
-        --sjdbOverhang 99
+    gunzip -k data/RNAseq"${REP}"_R1.fq.gz
+    gunzip -k data/RNAseq"${REP}"_R2.fq.gz
 
     STAR \
         --genomeDir data/genome \
         --runThreadN 12 \
-        --readFilesIn <(gunzip -k data/RNAseq_"${REP}"_R1.fq.gz) <(gunzip -k data/RNAseq_"${REP}"_R2.fq.gz) \
-        --outFileNamePrefix data/mapping/RNAseq_"${REP}" \
-        --outSAMtype BAM SortedByCoordinate \
+        --readFilesIn data/RNAseq"${REP}"_R1.fq data/RNAseq"${REP}"_R2.fq \
+        --outFileNamePrefix data/mapping/RNAseq"${REP}"_ \
+        --outSAMtype BAM Unsorted \
         --outSAMunmapped None \
         --outSAMattributes Standard 
 
-    samtools fixmate -@ 16 --output-fmt bam -m data/mapping/RNAseq_"${REP}"_R64-1-1.sam - \
+    samtools fixmate -@ 16 --output-fmt bam -m data/mapping/RNAseq_rep1_Aligned.out.bam - \
         | samtools sort -@ 16 --output-fmt bam - \
         | samtools markdup -@ 16 --output-fmt bam -r - - \
         | samtools view -@ 16 --output-fmt bam -f 0x001 -f 0x002 -F 0x004 -F 0x008 -q 20 -1 -b - \
-        | samtools sort -@ 16 --output-fmt bam -l 9 -o data/mapping/RNAseq_"${REP}"_R64-1-1.bam
+        | samtools sort -@ 16 --output-fmt bam -l 9 -o data/mapping/RNAseq"${REP}"_R64-1-1.bam
 
-    samtools index -@ 16 data/mapping/RNAseq_"${REP}"_R64-1-1.bam
+    samtools index -@ 16 data/mapping/RNAseq"${REP}"_R64-1-1.bam
 
     bamCoverage \
-        --bam data/mapping/RNAseq_"${REP}"_R64-1-1.bam \
-        --outFileName data/mapping/RNAseq_"${REP}"_R64-1-1.unstranded.CPM.bw \
+        --bam data/mapping/RNAseq"${REP}"_R64-1-1.bam \
+        --outFileName data/tracks/RNAseq"${REP}"_R64-1-1.unstranded.CPM.bw \
         --binSize 1 \
         --numberOfProcessors 16 \
         --normalizeUsing CPM \
@@ -75,8 +80,8 @@ do
         --ignoreDuplicates
 
     bamCoverage \
-        --bam data/mapping/RNAseq_"${REP}"_R64-1-1.bam \
-        --outFileName data/mapping/RNAseq_"${REP}"_R64-1-1.fwd.CPM.bw \
+        --bam data/mapping/RNAseq"${REP}"_R64-1-1.bam \
+        --outFileName data/tracks/RNAseq"${REP}"_R64-1-1.fwd.CPM.bw \
         --binSize 1 \
         --numberOfProcessors 16 \
         --normalizeUsing CPM \
@@ -86,8 +91,8 @@ do
         --filterRNAstrand forward
 
     bamCoverage \
-        --bam data/mapping/RNAseq_"${REP}"_R64-1-1.bam \
-        --outFileName data/mapping/RNAseq_"${REP}"_R64-1-1.rev.CPM.bw \
+        --bam data/mapping/RNAseq"${REP}"_R64-1-1.bam \
+        --outFileName data/tracks/RNAseq"${REP}"_R64-1-1.rev.CPM.bw \
         --binSize 1 \
         --numberOfProcessors 16 \
         --normalizeUsing CPM \
@@ -101,8 +106,18 @@ done
 
 ## Counting reads over gene annotations
 
+### Counting reads over peaks
+
 ```{bash, filename = 'sh'}
-
+mkdir data/counts 
+featureCounts \
+    -g gene_name \
+    -s 2 \
+    -p --countReadPairs \
+    -T 12 \
+    -a data/genome/R64-1-1.gtf \
+    -o data/counts/RNAseq_counts.tsv \
+    data/mapping/RNAseq_rep1_R64-1-1.bam \
+    data/mapping/RNAseq_rep2_R64-1-1.bam
 ```
-
 

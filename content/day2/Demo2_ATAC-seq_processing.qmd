@@ -13,7 +13,7 @@ execute:
 - Indexing a genome with `bowtie2`
 - Map paired-end reads with `bowtie2`
 - Generate sequencing-depth normalized track
-- Generate nucleosomes track
+- Calling peaks form ATAC-seq data
 :::
 
 ::: {.callout-tip icon='true'}
