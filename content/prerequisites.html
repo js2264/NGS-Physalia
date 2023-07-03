@@ -349,8 +349,39 @@ If trainees are familiar with `docker` and prefer using a pre-compiled image, se
 <li><code>meme</code>: https://meme-suite.org/meme/doc/install.html?man_type=web</li>
 <li><code>subread</code>: https://subread.sourceforge.net/</li>
 </ul></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Installing system dependencies with <code>micromamba</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>micromamba</code> is a blazing-fast flavour of <code>conda</code>, a software manager available in Mac and Linux. <code>micromamba</code> sets up <em>environments</em>, directories in your computer in which <code>micromamba</code> installs softwares <strong>only available upon environment activation</strong>.</p>
+<p>To install <code>micromamba</code> and system dependencies listed hereabove, use the following:</p>
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>sh</strong></pre>
+</div>
+<pre class="shell cell-code"><code>curl micro.mamba.pm/install.sh | bash
+bash
+micromamba create -n epigenomics
+micromamba activate epigenomics
+
+micromamba install -c bioconda -c conda-forge \
+    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread</code></pre>
+</div>
+</div>
+</div>
+</div>
+<ul>
 <li><p>Several R packages, the main ones being:</p>
 <ul>
+<li><code>BiocManager</code></li>
 <li><code>SummarizedExperiment</code></li>
 <li><code>rtracklayer</code></li>
 <li><code>GenomicRanges</code></li>
