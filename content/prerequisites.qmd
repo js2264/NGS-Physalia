@@ -49,13 +49,13 @@ If trainees are familiar with `docker` and prefer using a pre-compiled image, se
 To install `micromamba` and system dependencies listed hereabove, use the following: 
 
 ```{bash, filename = 'sh'}
+# apt update && apt install -y bzip2 curl wget
 curl micro.mamba.pm/install.sh | bash
 bash
 micromamba create -n epigenomics
 micromamba activate epigenomics
-
 micromamba install -c bioconda -c conda-forge \
-    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread
+    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread star samtools bedtools 
 ```
 :::
 
