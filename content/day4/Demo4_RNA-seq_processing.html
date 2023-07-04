@@ -367,8 +367,9 @@ Aims
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>Manually process RNA-seq reads</li>
+<li>Manually process RNA-seq reads with <code>STAR</code></li>
 <li>Generate stranded RNA-seq tracks with <code>bamCoverage</code></li>
+<li>Estimate transcript abundance from RNA-seq samples with <code>featureCounts</code></li>
 </ul>
 </div>
 </div>
@@ -382,10 +383,22 @@ Datasets
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>RNA-seq data was published in <a href="https://www.cell.com/molecular-cell/pdf/S1097-2765(15)00976-4.pdf">Wery et al., Mol. Cell 2016</a></p>
+<p>RNA-seq data was published in <a href="https://www.nature.com/articles/s41597-020-0412-z">Nuño-Cabanes et al., Scientific Data 2020</a></p>
 <ul>
-<li>WT RNA-seq @ 30C: <code>SRR2045244</code> &amp; <code>SRR2045244</code></li>
-<li>WT RNA-seq @ 37C: <code>SRR2045248</code> &amp; <code>SRR2045249</code></li>
+<li><p>Control RNA-seq @ 30 C:</p>
+<ul>
+<li><code>SRR9929263</code></li>
+<li><code>SRR9929264</code></li>
+<li><code>SRR9929273</code></li>
+<li><code>SRR9929282</code></li>
+</ul></li>
+<li><p>Heat shock RNA-seq @ 39 C, 20 min: <code>SRR2045248</code> &amp; <code>SRR2045249</code></p>
+<ul>
+<li><code>SRR9929271</code></li>
+<li><code>SRR9929265</code></li>
+<li><code>SRR9929280</code></li>
+<li><code>SRR9929274</code></li>
+</ul></li>
 </ul>
 </div>
 </div>
@@ -413,71 +426,77 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/004/SRR2045244/SRR2045244_1.fastq.gz <span class="at">-o</span> data/RNAseq_rep1_R1.fq.gz</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/004/SRR2045244/SRR2045244_2.fastq.gz <span class="at">-o</span> data/RNAseq_rep1_R2.fq.gz</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_1.fastq.gz <span class="at">-o</span> data/RNAseq_rep2_R1.fq.gz</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/005/SRR2045245/SRR2045245_2.fastq.gz <span class="at">-o</span> data/RNAseq_rep2_R2.fq.gz</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/008/SRR2045248/SRR2045248_1.fastq.gz -o data/RNAseq-37C_rep1_R1.fq.gz</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/008/SRR2045248/SRR2045248_2.fastq.gz -o data/RNAseq-37C_rep1_R2.fq.gz</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/009/SRR2045249/SRR2045249_1.fastq.gz -o data/RNAseq-37C_rep2_R1.fq.gz</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">## curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR204/009/SRR2045249/SRR2045249_2.fastq.gz -o data/RNAseq-37C_rep2_R2.fq.gz</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> REP <span class="kw">in</span> _rep1 _rep2 <span class="co">##-37C_rep1 -37C_rep2</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gunzip</span> <span class="at">-k</span> data/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R1.fq.gz</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gunzip</span> <span class="at">-k</span> data/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R2.fq.gz</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">STAR</span> <span class="dt">\</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">--genomeDir</span> data/genome <span class="dt">\</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">--runThreadN</span> 12 <span class="dt">\</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">--readFilesIn</span> data/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R1.fq data/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R2.fq <span class="dt">\</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileNamePrefix</span> data/mapping/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_ <span class="dt">\</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outSAMtype</span> BAM Unsorted <span class="dt">\</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outSAMunmapped</span> None <span class="dt">\</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outSAMattributes</span> Standard </span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="ex">samtools</span> fixmate <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-m</span> data/mapping/RNAseq_rep1_Aligned.out.bam <span class="at">-</span> <span class="dt">\</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> sort <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-</span> <span class="dt">\</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> markdup <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-r</span> <span class="at">-</span> <span class="at">-</span> <span class="dt">\</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> view <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-f</span> 0x001 <span class="at">-f</span> 0x002 <span class="at">-F</span> 0x004 <span class="at">-F</span> 0x008 <span class="at">-q</span> 20 <span class="at">-1</span> <span class="at">-b</span> <span class="at">-</span> <span class="dt">\</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> sort <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-l</span> 9 <span class="at">-o</span> data/mapping/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/003/SRR9929263/SRR9929263_1.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep1_R1.fq.gz</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/003/SRR9929263/SRR9929263_2.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep1_R2.fq.gz</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/004/SRR9929264/SRR9929264_1.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep2_R1.fq.gz</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/004/SRR9929264/SRR9929264_2.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep2_R2.fq.gz</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/003/SRR9929273/SRR9929273_1.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep3_R1.fq.gz</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/003/SRR9929273/SRR9929273_2.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep3_R2.fq.gz</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/002/SRR9929282/SRR9929282_1.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep4_R1.fq.gz</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/002/SRR9929282/SRR9929282_2.fastq.gz <span class="at">-o</span> data/RNAseq_WT_rep4_R2.fq.gz</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/001/SRR9929271/SRR9929271_1.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep1_R1.fq.gz</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/001/SRR9929271/SRR9929271_2.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep1_R2.fq.gz</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/005/SRR9929265/SRR9929265_1.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep2_R1.fq.gz</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/005/SRR9929265/SRR9929265_2.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep2_R2.fq.gz</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/000/SRR9929280/SRR9929280_1.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep3_R1.fq.gz</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/000/SRR9929280/SRR9929280_2.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep3_R2.fq.gz</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/004/SRR9929274/SRR9929274_1.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep4_R1.fq.gz</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR992/004/SRR9929274/SRR9929274_2.fastq.gz <span class="at">-o</span> data/RNAseq_HS_rep4_R2.fq.gz</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> REP <span class="kw">in</span> WT_rep1 WT_rep2 WT_rep3 WT_rep4 HS_rep1 HS_rep2 HS_rep3 HS_rep4</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="ex">STAR</span> <span class="dt">\</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">--genomeDir</span> data/genome <span class="dt">\</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">--readFilesCommand</span> zcat <span class="dt">\</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">--runThreadN</span> 12 <span class="dt">\</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">--readFilesIn</span> data/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R1.fq.gz data/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R2.fq.gz <span class="dt">\</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileNamePrefix</span> data/mapping/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_ <span class="dt">\</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outSAMtype</span> BAM Unsorted <span class="dt">\</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outSAMunmapped</span> None <span class="dt">\</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outSAMattributes</span> Standard </span>
 <span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bam</span> data/mapping/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam <span class="dt">\</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileName</span> data/tracks/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.unstranded.CPM.bw <span class="dt">\</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">--ignoreDuplicates</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bam</span> data/mapping/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam <span class="dt">\</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileName</span> data/tracks/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.fwd.CPM.bw <span class="dt">\</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">--ignoreDuplicates</span> <span class="dt">\</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">--filterRNAstrand</span> forward</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bam</span> data/mapping/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam <span class="dt">\</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileName</span> data/tracks/RNAseq<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.rev.CPM.bw <span class="dt">\</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">--ignoreDuplicates</span> <span class="dt">\</span></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">--filterRNAstrand</span> reverse</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="ex">samtools</span> fixmate <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-m</span> data/mapping/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_Aligned.out.bam <span class="at">-</span> <span class="dt">\</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> sort <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-</span> <span class="dt">\</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> markdup <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-r</span> <span class="at">-</span> <span class="at">-</span> <span class="dt">\</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> view <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-f</span> 0x001 <span class="at">-f</span> 0x002 <span class="at">-F</span> 0x004 <span class="at">-F</span> 0x008 <span class="at">-q</span> 20 <span class="at">-1</span> <span class="at">-b</span> <span class="at">-</span> <span class="dt">\</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="ex">samtools</span> sort <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="at">-l</span> 9 <span class="at">-o</span> data/mapping/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bam</span> data/mapping/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileName</span> data/tracks/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.unstranded.CPM.bw <span class="dt">\</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">--ignoreDuplicates</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bam</span> data/mapping/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileName</span> data/tracks/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.fwd.CPM.bw <span class="dt">\</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">--ignoreDuplicates</span> <span class="dt">\</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">--filterRNAstrand</span> forward</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bam</span> data/mapping/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileName</span> data/tracks/RNAseq_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R64-1-1.rev.CPM.bw <span class="dt">\</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        <span class="at">--ignoreDuplicates</span> <span class="dt">\</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="at">--filterRNAstrand</span> reverse</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -498,8 +517,10 @@ Datasets
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">-T</span> 12 <span class="dt">\</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">-a</span> data/genome/R64-1-1.gtf <span class="dt">\</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/counts/RNAseq_counts.tsv <span class="dt">\</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    data/mapping/RNAseq_rep1_R64-1-1.bam <span class="dt">\</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    data/mapping/RNAseq_rep2_R64-1-1.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    data/mapping/RNAseq_WT_rep1_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    data/mapping/RNAseq_WT_rep2_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    data/mapping/RNAseq_WT_rep3_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    data/mapping/RNAseq_WT_rep4_R64-1-1.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 

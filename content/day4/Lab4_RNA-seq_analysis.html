@@ -363,7 +363,11 @@ Aims
 </div>
 </div>
 <div class="callout-body-container callout-body">
-
+<ul>
+<li>Estimate transcript abundance from RNA-seq samples (<code>bam</code> files)</li>
+<li>Perform differential expression analysis with <code>DESeq2</code></li>
+<li>Identify gene ontology pathways over-represented in genes up-regulated upon heat shock treatment</li>
+</ul>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -376,7 +380,23 @@ Datasets
 </div>
 </div>
 <div class="callout-body-container callout-body">
-
+<p>RNA-seq data was published in <a href="https://www.nature.com/articles/s41597-020-0412-z">Nuño-Cabanes et al., Scientific Data 2020</a></p>
+<ul>
+<li><p>Control RNA-seq @ 30 C:</p>
+<ul>
+<li><code>SRR9929263</code></li>
+<li><code>SRR9929264</code></li>
+<li><code>SRR9929273</code></li>
+<li><code>SRR9929282</code></li>
+</ul></li>
+<li><p>Heat shock RNA-seq @ 39 C, 20 min: <code>SRR2045248</code> &amp; <code>SRR2045249</code></p>
+<ul>
+<li><code>SRR9929271</code></li>
+<li><code>SRR9929265</code></li>
+<li><code>SRR9929280</code></li>
+<li><code>SRR9929274</code></li>
+</ul></li>
+</ul>
 </div>
 </div>
 <section id="counting-mapped-fragments-over-a-set-of-gene-annotations" class="level2" data-number="17.1">
@@ -385,7 +405,7 @@ Datasets
 <li><p>Create a tibble containing the following information for the four RNA-seq samples (bam files provided in the shared Google Drive):</p>
 <ul>
 <li>Path to local <code>bam</code> file</li>
-<li>The biological sample it corresponds to (e.g.&nbsp;<code>RNAseq</code>, <code>RNAseq-37C</code>)</li>
+<li>The biological sample it corresponds to (e.g.&nbsp;<code>WT</code>, <code>HS</code>)</li>
 <li>The biological replicate it corresponds to (e.g.&nbsp;<code>rep1</code>, <code>rep2</code>, …)</li>
 </ul></li>
 </ul>
@@ -408,16 +428,17 @@ Answer
 </div>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">bam =</span> <span class="fu">list.files</span>(<span class="st">'data/mapping'</span>, <span class="at">pattern =</span> <span class="st">'RNAseq_rep[12]_R64-1-1.bam$'</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">bam =</span> <span class="fu">list.files</span>(<span class="st">'data/mapping'</span>, <span class="at">pattern =</span> <span class="st">'RNAseq.*_R64-1-1.bam$'</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>), </span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample =</span> <span class="fu">basename</span>(bam), </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">separate</span>(sample, <span class="at">sep =</span> <span class="st">'_'</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">'sample'</span>, <span class="st">'rep'</span>, <span class="st">'genome'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">separate</span>(sample, <span class="at">sep =</span> <span class="st">'_'</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">'type'</span>, <span class="st">'sample'</span>, <span class="st">'rep'</span>, <span class="st">'genome'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Check the <code>summarizeOverlaps()</code> function from the <code>GenomicAlignments</code> package.</li>
+<li>Import gene annotations downloaded on Monday for yeast.</li>
+<li>Filter it out to only keep transcripts</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
@@ -436,7 +457,49 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicAlignments)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtracklayer)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">'data/genome/R64-1-1.gtf'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> genes[genes<span class="sc">$</span>type <span class="sc">==</span> <span class="st">'transcript'</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(genes) <span class="ot">&lt;-</span> genes<span class="sc">$</span>gene_name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Check the <code>summarizeOverlaps()</code> function from the <code>GenomicAlignments</code> package.</li>
+<li>Run it to compute transcript abundance for all transcripts across the four replicates of the two samples.</li>
+<li>Specify <code>BPPARAM</code> argument to perform RNA counting over multiple CPUs.</li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rsamtools)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicAlignments)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SummarizedExperiment)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BiocParallel)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>RNAseq_counts <span class="ot">&lt;-</span> <span class="fu">summarizeOverlaps</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">reads =</span> <span class="fu">BamFileList</span>(samples<span class="sc">$</span>bam), </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">features =</span> genes, </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">singleEnd =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fragments =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="at">workers =</span> <span class="fu">length</span>(samples<span class="sc">$</span>bam), <span class="at">progressbar =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colData</span>(RNAseq_counts) <span class="ot">&lt;-</span> <span class="fu">DataFrame</span>(samples)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -445,9 +508,100 @@ Answer
 </section>
 <section id="differential-expression-analysis" class="level2" data-number="17.2">
 <h2 data-number="17.2" class="anchored" data-anchor-id="differential-expression-analysis"><span class="header-section-number">17.2</span> Differential expression analysis</h2>
+<ul>
+<li>Read <code>DESeq</code> documentation (<code>?DESeq</code>). What type of object does it require? How can you create one?</li>
+<li>Create a <code>DESeqDataSet</code> object from the RNA counts. Choose your <code>design</code> formula appropriately.</li>
+<li>Run <code>DESeq</code> workflow</li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DESeq2)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSet</span>(RNAseq_counts, <span class="at">design =</span> <span class="sc">~</span> sample)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Check the documentation for the <code>results</code> function from <code>DESeq2</code> package.</li>
+<li>Extract the results of differential expression analysis, for the appropriate <code>contrast</code>.</li>
+<li>Recover genes over-expressed in heat-shock vs.&nbsp;control growth (fold-change &gt;= 2, p-value &lt;= 0.01)</li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">'sample'</span>, <span class="st">'HS'</span>, <span class="st">'WT'</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>upreg_genes <span class="ot">&lt;-</span> res <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">'gene'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(log2FoldChange <span class="sc">&gt;</span> <span class="dv">1</span>, padj <span class="sc">&lt;=</span> <span class="fl">0.01</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(gene)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="gene-ontology-over-enrichment-analysis" class="level2" data-number="17.3">
 <h2 data-number="17.3" class="anchored" data-anchor-id="gene-ontology-over-enrichment-analysis"><span class="header-section-number">17.3</span> Gene ontology over-enrichment analysis</h2>
+<ul>
+<li>Perform gene ontology enrichment analysis using the <code>gprofiler2</code> package.</li>
+<li>From the results, recover GO terms from the <code>KEGG</code> database and extract the most enriched terms</li>
+<li>Comment</li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>go <span class="ot">&lt;-</span> gprofiler2<span class="sc">::</span><span class="fu">gost</span>(genes, <span class="at">organism =</span> <span class="st">'scerevisiae'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>go<span class="sc">$</span>result <span class="sc">|&gt;</span> <span class="fu">filter</span>(source <span class="sc">==</span> <span class="st">'KEGG'</span>) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(p_value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
 </section>
