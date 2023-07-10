@@ -354,6 +354,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The course is intended for those who have basic familiarity with Unix and the R scripting language.</p>
 <ul>
 <li>If a refresher is needed for Unix command line (hopefully not), please go over <a href="https://ryanstutorials.net/linuxtutorial/">this tutorial</a> and its <a href="https://ryanstutorials.net/linuxtutorial/cheatsheet.php">companion cheatsheet</a>.</li>
+<li>Another helpful UNIX cheatsheet: <a href="https://files.fosswire.com/2007/08/fwunixref.pdf">here</a></li>
 <li>Getting down to basics: an introduction to the fundamentals of R (<a href="markravinet.github.io/Introduction.html">courtesy of Mark Ravinet</a>).</li>
 <li>Gentle introduction to <code>R/Biocondutor</code>: <a href="https://bioconductor.github.io/BiocWorkshops/introduction-to-bioconductor-annotation-resources.html">here</a></li>
 <li>For a full in-depth guide of <code>Bioconductor</code> ecosystem: read the comprehensive <code>R/Bioconductor</code> book from Kasper D. Hansen available under the CC BY-NC-SA 4.0 license. It is freely available under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US">CC BY-NC-SA 4.0 license</a>: <a href="https://leanpub.com/bioconductor">Link to EPUB</a></li>
@@ -401,13 +402,15 @@ Installing system dependencies with <code>micromamba</code>
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apt update &amp;&amp; apt install -y bzip2 curl wget</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> micro.mamba.pm/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> create <span class="at">-n</span> epigenomics</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> activate epigenomics</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> install <span class="at">-c</span> bioconda <span class="at">-c</span> conda-forge <span class="dt">\</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread star samtools bedtools </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># apt update &amp;&amp; apt install -y bzip2 curl wget</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">curl</span> micro.mamba.pm/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">bash</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="ex">micromamba</span> create <span class="at">-n</span> epigenomics</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="ex">micromamba</span> activate epigenomics</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="ex">micromamba</span> install <span class="at">-c</span> bioconda <span class="at">-c</span> conda-forge <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread star samtools bedtools <span class="dt">\</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>    mawk tree java-jdk ucsc-bedGraphToBigWig <span class="dt">\</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>    pandas numpydoc matplotlib cooler cooltools hicstuff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>

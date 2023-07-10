@@ -400,16 +400,16 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## - Fetching data from iGenomes</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Caenorhabditis_elegans/Ensembl/WBcel235/Caenorhabditis_elegans_Ensembl_WBcel235.tar.gz <span class="at">-o</span> data/genome/WBcel235.tar.gz</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## - Unpacking data </span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-C</span> data/genome/ <span class="at">-xzf</span> data/genome/WBcel235.tar.gz</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> data/genome/Caenorhabditis_elegans//Ensembl/WBcel235/Sequence/WholeGenomeFasta/genome.fa data/genome/WBcel235.fa</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> data/genome/Caenorhabditis_elegans//Ensembl/WBcel235/Annotation/Genes/genes.gtf data/genome/WBcel235.gtf</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">## - Indexing genome</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2-build</span> data/genome/WBcel235.fa data/genome/WBcel235</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## - Fetching data from iGenomes</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">curl</span> <span class="at">-L</span> http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Caenorhabditis_elegans/Ensembl/WBcel235/Caenorhabditis_elegans_Ensembl_WBcel235.tar.gz <span class="at">-o</span> data/genome/WBcel235.tar.gz</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">## - Unpacking data </span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">tar</span> <span class="at">-C</span> data/genome/ <span class="at">-xzf</span> data/genome/WBcel235.tar.gz</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">cp</span> data/genome/Caenorhabditis_elegans//Ensembl/WBcel235/Sequence/WholeGenomeFasta/genome.fa data/genome/WBcel235.fa</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">cp</span> data/genome/Caenorhabditis_elegans//Ensembl/WBcel235/Annotation/Genes/genes.gtf data/genome/WBcel235.gtf</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">## - Indexing genome</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="ex">bowtie2-build</span> data/genome/WBcel235.fa data/genome/WBcel235</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -420,16 +420,16 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> REP <span class="kw">in</span> rep1 rep2</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bowtie2</span> <span class="dt">\</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">--threads</span> 16 <span class="dt">\</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">--maxins</span> 2000 <span class="dt">\</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">-x</span> data/genome/WBcel235 <span class="dt">\</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">-1</span> data/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R1.fq.gz <span class="dt">\</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">-2</span> data/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R2.fq.gz <span class="dt">\</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.sam</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">for</span> REP <span class="kw">in</span> rep1 rep2</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="cf">do</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="ex">bowtie2</span> <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>        <span class="at">--threads</span> 16 <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>        <span class="at">--maxins</span> 2000 <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>        <span class="at">-x</span> data/genome/WBcel235 <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>        <span class="at">-1</span> data/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R1.fq.gz <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>        <span class="at">-2</span> data/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_R2.fq.gz <span class="dt">\</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>        <span class="op">&gt;</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.sam</span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -440,17 +440,17 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">SAMTOOLS_OPTIONS</span><span class="op">=</span><span class="st">"-@ 12 --output-fmt bam"</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> REP <span class="kw">in</span> rep1 rep2</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">samtools</span> fixmate <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-m</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.sam <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="ex">samtools</span> sort <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="ex">samtools</span> markdup <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-r</span> <span class="at">-</span> <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="ex">samtools</span> view <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-q</span> 20 <span class="at">--fast</span> <span class="at">-b</span> <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="ex">samtools</span> sort <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-l</span> 9 <span class="at">-o</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bam</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">samtools</span> index <span class="at">-@</span> 12 data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bam</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="va">SAMTOOLS_OPTIONS</span><span class="op">=</span><span class="st">"-@ 12 --output-fmt bam"</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="cf">for</span> REP <span class="kw">in</span> rep1 rep2</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="cf">do</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>    <span class="ex">samtools</span> fixmate <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-m</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.sam <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>        <span class="ex">samtools</span> sort <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>        <span class="ex">samtools</span> markdup <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-r</span> <span class="at">-</span> <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>        <span class="ex">samtools</span> view <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-q</span> 20 <span class="at">--fast</span> <span class="at">-b</span> <span class="at">-</span> <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>        <span class="ex">samtools</span> sort <span class="st">"</span><span class="va">${SAMTOOLS_OPTIONS}</span><span class="st">"</span> <span class="at">-l</span> 9 <span class="at">-o</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bam</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="ex">samtools</span> index <span class="at">-@</span> 12 data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bam</span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -461,18 +461,18 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> REP <span class="kw">in</span> rep1 rep2</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">--bam</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bam <span class="dt">\</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outFileName</span> data/tracks/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bw <span class="dt">\</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">--numberOfProcessors</span> 12 <span class="dt">\</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">--ignoreDuplicates</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">for</span> REP <span class="kw">in</span> rep1 rep2</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="cf">do</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="ex">bamCoverage</span> <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>        <span class="at">--bam</span> data/mapping/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bam <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>        <span class="at">--outFileName</span> data/tracks/ATAC_<span class="st">"</span><span class="va">${REP}</span><span class="st">"</span>_WBcel235.bw <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>        <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>        <span class="at">--numberOfProcessors</span> 12 <span class="dt">\</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>        <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>        <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>        <span class="at">--extendReads</span> <span class="dt">\</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>        <span class="at">--ignoreDuplicates</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -483,10 +483,10 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/peaks</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">yapc</span> data/peaks/ATAC_WBcel235 ATAC_WBcel235 data/tracks/ATAC_rep1_WBcel235.bw data/tracks/ATAC_rep2_WBcel235.bw</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> data/peaks/ATAC_WBcel235_0.05.bed</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f1-6</span> data/peaks/ATAC_WBcel235_0.05.bed <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'1d'</span> <span class="op">&gt;</span> data/peaks/ATAC_WBcel235.bed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">mkdir</span> data/peaks</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="ex">yapc</span> data/peaks/ATAC_WBcel235 ATAC_WBcel235 data/tracks/ATAC_rep1_WBcel235.bw data/tracks/ATAC_rep2_WBcel235.bw</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="fu">head</span> data/peaks/ATAC_WBcel235_0.05.bed</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="fu">cut</span> <span class="at">-f1-6</span> data/peaks/ATAC_WBcel235_0.05.bed <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'1d'</span> <span class="op">&gt;</span> data/peaks/ATAC_WBcel235.bed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 

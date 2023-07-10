@@ -412,9 +412,9 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtracklayer)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>peaks <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">'data/peaks/ATAC_WBcel235.bed'</span>, <span class="at">format =</span> <span class="st">'bed'</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>peaks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(rtracklayer)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>peaks <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">'data/peaks/ATAC_WBcel235.bed'</span>, <span class="at">format =</span> <span class="st">'bed'</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>peaks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -443,12 +443,12 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rsamtools)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>bamfiles <span class="ot">&lt;-</span> <span class="fu">BamFileList</span>(<span class="fu">list</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">rep1 =</span> <span class="fu">BamFile</span>(<span class="st">'data/mapping/ATAC_rep1_WBcel235.bam'</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rep2 =</span> <span class="fu">BamFile</span>(<span class="st">'data/mapping/ATAC_rep2_WBcel235.bam'</span>) </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>bamfiles</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(Rsamtools)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>bamfiles <span class="ot">&lt;-</span> <span class="fu">BamFileList</span>(<span class="fu">list</span>(</span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="at">rep1 =</span> <span class="fu">BamFile</span>(<span class="st">'data/mapping/ATAC_rep1_WBcel235.bam'</span>),</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="at">rep2 =</span> <span class="fu">BamFile</span>(<span class="st">'data/mapping/ATAC_rep2_WBcel235.bam'</span>) </span>
+<span id="cb2-5"><a href="#cb2-5"></a>))</span>
+<span id="cb2-6"><a href="#cb2-6"></a>bamfiles</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -475,20 +475,20 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicAlignments)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>param <span class="ot">&lt;-</span> <span class="fu">ScanBamParam</span>(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">flag=</span><span class="fu">scanBamFlag</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">isPaired =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">isProperPair =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">isDuplicate =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">isSecondaryAlignment =</span> <span class="cn">FALSE</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ), </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">mapqFilter =</span> <span class="dv">20</span>, </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="fu">c</span>(<span class="st">"isize"</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>frags <span class="ot">&lt;-</span> <span class="fu">map</span>(bamfiles, readGAlignmentPairs, <span class="at">param =</span> param)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>frags</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(GenomicAlignments)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>param <span class="ot">&lt;-</span> <span class="fu">ScanBamParam</span>(</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    <span class="at">flag=</span><span class="fu">scanBamFlag</span>(</span>
+<span id="cb3-5"><a href="#cb3-5"></a>        <span class="at">isPaired =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>        <span class="at">isProperPair =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>        <span class="at">isDuplicate =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb3-8"><a href="#cb3-8"></a>        <span class="at">isSecondaryAlignment =</span> <span class="cn">FALSE</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>    ), </span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="at">mapqFilter =</span> <span class="dv">20</span>, </span>
+<span id="cb3-11"><a href="#cb3-11"></a>    <span class="at">what =</span> <span class="fu">c</span>(<span class="st">"isize"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12"></a>)</span>
+<span id="cb3-13"><a href="#cb3-13"></a>frags <span class="ot">&lt;-</span> <span class="fu">map</span>(bamfiles, readGAlignmentPairs, <span class="at">param =</span> param)</span>
+<span id="cb3-14"><a href="#cb3-14"></a>frags</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -518,9 +518,9 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicRanges)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>frags <span class="ot">&lt;-</span> <span class="fu">map</span>(frags, as, <span class="st">"GRanges"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>frags <span class="ot">&lt;-</span> <span class="fu">map</span>(frags, subsetByOverlaps, peaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(GenomicRanges)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>frags <span class="ot">&lt;-</span> <span class="fu">map</span>(frags, as, <span class="st">"GRanges"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>frags <span class="ot">&lt;-</span> <span class="fu">map</span>(frags, subsetByOverlaps, peaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -546,10 +546,10 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(frags, as_tibble) <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(width) <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tally</span>()</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> width, <span class="at">y =</span> n)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">600</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>df <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(frags, as_tibble) <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2"></a>    <span class="fu">group_by</span>(width) <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="fu">tally</span>()</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> width, <span class="at">y =</span> n)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">600</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -583,15 +583,15 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">'https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx'</span>, <span class="st">'data/WBcel235_REs.xlsx'</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>REs <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">'data/WBcel235_REs.xlsx'</span>, <span class="at">skip =</span> <span class="dv">2</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>REs <span class="ot">&lt;-</span> <span class="fu">makeGRangesFromDataFrame</span>(</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    REs, <span class="at">seqnames.field =</span> <span class="st">'chrom_ce11'</span>, </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">start.field =</span> <span class="st">'start_ce11'</span>, <span class="at">end.field =</span> <span class="st">'end_ce11'</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">keep.extra.columns =</span> <span class="cn">TRUE</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>REs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">download.file</span>(<span class="st">'https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx'</span>, <span class="st">'data/WBcel235_REs.xlsx'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a>REs <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">'data/WBcel235_REs.xlsx'</span>, <span class="at">skip =</span> <span class="dv">2</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-4"><a href="#cb6-4"></a>REs <span class="ot">&lt;-</span> <span class="fu">makeGRangesFromDataFrame</span>(</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    REs, <span class="at">seqnames.field =</span> <span class="st">'chrom_ce11'</span>, </span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="at">start.field =</span> <span class="st">'start_ce11'</span>, <span class="at">end.field =</span> <span class="st">'end_ce11'</span>,</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    <span class="at">keep.extra.columns =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>)</span>
+<span id="cb6-9"><a href="#cb6-9"></a>REs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -603,9 +603,9 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevelsStyle</span>(REs)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevelsStyle</span>(peaks)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevelsStyle</span>(REs) <span class="ot">&lt;-</span> <span class="fu">seqlevelsStyle</span>(peaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">seqlevelsStyle</span>(REs)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">seqlevelsStyle</span>(peaks)</span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="fu">seqlevelsStyle</span>(REs) <span class="ot">&lt;-</span> <span class="fu">seqlevelsStyle</span>(peaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -631,7 +631,7 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(peaks <span class="sc">%over%</span> REs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">table</span>(peaks <span class="sc">%over%</span> REs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -659,8 +659,8 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>REs<span class="sc">$</span>is_germline_specific <span class="ot">&lt;-</span> REs<span class="sc">$</span>Annotation <span class="sc">==</span> <span class="st">'Germline'</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(REs <span class="sc">%over%</span> peaks, REs<span class="sc">$</span>is_germline_specific) <span class="sc">|&gt;</span> <span class="fu">fisher.test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>REs<span class="sc">$</span>is_germline_specific <span class="ot">&lt;-</span> REs<span class="sc">$</span>Annotation <span class="sc">==</span> <span class="st">'Germline'</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">table</span>(REs <span class="sc">%over%</span> peaks, REs<span class="sc">$</span>is_germline_specific) <span class="sc">|&gt;</span> <span class="fu">fisher.test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>

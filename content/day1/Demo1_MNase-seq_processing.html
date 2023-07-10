@@ -413,10 +413,10 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/EpigenomicsDataAnalysis_2023</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_1.fastq.gz <span class="at">-o</span> data/MNase_R1.fq.gz</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_2.fastq.gz <span class="at">-o</span> data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="bu">cd</span> ~/EpigenomicsDataAnalysis_2023</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">mkdir</span> data/</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_1.fastq.gz <span class="at">-o</span> data/MNase_R1.fq.gz</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="ex">curl</span> <span class="at">-L</span> ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/002/SRR3193262/SRR3193262_2.fastq.gz <span class="at">-o</span> data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -428,13 +428,13 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/fastqc</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fastqc</span> <span class="dt">\</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outdir</span> data/fastqc <span class="dt">\</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--noextract</span> <span class="dt">\</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--threads</span> 12 <span class="dt">\</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--adapters</span> /home/rsg/repos/autobcl2fastq/adapters.txt <span class="dt">\</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    data/<span class="pp">*</span>fq.gz <span class="dv">1</span><span class="op">&gt;&amp;</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">mkdir</span> data/fastqc</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="ex">fastqc</span> <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="at">--outdir</span> data/fastqc <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="at">--noextract</span> <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="at">--threads</span> 12 <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="at">--adapters</span> /home/rsg/repos/autobcl2fastq/adapters.txt <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    data/<span class="pp">*</span>fq.gz <span class="dv">1</span><span class="op">&gt;&amp;</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -448,13 +448,13 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">trim_galore</span> <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cores</span> 8 <span class="dt">\</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--length</span> 20 <span class="dt">\</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--gzip</span> <span class="dt">\</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--paired</span> <span class="dt">\</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--output_dir</span> data/trimmed/ <span class="dt">\</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    data/MNase_R1.fq.gz data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">trim_galore</span> <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="at">--cores</span> 8 <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>    <span class="at">--length</span> 20 <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>    <span class="at">--gzip</span> <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>    <span class="at">--paired</span> <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>    <span class="at">--output_dir</span> data/trimmed/ <span class="dt">\</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>    data/MNase_R1.fq.gz data/MNase_R2.fq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -465,12 +465,12 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">fastqc</span> <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outdir</span> data/fastqc <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--noextract</span> <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--threads</span> 12 <span class="dt">\</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--adapters</span> /home/rsg/repos/autobcl2fastq/adapters.txt <span class="dt">\</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    data/trimmed/<span class="pp">*</span>fq.gz <span class="dv">1</span><span class="op">&gt;&amp;</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">fastqc</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>    <span class="at">--outdir</span> data/fastqc <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="at">--noextract</span> <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="at">--threads</span> 12 <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="at">--adapters</span> /home/rsg/repos/autobcl2fastq/adapters.txt <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>    data/trimmed/<span class="pp">*</span>fq.gz <span class="dv">1</span><span class="op">&gt;&amp;</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -485,17 +485,17 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">## - Fetching data from iGenomes</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/genome</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Saccharomyces_cerevisiae_Ensembl_R64-1-1.tar.gz <span class="at">-o</span> data/genome/R64-1-1.tar.gz</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">## - Unpacking data </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-C</span> data/genome/ <span class="at">-xzf</span> data/genome/R64-1-1.tar.gz</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Sequence/WholeGenomeFasta/genome.fa data/genome/R64-1-1.fa</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Annotation/Genes/genes.gtf data/genome/R64-1-1.gtf</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">## - Indexing genome</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2-build</span> data/genome/R64-1-1.fa data/genome/R64-1-1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">## - Fetching data from iGenomes</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">mkdir</span> data/genome</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="ex">curl</span> <span class="at">-L</span> http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Saccharomyces_cerevisiae_Ensembl_R64-1-1.tar.gz <span class="at">-o</span> data/genome/R64-1-1.tar.gz</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">## - Unpacking data </span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="fu">tar</span> <span class="at">-C</span> data/genome/ <span class="at">-xzf</span> data/genome/R64-1-1.tar.gz</span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="fu">cp</span> data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Sequence/WholeGenomeFasta/genome.fa data/genome/R64-1-1.fa</span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="fu">cp</span> data/genome/Saccharomyces_cerevisiae/Ensembl/R64-1-1/Annotation/Genes/genes.gtf data/genome/R64-1-1.gtf</span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co">## - Indexing genome</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="ex">bowtie2-build</span> data/genome/R64-1-1.fa data/genome/R64-1-1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -506,14 +506,14 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">## - Mapping fastq files to reference genome</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/mapping</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2</span> <span class="dt">\</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--threads</span> 16 <span class="dt">\</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">-x</span> data/genome/R64-1-1 <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">-1</span> data/trimmed/MNase_R1_val_1.fq.gz <span class="dt">\</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">-2</span> data/trimmed/MNase_R2_val_2.fq.gz <span class="dt">\</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> data/mapping/MNase_R64-1-1.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## - Mapping fastq files to reference genome</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">mkdir</span> data/mapping</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="ex">bowtie2</span> <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="at">--threads</span> 16 <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="at">-x</span> data/genome/R64-1-1 <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="at">-1</span> data/trimmed/MNase_R1_val_1.fq.gz <span class="dt">\</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>    <span class="at">-2</span> data/trimmed/MNase_R2_val_2.fq.gz <span class="dt">\</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="op">&gt;</span> data/mapping/MNase_R64-1-1.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -524,52 +524,52 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">## - Fixing mates</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| -m: "Add mate score tag"</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> fixmate <span class="dt">\</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">-m</span> <span class="dt">\</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1.sam data/mapping/MNase_R64-1-1.bam</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">## - Sorting read pairs</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1.bam <span class="dt">\</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted.bam </span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">## - Removing PCR &amp; optical duplicates</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#| -s: "Report stats"</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#| -r: "Remove duplicate reads"</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> markdup <span class="dt">\</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">-s</span> <span class="at">-r</span> <span class="dt">\</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted.bam <span class="dt">\</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted_noDups.bam </span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">## - Filter read pairs</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#| -f 0x001: "Keep read paired"</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| -f 0x002: "Keep read mapped in proper pair"</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#| -F 0x004: "Remove read unmapped"</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| -F 0x008: "Remove mate unmapped"</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| -q 10: "MAPQ &gt; 20"</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| --fast: "Use fast bam compression"</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="dt">\</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">-f</span> 0x001 <span class="at">-f</span> 0x002 <span class="at">-F</span> 0x004 <span class="at">-F</span> 0x008 <span class="at">-q</span> 20 <span class="dt">\</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">--fast</span> <span class="dt">\</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted_noDups.bam <span class="dt">\</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">## - Sorting read pairs</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| -l 9: "Use best compression "</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">-l</span> 9 <span class="dt">\</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam <span class="dt">\</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co">## - Indexing bam file</span></span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">## - Fixing mates</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">#| -m: "Add mate score tag"</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="ex">samtools</span> fixmate <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="at">-m</span> <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>    data/mapping/MNase_R64-1-1.sam data/mapping/MNase_R64-1-1.bam</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">## - Sorting read pairs</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>    data/mapping/MNase_R64-1-1.bam <span class="dt">\</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted.bam </span>
+<span id="cb7-13"><a href="#cb7-13"></a></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="co">## - Removing PCR &amp; optical duplicates</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="co">#| -s: "Report stats"</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="co">#| -r: "Remove duplicate reads"</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="ex">samtools</span> markdup <span class="dt">\</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>    <span class="at">-s</span> <span class="at">-r</span> <span class="dt">\</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>    data/mapping/MNase_R64-1-1_sorted.bam <span class="dt">\</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>    data/mapping/MNase_R64-1-1_sorted_noDups.bam </span>
+<span id="cb7-22"><a href="#cb7-22"></a></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="co">## - Filter read pairs</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co">#| -f 0x001: "Keep read paired"</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#| -f 0x002: "Keep read mapped in proper pair"</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#| -F 0x004: "Remove read unmapped"</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="co">#| -F 0x008: "Remove mate unmapped"</span></span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="co">#| -q 10: "MAPQ &gt; 20"</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a><span class="co">#| --fast: "Use fast bam compression"</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a><span class="ex">samtools</span> view <span class="dt">\</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
+<span id="cb7-32"><a href="#cb7-32"></a>    <span class="at">-f</span> 0x001 <span class="at">-f</span> 0x002 <span class="at">-F</span> 0x004 <span class="at">-F</span> 0x008 <span class="at">-q</span> 20 <span class="dt">\</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a>    <span class="at">--fast</span> <span class="dt">\</span></span>
+<span id="cb7-34"><a href="#cb7-34"></a>    data/mapping/MNase_R64-1-1_sorted_noDups.bam <span class="dt">\</span></span>
+<span id="cb7-35"><a href="#cb7-35"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam</span>
+<span id="cb7-36"><a href="#cb7-36"></a></span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="co">## - Sorting read pairs</span></span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="co">#| -l 9: "Use best compression "</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
+<span id="cb7-40"><a href="#cb7-40"></a>    <span class="at">-@</span> 16 <span class="at">--output-fmt</span> bam <span class="dt">\</span></span>
+<span id="cb7-41"><a href="#cb7-41"></a>    <span class="at">-l</span> 9 <span class="dt">\</span></span>
+<span id="cb7-42"><a href="#cb7-42"></a>    data/mapping/MNase_R64-1-1_sorted_noDups_filtered.bam <span class="dt">\</span></span>
+<span id="cb7-43"><a href="#cb7-43"></a>    <span class="at">-o</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam</span>
+<span id="cb7-44"><a href="#cb7-44"></a></span>
+<span id="cb7-45"><a href="#cb7-45"></a><span class="co">## - Indexing bam file</span></span>
+<span id="cb7-46"><a href="#cb7-46"></a><span class="ex">samtools</span> index <span class="at">-@</span> 16 data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -580,16 +580,16 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">## - Generate coverage</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/tracks</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bam</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outFileName</span> data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.CPM.bw <span class="dt">\</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--extendReads</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">## - Generate coverage</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">mkdir</span> data/tracks</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="ex">bamCoverage</span> <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="at">--bam</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="at">--outFileName</span> data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.CPM.bw <span class="dt">\</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>    <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>    <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>    <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>    <span class="at">--extendReads</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -600,17 +600,17 @@ Datasets
 <div class="code-with-filename-file">
 <pre><strong>sh</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bamCoverage</span> <span class="dt">\</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bam</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outFileName</span> data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.135-160bp.CPM.bw <span class="dt">\</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--extendReads</span> 40 <span class="dt">\</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--centerReads</span> <span class="dt">\</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--minFragmentLength</span> 130 <span class="dt">\</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">--maxFragmentLength</span> 165</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1"></a><span class="ex">bamCoverage</span> <span class="dt">\</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>    <span class="at">--bam</span> data/mapping/MNase_R64-1-1_sorted_noDups_filtered_sorted.bam <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>    <span class="at">--outFileName</span> data/tracks/MNase_R64-1-1_sorted_noDups_filtered_sorted.135-160bp.CPM.bw <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>    <span class="at">--binSize</span> 1 <span class="dt">\</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>    <span class="at">--numberOfProcessors</span> 16 <span class="dt">\</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>    <span class="at">--normalizeUsing</span> CPM <span class="dt">\</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a>    <span class="at">--skipNonCoveredRegions</span> <span class="dt">\</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a>    <span class="at">--extendReads</span> 40 <span class="dt">\</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>    <span class="at">--centerReads</span> <span class="dt">\</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>    <span class="at">--minFragmentLength</span> 130 <span class="dt">\</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a>    <span class="at">--maxFragmentLength</span> 165</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 
