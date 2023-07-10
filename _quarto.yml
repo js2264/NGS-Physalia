@@ -3,6 +3,8 @@ project:
   output-dir: docs
 
 IP: 35.89.32.86
+engine: knitr
+code-line-numbers: true
 
 book:
   title: "Epigenomics Data Analysis"
@@ -53,7 +55,7 @@ format:
   html:
     default-image-extension: pdf
     theme:
-      - yeti
+      - cosmo
       - theme.scss
     code-link: true
     author-meta: "J. Serizay"
@@ -63,8 +65,14 @@ format:
     toc-float: 
       collapsed: false
     toc-depth: 3
+    grid:
+      gutter-width: 1.5em
+      sidebar-width: 500px
+      body-width: 1200px
+      margin-width: 400px
     website: 
       sidebar: 
+        style: "docked"
         search: true
         collapse-level: 5
 

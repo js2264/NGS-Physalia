@@ -10,6 +10,7 @@ The course is intended for those who have basic familiarity with Unix and
 the R scripting language.
 
 * If a refresher is needed for Unix command line (hopefully not), please go over [this tutorial](https://ryanstutorials.net/linuxtutorial/) and its [companion cheatsheet](https://ryanstutorials.net/linuxtutorial/cheatsheet.php).
+* Another helpful UNIX cheatsheet: [here](https://files.fosswire.com/2007/08/fwunixref.pdf)
 * Getting down to basics: an introduction to the fundamentals of R ([courtesy of Mark Ravinet](markravinet.github.io/Introduction.html)).
 * Gentle introduction to `R/Biocondutor`: [here](https://bioconductor.github.io/BiocWorkshops/introduction-to-bioconductor-annotation-resources.html)
 * For a full in-depth guide of `Bioconductor` ecosystem: read the comprehensive `R/Bioconductor` book from Kasper D. Hansen available under the CC BY-NC-SA 4.0 license. It is freely available under the [CC BY-NC-SA 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US): [Link to EPUB](https://leanpub.com/bioconductor)
@@ -55,7 +56,9 @@ bash
 micromamba create -n epigenomics
 micromamba activate epigenomics
 micromamba install -c bioconda -c conda-forge \
-    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread star samtools bedtools 
+    fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread star samtools bedtools \
+    mawk tree java-jdk ucsc-bedGraphToBigWig \
+    pandas numpydoc matplotlib cooler cooltools hicstuff
 ```
 :::
 

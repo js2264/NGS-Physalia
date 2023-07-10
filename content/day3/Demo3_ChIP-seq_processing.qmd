@@ -58,7 +58,7 @@ do
     bowtie2 \
         --threads 16 \
         -x data/genome/R64-1-1 \
-        -r data/Scc1_"${FILE}".fq.gz \
+        -U data/Scc1_"${FILE}".fq.gz \
         > data/mapping/Scc1_"${FILE}"_R64-1-1.sam
 done
 ```
