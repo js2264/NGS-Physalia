@@ -91,11 +91,17 @@
 ### Lectures
 
 * Lecture 10: Hi-C processing
+* Lecture 11: GO and GSEA analyses
 
 ### Demo
 
-TBD
+- Recovering chromatin states from the `AnnotationHub`
+- Intersecting `GRanges`
+- Recovering genes from genomic loci
+- Performing GO analysis
 
 ### Labs
 
-TBD
+- Visually inspect results from MNase-seq, Scc1 ChIP-seq and RNA-seq in yeast
+- Plot profiles of MNase-seq coverage @ TSSs
+- Plot profiles of RNA-seq @ Scc1 ChIP-seq 

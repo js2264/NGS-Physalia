@@ -1,0 +1,7 @@
+# Lecture 10 - HiC processing 
+
+```{r, echo=FALSE}
+slides <- xfun::with_ext(knitr::current_input(), "qmd") |> stringr::str_replace('.qmd', '.pdf')
+```
+
+<iframe height="800" width="100%" src="`r slides`">

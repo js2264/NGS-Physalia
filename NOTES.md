@@ -19,7 +19,7 @@
 - bamCoverage: IP/input ratios
 - Call peaks
 
-## **Day 4: RNA-seq**
+## Day 4: RNA-seq
 
 - map yeast stranded RNA (WT 30C, Nuño-Cabanes et al. 2020 Scientific Data)
 - check strandness
@@ -51,7 +51,7 @@
 * bash: Find motifs for Xnd-1
 * in R, check distribution ~ genomic features
 
-## **Day 4: RNA-seq**
+## Day 4: RNA-seq
 
 * bash: Processing of a mutant (WT heat-shock 39C, Nuño-Cabanes et al. 2020 Scientific Data)
 * in R: Differential gene expression analysis between samples

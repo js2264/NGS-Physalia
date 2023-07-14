@@ -1,0 +1,127 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 5 - Multi-omics data integration
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Visually inspect results from MNase-seq, Scc1 ChIP-seq and RNA-seq in yeast
+- Plot profiles of MNase-seq coverage @ TSSs
+- Plot profiles of RNA-seq @ Scc1 ChIP-seq 
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+RNA-seq data was published in [Nuño-Cabanes et al., Scientific Data 2020](https://www.nature.com/articles/s41597-020-0412-z)
+
+- Control RNA-seq @ 30 C: 
+
+    - `SRR9929263`
+    - `SRR9929264`
+    - `SRR9929273`
+    - `SRR9929282`
+
+- Heat shock RNA-seq @ 39 C, 20 min: `SRR2045248` & `SRR2045249`
+
+    - `SRR9929271`
+    - `SRR9929265`
+    - `SRR9929280`
+    - `SRR9929274`
+:::
+
+## Counting mapped fragments over a set of gene annotations 
+
+- Create a tibble containing the following information for the four RNA-seq samples (bam files provided in the shared Google Drive): 
+
+    - Path to local `bam` file
+    - The biological sample it corresponds to (e.g. `WT`, `HS`)
+    - The biological replicate it corresponds to (e.g. `rep1`, `rep2`, ...)
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(tidyverse)
+samples <- tibble(
+    bam = list.files('data/mapping', pattern = 'RNAseq.*_R64-1-1.bam$', full.names = TRUE), 
+    sample = basename(bam), 
+) |> separate(sample, sep = '_', into = c('type', 'sample', 'rep', 'genome'))
+```
+:::
+
+- Import gene annotations downloaded on Monday for yeast. 
+- Filter it out to only keep transcripts
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(rtracklayer)
+genes <- import('data/genome/R64-1-1.gtf')
+genes <- genes[genes$type == 'transcript']
+names(genes) <- genes$gene_name
+```
+:::
+
+- Check the `summarizeOverlaps()` function from the `GenomicAlignments` package. 
+- Run it to compute transcript abundance for all transcripts across the four replicates of the two samples. 
+- Specify `BPPARAM` argument to perform RNA counting over multiple CPUs. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(Rsamtools)
+library(GenomicAlignments)
+library(SummarizedExperiment)
+library(BiocParallel)
+RNAseq_counts <- summarizeOverlaps(
+    reads = BamFileList(samples$bam), 
+    features = genes, 
+    singleEnd = FALSE, 
+    fragments = TRUE,
+    BPPARAM = MulticoreParam(workers = length(samples$bam), progressbar = TRUE)
+)
+colData(RNAseq_counts) <- DataFrame(samples)
+```
+:::
+
+## Differential expression analysis
+
+- Read `DESeq` documentation (`?DESeq`). What type of object does it require? How can you create one? 
+- Create a `DESeqDataSet` object from the RNA counts. Choose your `design` formula appropriately.
+- Run `DESeq` workflow 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(DESeq2)
+dds <- DESeqDataSet(RNAseq_counts, design = ~ sample)
+dds <- DESeq(dds)
+```
+:::
+
+- Check the documentation for the `results` function from `DESeq2` package.
+- Extract the results of differential expression analysis, for the appropriate `contrast`. 
+- Recover genes over-expressed in heat-shock vs. control growth (fold-change >= 2, p-value <= 0.01)
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+res <- results(dds, contrast = c('sample', 'HS', 'WT'))
+upreg_genes <- res |> 
+    as_tibble(rownames = 'gene') |> 
+    filter(log2FoldChange > 1, padj <= 0.01) |> 
+    pull(gene)
+```
+:::
+
+## Gene ontology over-enrichment analysis
+
+- Perform gene ontology enrichment analysis using the `gprofiler2` package. 
+- From the results, recover GO terms from the `KEGG` database and extract the most enriched terms
+- Comment
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+go <- gprofiler2::gost(genes, organism = 'scerevisiae')
+go$result |> filter(source == 'KEGG') |> arrange(p_value)
+```
+:::

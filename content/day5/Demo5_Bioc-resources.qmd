@@ -1,0 +1,139 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Demo 5 - Leveraging Bioconductor resources 
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Recovering chromatin states from the `AnnotationHub`
+- Intersecting `GRanges`
+- Recovering genes from genomic loci
+- Performing GO analysis
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+All the data will be recovered from Bioconductor!
+:::
+
+---
+title: "Ex. 05-3: Leveraging AnnotationHub to investigate epigenomics"
+---
+
+## Recover HMM-based chromatin state annotations in two human cell lines
+
+Leveraging `AnnotationHub`, I can recover chromatin state annotations from 
+the Epigenome Roadmap project (published [here](https://www.nature.com/articles/nature14248)) for two different cell lines. 
+
+```{r}
+library(tidyverse)
+library(AnnotationHub)
+ah <- AnnotationHub()
+ah_human_epigenome <- query(ah, c("Homo sapiens", "EpigenomeRoadMap"))
+epigenome_metadata <- query(ah_human_epigenome, 'data.frame')[[1]]
+epigenome_metadata[1:10, 1:10]
+query(ah_human_epigenome, c("chromhmmSegmentations", "cell line"))
+H1_states <- query(ah_human_epigenome, c("chromhmmSegmentations", "ESC.H1"))[[1]]
+NPC_states <- query(ah_human_epigenome, c("chromhmmSegmentations", "ESDR.H1.NEUR.PROG"))[[1]]
+H1_states
+NPC_states
+```
+
+## Compare state annotations in two human cell lines
+
+I can then compare how these two sets of annotations vary, to 
+infer how chromatin states change througout a differentiation process. 
+
+```{r}
+library(plyranges)
+states <- c(
+    "Active TSS", 
+    "Flanking Active TSS", 
+    "Bivalent/Poised TSS", 
+    "Enhancers",
+    "Flanking Bivalent TSS/Enh", 
+    "Strong transcription",
+    "Transcr. at gene 5' and 3'", 
+    "Weak transcription",
+    "Bivalent Enhancer", 
+    "Genic enhancers",
+    "Quiescent/Low", 
+    "Heterochromatin", 
+    "Weak Repressed PolyComb", 
+    "Repressed PolyComb", 
+    "ZNF genes & repeats"
+)
+H1_states$H1_state <- factor(H1_states$name, levels = states)
+H1_states$NPC_state <- join_nearest(H1_states, NPC_states)$name.y |> factor(levels = states)
+df <- tibble(
+    stateInH1 = H1_states$H1_state, 
+    stateInNPCs = H1_states$NPC_state  
+) |> 
+    group_by(stateInH1, stateInNPCs) |> 
+    count() |> 
+    group_by(stateInH1) |> 
+    mutate(
+        total = sum(n), 
+        pct = n/total
+    )
+p <- ggplot(df, aes(x = stateInH1, y = stateInNPCs, fill = pct)) + 
+    geom_tile(col = "black") + 
+    theme_bw() + 
+    scale_fill_gradientn(colours = c('white', 'orange', 'darkred')) + 
+    labs(
+        x = "Chromatin states in H1 cells", 
+        y = "Chromatin states in H1-derived\nneural progenitor cells", 
+        fill = '# of genomic bins'
+    ) + 
+    guides(x =  guide_axis(angle = 90)) +
+    coord_fixed()
+```
+
+
+
+> Which transitions can you detect? 
+
+> Can you recover genomic loci which change from `Quiescent/Low` to `Enhancers` upon H1 differentiation into NPCs? 
+
+```{r}
+H1_states <- query(ah_human_epigenome, c("chromhmmSegmentations", "ESC.H1"))[[1]]
+transitioning_loci <- H1_states[H1_states$H1_state == 'Flanking Bivalent TSS/Enh' & H1_states$NPC_state == 'Active TSS']
+```
+
+> What are the closest genes? 
+
+```{r}
+query(ah, c("Homo sapiens", "release-75"))
+human_gtf <- ah[['AH5036']]
+human_Ensembl_genes <- human_gtf[human_gtf$type == 'gene' & human_gtf$gene_biotype == 'protein_coding']
+human_Ensembl_TSSs <- resize(human_Ensembl_genes, 1, 'start')
+human_Ensembl_TSSs
+#
+seqlevelsStyle(human_Ensembl_TSSs) <- "UCSC"
+seqlevels(human_Ensembl_TSSs, pruning.mode = 'coarse') <- seqlevels(transitioning_loci)
+seqinfo(human_Ensembl_TSSs) <- seqinfo(transitioning_loci)
+transitioning_loci <- keepStandardChromosomes(transitioning_loci, pruning.mode = 'coarse')
+human_Ensembl_TSSs <- keepStandardChromosomes(human_Ensembl_TSSs, pruning.mode = 'coarse')
+seqinfo(transitioning_loci) <- seqinfo(human_Ensembl_TSSs)
+transitioning_loci$nearest_gene <- human_Ensembl_TSSs[nearest(transitioning_loci, human_Ensembl_TSSs)]$gene_name
+transitioning_loci$distance_to_nearest_gene <- mcols(distanceToNearest(transitioning_loci, human_Ensembl_TSSs))$distance
+```
+
+> Are the associated genes involved in a specific process? 
+
+```{r}
+genes <- unique(transitioning_loci$nearest_gene[transitioning_loci$distance_to_nearest_gene <= 500]) 
+res <- gprofiler2::gost(genes, organism = 'hsapiens')
+res$result |> arrange(p_value)
+```
+
+## Conclusions 
+
+> Can you conclude on the importance of having universal processing 
+workflows to ensure the usefulness of a centralized database? 
+
