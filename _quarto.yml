@@ -49,6 +49,7 @@ book:
         - content/day4/Demo4_RNA-seq_processing.qmd
         - content/day4/Lab4_RNA-seq_analysis.qmd
     - part: "Day 5"
+      chapters:
         - content/day5/Lecture10_HiC.qmd
         - content/day5/Lecture11_GO-GSEA.qmd
         - content/day5/Demo5_Bioc-resources.qmd

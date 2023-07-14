@@ -94,46 +94,46 @@ p <- ggplot(df, aes(x = stateInH1, y = stateInNPCs, fill = pct)) +
     coord_fixed()
 ```
 
-
-
-> Which transitions can you detect? 
-
-> Can you recover genomic loci which change from `Quiescent/Low` to `Enhancers` upon H1 differentiation into NPCs? 
-
 ```{r}
-H1_states <- query(ah_human_epigenome, c("chromhmmSegmentations", "ESC.H1"))[[1]]
-transitioning_loci <- H1_states[H1_states$H1_state == 'Flanking Bivalent TSS/Enh' & H1_states$NPC_state == 'Active TSS']
+transitioning_loci_1 <- H1_states[H1_states$H1_state == 'Bivalent/Poised TSS' & H1_states$NPC_state == 'Active TSS']
+transitioning_loci_2 <- H1_states[H1_states$H1_state == 'Bivalent/Poised TSS' & H1_states$NPC_state == 'Repressed PolyComb']
 ```
 
-> What are the closest genes? 
+## Recover genes associated with varying chromatin states
 
 ```{r}
 query(ah, c("Homo sapiens", "release-75"))
-human_gtf <- ah[['AH5036']]
+human_gtf <- ah[['AH10684']]
 human_Ensembl_genes <- human_gtf[human_gtf$type == 'gene' & human_gtf$gene_biotype == 'protein_coding']
 human_Ensembl_TSSs <- resize(human_Ensembl_genes, 1, 'start')
 human_Ensembl_TSSs
+seqlevelsStyle(human_Ensembl_TSSs) <- seqlevelsStyle(H1_states)
 #
-seqlevelsStyle(human_Ensembl_TSSs) <- "UCSC"
-seqlevels(human_Ensembl_TSSs, pruning.mode = 'coarse') <- seqlevels(transitioning_loci)
-seqinfo(human_Ensembl_TSSs) <- seqinfo(transitioning_loci)
-transitioning_loci <- keepStandardChromosomes(transitioning_loci, pruning.mode = 'coarse')
-human_Ensembl_TSSs <- keepStandardChromosomes(human_Ensembl_TSSs, pruning.mode = 'coarse')
-seqinfo(transitioning_loci) <- seqinfo(human_Ensembl_TSSs)
-transitioning_loci$nearest_gene <- human_Ensembl_TSSs[nearest(transitioning_loci, human_Ensembl_TSSs)]$gene_name
-transitioning_loci$distance_to_nearest_gene <- mcols(distanceToNearest(transitioning_loci, human_Ensembl_TSSs))$distance
+seqlevels(transitioning_loci_1, pruning.mode = 'coarse') <- seqlevelsInUse(transitioning_loci_1)
+seqlevels(human_Ensembl_TSSs, pruning.mode = 'coarse') <- seqlevels(transitioning_loci_1)
+transitioning_loci_1 <- join_nearest(transitioning_loci_1, human_Ensembl_TSSs, distance = TRUE)
+transitioning_loci_2 <- join_nearest(transitioning_loci_2, human_Ensembl_TSSs, distance = TRUE)
 ```
 
-> Are the associated genes involved in a specific process? 
+## Enriched gene ontology terms for genes associated with varying chromatin states 
 
 ```{r}
-genes <- unique(transitioning_loci$nearest_gene[transitioning_loci$distance_to_nearest_gene <= 500]) 
+genes <- unique(transitioning_loci_1$gene_name[transitioning_loci_1$distance <= 500]) 
 res <- gprofiler2::gost(genes, organism = 'hsapiens')
-res$result |> arrange(p_value)
+as_tibble(res$result) |>   
+    select(source, term_name, p_value, precision, recall) |>
+    filter(source == "GO:BP",recall >= 0.05) |> 
+    arrange(p_value) |> 
+    print(n = 50)
 ```
 
-## Conclusions 
-
-> Can you conclude on the importance of having universal processing 
-workflows to ensure the usefulness of a centralized database? 
+```{r}
+genes <- unique(transitioning_loci_2$gene_name[transitioning_loci_2$distance <= 500]) 
+res <- gprofiler2::gost(genes, organism = 'hsapiens')
+as_tibble(res$result) |>   
+    select(source, term_name, p_value, precision, recall) |>
+    filter(source == "GO:BP",recall >= 0.05) |> 
+    arrange(p_value) |> 
+    print(n = 50)
+```
 
