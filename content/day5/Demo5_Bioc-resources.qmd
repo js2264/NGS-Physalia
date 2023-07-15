@@ -21,10 +21,6 @@ execute:
 All the data will be recovered from Bioconductor!
 :::
 
----
-title: "Ex. 05-3: Leveraging AnnotationHub to investigate epigenomics"
----
-
 ## Recover HMM-based chromatin state annotations in two human cell lines
 
 Leveraging `AnnotationHub`, I can recover chromatin state annotations from 
