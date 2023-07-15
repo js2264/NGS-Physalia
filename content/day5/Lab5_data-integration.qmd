@@ -10,118 +10,187 @@ execute:
 ## Aims
 
 - Visually inspect results from MNase-seq, Scc1 ChIP-seq and RNA-seq in yeast
-- Plot profiles of MNase-seq coverage @ TSSs
-- Plot profiles of RNA-seq @ Scc1 ChIP-seq 
+- Plot aggregated profiles of stranded RNA-seq coverage @ Scc1 ChIP-seq peaks
+- Compare stranded RNA-seq coverages at strong/weak Scc1 peaks
 :::
 
 ::: {.callout-tip icon='true'}
 ## Datasets
 
-RNA-seq data was published in [Nuño-Cabanes et al., Scientific Data 2020](https://www.nature.com/articles/s41597-020-0412-z)
-
-- Control RNA-seq @ 30 C: 
-
-    - `SRR9929263`
-    - `SRR9929264`
-    - `SRR9929273`
-    - `SRR9929282`
-
-- Heat shock RNA-seq @ 39 C, 20 min: `SRR2045248` & `SRR2045249`
-
-    - `SRR9929271`
-    - `SRR9929265`
-    - `SRR9929280`
-    - `SRR9929274`
+- Scc1 ChIP-seq: unpublished 
+- MNase-seq: unpublished 
+- RNA-seq from [Nuño-Cabanes et al., Scientific Data 2020](https://www.nature.com/articles/s41597-020-0412-z): `SRR9929263`
 :::
 
-## Counting mapped fragments over a set of gene annotations 
+<!-- 
+- Scc1 track: /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/tracks/CH219/CH219%5Eunmapped_CBS138%5Emapped_S288c_Mpneumo%5EEHEJFT.CPM.bw
+- Scc1 peaks: /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/peaks/CH219/CH219_vs-CH220_genome-S288c_Mpneumo_EHEJFT_peaks.narrowPeak
+- MNase track: /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/MNase/tracks/CH206/CH206%5Emapped_S288c_Mpneumo%5Efiltered%5E130-200%5EHS5L1A.130-200.CPM.bw
 
-- Create a tibble containing the following information for the four RNA-seq samples (bam files provided in the shared Google Drive): 
+cp /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/tracks/CH219/CH219^unmapped_CBS138^mapped_S288c_Mpneumo^EHEJFT.CPM.bw EpigenomicsDataAnalysis_2023/data/day5/Scc1.bw
+grep -vP 'Mpneumo\t' /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/peaks/CH219/CH219_vs-CH220_genome-S288c_Mpneumo_EHEJFT_peaks.narrowPeak | sed 's,CH219_vs-CH220_genome-S288c_Mpneumo_EHEJFT_,,' > EpigenomicsDataAnalysis_2023/data/day5/Scc1.narrowPeak
+cp /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/MNase/tracks/CH206/CH206^mapped_S288c_Mpneumo^filtered^130-200^HS5L1A.130-200.CPM.bw EpigenomicsDataAnalysis_2023/data/day5/MNase.filtered^130-200bp.bw
+cp ~/EpigenomicsDataAnalysis_2023/data/tracks/RNAseq_WT_rep1_R64-1-1.fwd.CPM.bw ~/EpigenomicsDataAnalysis_2023/data/day5/RNAseq.fwd.bw
+cp ~/EpigenomicsDataAnalysis_2023/data/tracks/RNAseq_WT_rep1_R64-1-1.rev.CPM.bw ~/EpigenomicsDataAnalysis_2023/data/day5/RNAseq.rev.bw
+-->
 
-    - Path to local `bam` file
-    - The biological sample it corresponds to (e.g. `WT`, `HS`)
-    - The biological replicate it corresponds to (e.g. `rep1`, `rep2`, ...)
+## Inspecting data in IGV
+
+- Open `.bw` files and the Scc1 ChIP-seq peak file in IGV. 
+- Compare the signal of stranded RNA-seq coverage tracks with the location of Scc1 peaks. Comment.
+- Compare the location of transcription start sites (TSSs) with nucleosome profiles. Comment.
+
+## Plotting stranded RNA-seq signal over Scc1 ChIP-seq peaks
+
+- Load forward and reverse RNA-seq coverage as `Rle` in R
+- Load Scc1 peaks in R
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
 library(tidyverse)
-samples <- tibble(
-    bam = list.files('data/mapping', pattern = 'RNAseq.*_R64-1-1.bam$', full.names = TRUE), 
-    sample = basename(bam), 
-) |> separate(sample, sep = '_', into = c('type', 'sample', 'rep', 'genome'))
-```
-:::
-
-- Import gene annotations downloaded on Monday for yeast. 
-- Filter it out to only keep transcripts
-
-::: {.callout-answer .icon .callout-note collapse=true}
-```{r, filename = 'R'}
+library(GenomicRanges)
 library(rtracklayer)
-genes <- import('data/genome/R64-1-1.gtf')
-genes <- genes[genes$type == 'transcript']
-names(genes) <- genes$gene_name
+rna_fwd_track <- import('data/day5/RNAseq.fwd.bw', as = 'Rle')
+rna_rev_track <- import('data/day5/RNAseq.rev.bw', as = 'Rle')
+scc1_peaks <- import('data/day5/Scc1.narrowPeak')
 ```
 :::
 
-- Check the `summarizeOverlaps()` function from the `GenomicAlignments` package. 
-- Run it to compute transcript abundance for all transcripts across the four replicates of the two samples. 
-- Specify `BPPARAM` argument to perform RNA counting over multiple CPUs. 
+- Resize Scc1 peaks so that they all are centered over their summit (check `peak` column from the `narrowPeak` file), and extend then ± 4000 bp
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
-library(Rsamtools)
-library(GenomicAlignments)
-library(SummarizedExperiment)
-library(BiocParallel)
-RNAseq_counts <- summarizeOverlaps(
-    reads = BamFileList(samples$bam), 
-    features = genes, 
-    singleEnd = FALSE, 
-    fragments = TRUE,
-    BPPARAM = MulticoreParam(workers = length(samples$bam), progressbar = TRUE)
-)
-colData(RNAseq_counts) <- DataFrame(samples)
+library(plyranges)
+scc1_peaks <- scc1_peaks |> 
+    resize(fix = 'start', width = 1) |> 
+    shift_right(scc1_peaks$peak) |> 
+    resize(fix = 'center', width = 8000)
 ```
 :::
 
-## Differential expression analysis
-
-- Read `DESeq` documentation (`?DESeq`). What type of object does it require? How can you create one? 
-- Create a `DESeqDataSet` object from the RNA counts. Choose your `design` formula appropriately.
-- Run `DESeq` workflow 
+- Compute a `seqinfo` from the `rna_fwd_track` `Rle`, add `seqlengths` and convert it into a `GRanges` object. 
+- Remove the extended Scc1 peaks that lie outside of genome boundaries. To do this, check the operators `%over%` and `%within%`. 
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
-library(DESeq2)
-dds <- DESeqDataSet(RNAseq_counts, design = ~ sample)
-dds <- DESeq(dds)
+genome <- seqinfo(rna_fwd_track)
+seqlengths(genome) <- lengths(rna_fwd_track)
+genome <- as(genome, "GRanges")
+table(scc1_peaks %over% genome)
+table(scc1_peaks %within% genome)
+scc1_peaks <- scc1_peaks[scc1_peaks %within% genome]
 ```
 :::
 
-- Check the documentation for the `results` function from `DESeq2` package.
-- Extract the results of differential expression analysis, for the appropriate `contrast`. 
-- Recover genes over-expressed in heat-shock vs. control growth (fold-change >= 2, p-value <= 0.01)
+- Extract the forward RNA-seq coverage signal over the first Scc1 peak 
+- Convert it into a tibble and add coordinates (± 4000 bp centered over Scc1 peak)
+- Do the same for reverse RNA-seq coverage 
+- Plot the two stranded RNA-seq coverages together
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
-res <- results(dds, contrast = c('sample', 'HS', 'WT'))
-upreg_genes <- res |> 
-    as_tibble(rownames = 'gene') |> 
-    filter(log2FoldChange > 1, padj <= 0.01) |> 
-    pull(gene)
+rna_fwd_track[scc1_peaks][[1]]
+df <- rna_fwd_track[scc1_peaks][[1]] |> 
+    as_tibble() |>
+    mutate(position = seq(-3999, 4000, 1))
+df$forward <- df$value
+df$reverse <- rna_rev_track[scc1_peaks][[1]] |> as.vector()
+df$value <- NULL
+p <- pivot_longer(df, -pos, names_to = 'strandness', values_to = 'coverage') |>
+    ggplot(aes(x = pos, y = coverage, col = strandness)) + 
+    geom_line()
 ```
 :::
 
-## Gene ontology over-enrichment analysis
-
-- Perform gene ontology enrichment analysis using the `gprofiler2` package. 
-- From the results, recover GO terms from the `KEGG` database and extract the most enriched terms
-- Comment
+- Iterate over all Scc1 peaks to extract stranded RNA-seq coverage around Scc1 peaks
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
-go <- gprofiler2::gost(genes, organism = 'scerevisiae')
-go$result |> filter(source == 'KEGG') |> arrange(p_value)
+df <- rna_fwd_track[scc1_peaks] |>
+    as_tibble() |> ## Convert into a data.frame
+    mutate(position = rep(seq(-3999, 4000, 1), length(scc1_peaks))) |> ## Repeat the position (± 4000bp) as many times as the number of Scc1 peaks
+    mutate(forward = value) |> 
+    select(group, position, forward) |> ## Tidy up columns
+    mutate(reverse = rna_rev_track[scc1_peaks] |> unlist() |> as.vector()) |> ## Add reverse scores
+    pivot_longer(-c(group, position), names_to = 'strandness', values_to = 'coverage') |>
+    group_by(position, strandness) 
+```
+:::
+
+- Calculate mean, standard deviation and 95% confidence interval of forward and reverse RNA-seq coverage around Scc1 peaks
+- Plot the average forward and reverse RNA-seq coverages, with a ribbon showing the 95% confidence interval. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+aggr_df <- summarize(df, 
+    mean = mean(coverage), 
+    sd = sd(coverage, na.rm = TRUE), 
+    n = dplyr::n()
+) |>
+    mutate(
+        se = sd / sqrt(n),
+        CI = qt(0.975, n-1) * se,
+        topMargin = mean + CI,
+        bottomMargin = mean - CI
+    )
+p <- ggplot(aggr_df, aes(x = position, y = mean, col = strandness, fill = strandness)) + 
+    geom_line() + 
+    geom_ribbon(aes(ymax = mean + CI, ymin = mean - CI), alpha = 0.2, col = NA)
+```
+:::
+
+## Plot a heaetmap of RNA-seq coverage over ordered Scc1 peaks
+
+- Order peaks according to their Scc1 peak signal
+- Re-compute the stranded RNA-seq coverages around **ordered** Scc1 peaks
+- Plot a (rasterized) heatmap using `geom_tile()`, with the distance from Scc1 peak in abscisse and each row representing an individual Scc1 peak locus. You can split forward and reverse coverage with `facet_wrap(~ strandness)`. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+ordered_scc1_peaks <- scc1_peaks[order(scc1_peaks$signalValue, decreasing = TRUE)]
+df <- rna_fwd_track[ordered_scc1_peaks] |>
+    as_tibble() |> ## Convert into a data.frame
+    mutate(position = rep(seq(-3999, 4000, 1), length(ordered_scc1_peaks))) |> ## Repeat the position (± 4000bp) as many times as the number of Scc1 peaks
+    mutate(forward = value) |> 
+    dplyr::select(group, position, forward) |> ## Tidy up columns
+    mutate(reverse = rna_rev_track[ordered_scc1_peaks] |> unlist() |> as.vector()) |> ## Add reverse scores
+    pivot_longer(-c(group, position), names_to = 'strandness', values_to = 'coverage') |>
+    group_by(position, strandness) 
+p <- ggplot(df, aes(x = position, y = group, fill = log2(coverage))) + 
+    geom_tile() |> ggrastr::rasterise() + 
+    facet_wrap(~ strandness, scales = 'free') +
+    scale_y_reverse() +
+    scale_fill_gradientn(
+        colours = c("#FFFEF9", "#FFCA67", "#ED3024", "#1A0A10"), 
+        na.value = 'white'
+    )
+```
+:::
+
+## Plot stranded RNA-seq coverages for Scc1 peaks grouped by their strength
+
+- Group the coverage tibble in 4 groups, containing the 0-25% (weakest) peaks, then 25-50%, 50-75% and 75-100% (strongest) peaks. This can be done with the `ntile` function. 
+- Re-plot the average forward and reverse RNA-seq coverages, with a ribbon showing the 95% confidence interval, **splitting the peaks from each group in a different facet (with `facet_wrap(~ group)`)**. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+df$signalValue <- ordered_scc1_peaks$signalValue[df$group]
+df$group <- ntile(df$signalValue, 4)
+aggr_df <- group_by(df, group, position, strandness) |>
+    summarize( 
+        mean = mean(coverage), 
+        sd = sd(coverage, na.rm = TRUE), 
+        n = dplyr::n()
+    ) |>
+    mutate(
+        se = sd / sqrt(n),
+        CI = qt(0.975, n-1) * se,
+        topMargin = mean + CI,
+        bottomMargin = mean - CI
+    )
+p <- ggplot(aggr_df, aes(x = position, y = mean, col = strandness, fill = strandness)) + 
+    geom_line() + 
+    geom_ribbon(aes(ymax = mean + CI, ymin = mean - CI), alpha = 0.2, col = NA) +
+    facet_wrap(~ group)
 ```
 :::
