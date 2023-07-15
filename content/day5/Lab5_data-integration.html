@@ -358,9 +358,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#counting-mapped-fragments-over-a-set-of-gene-annotations" id="toc-counting-mapped-fragments-over-a-set-of-gene-annotations" class="nav-link active" data-scroll-target="#counting-mapped-fragments-over-a-set-of-gene-annotations"><span class="header-section-number">21.1</span> Counting mapped fragments over a set of gene annotations</a></li>
-  <li><a href="#differential-expression-analysis" id="toc-differential-expression-analysis" class="nav-link" data-scroll-target="#differential-expression-analysis"><span class="header-section-number">21.2</span> Differential expression analysis</a></li>
-  <li><a href="#gene-ontology-over-enrichment-analysis" id="toc-gene-ontology-over-enrichment-analysis" class="nav-link" data-scroll-target="#gene-ontology-over-enrichment-analysis"><span class="header-section-number">21.3</span> Gene ontology over-enrichment analysis</a></li>
+  <li><a href="#inspecting-data-in-igv" id="toc-inspecting-data-in-igv" class="nav-link active" data-scroll-target="#inspecting-data-in-igv"><span class="header-section-number">21.1</span> Inspecting data in IGV</a></li>
+  <li><a href="#plotting-stranded-rna-seq-signal-over-scc1-chip-seq-peaks" id="toc-plotting-stranded-rna-seq-signal-over-scc1-chip-seq-peaks" class="nav-link" data-scroll-target="#plotting-stranded-rna-seq-signal-over-scc1-chip-seq-peaks"><span class="header-section-number">21.2</span> Plotting stranded RNA-seq signal over Scc1 ChIP-seq peaks</a></li>
+  <li><a href="#plot-a-heaetmap-of-rna-seq-coverage-over-ordered-scc1-peaks" id="toc-plot-a-heaetmap-of-rna-seq-coverage-over-ordered-scc1-peaks" class="nav-link" data-scroll-target="#plot-a-heaetmap-of-rna-seq-coverage-over-ordered-scc1-peaks"><span class="header-section-number">21.3</span> Plot a heaetmap of RNA-seq coverage over ordered Scc1 peaks</a></li>
+  <li><a href="#plot-stranded-rna-seq-coverages-for-scc1-peaks-grouped-by-their-strength" id="toc-plot-stranded-rna-seq-coverages-for-scc1-peaks-grouped-by-their-strength" class="nav-link" data-scroll-target="#plot-stranded-rna-seq-coverages-for-scc1-peaks-grouped-by-their-strength"><span class="header-section-number">21.4</span> Plot stranded RNA-seq coverages for Scc1 peaks grouped by their strength</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/js2264/NGS-Physalia/edit/main/content/day5/Lab5_data-integration.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/js2264/NGS-Physalia/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -396,8 +397,8 @@ Aims
 <div class="callout-body-container callout-body">
 <ul>
 <li>Visually inspect results from MNase-seq, Scc1 ChIP-seq and RNA-seq in yeast</li>
-<li>Plot profiles of MNase-seq coverage @ TSSs</li>
-<li>Plot profiles of RNA-seq @ Scc1 ChIP-seq</li>
+<li>Plot aggregated profiles of stranded RNA-seq coverage @ Scc1 ChIP-seq peaks</li>
+<li>Compare stranded RNA-seq coverages at strong/weak Scc1 peaks</li>
 </ul>
 </div>
 </div>
@@ -411,34 +412,37 @@ Datasets
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>RNA-seq data was published in <a href="https://www.nature.com/articles/s41597-020-0412-z">Nuño-Cabanes et al., Scientific Data 2020</a></p>
 <ul>
-<li><p>Control RNA-seq @ 30 C:</p>
-<ul>
-<li><code>SRR9929263</code></li>
-<li><code>SRR9929264</code></li>
-<li><code>SRR9929273</code></li>
-<li><code>SRR9929282</code></li>
-</ul></li>
-<li><p>Heat shock RNA-seq @ 39 C, 20 min: <code>SRR2045248</code> &amp; <code>SRR2045249</code></p>
-<ul>
-<li><code>SRR9929271</code></li>
-<li><code>SRR9929265</code></li>
-<li><code>SRR9929280</code></li>
-<li><code>SRR9929274</code></li>
-</ul></li>
+<li>Scc1 ChIP-seq: unpublished</li>
+<li>MNase-seq: unpublished</li>
+<li>RNA-seq from <a href="https://www.nature.com/articles/s41597-020-0412-z">Nuño-Cabanes et al., Scientific Data 2020</a>: <code>SRR9929263</code></li>
 </ul>
 </div>
 </div>
-<section id="counting-mapped-fragments-over-a-set-of-gene-annotations" class="level2" data-number="21.1">
-<h2 data-number="21.1" class="anchored" data-anchor-id="counting-mapped-fragments-over-a-set-of-gene-annotations"><span class="header-section-number">21.1</span> Counting mapped fragments over a set of gene annotations</h2>
+<!-- 
+- Scc1 track: /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/tracks/CH219/CH219%5Eunmapped_CBS138%5Emapped_S288c_Mpneumo%5EEHEJFT.CPM.bw
+- Scc1 peaks: /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/peaks/CH219/CH219_vs-CH220_genome-S288c_Mpneumo_EHEJFT_peaks.narrowPeak
+- MNase track: /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/MNase/tracks/CH206/CH206%5Emapped_S288c_Mpneumo%5Efiltered%5E130-200%5EHS5L1A.130-200.CPM.bw
+
+cp /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/tracks/CH219/CH219^unmapped_CBS138^mapped_S288c_Mpneumo^EHEJFT.CPM.bw EpigenomicsDataAnalysis_2023/data/day5/Scc1.bw
+grep -vP 'Mpneumo\t' /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/ChIP/peaks/CH219/CH219_vs-CH220_genome-S288c_Mpneumo_EHEJFT_peaks.narrowPeak | sed 's,CH219_vs-CH220_genome-S288c_Mpneumo_EHEJFT_,,' > EpigenomicsDataAnalysis_2023/data/day5/Scc1.narrowPeak
+cp /data/20220309_Christophe_GC-paper/data/S288c_Mpneumo/MNase/tracks/CH206/CH206^mapped_S288c_Mpneumo^filtered^130-200^HS5L1A.130-200.CPM.bw EpigenomicsDataAnalysis_2023/data/day5/MNase.filtered^130-200bp.bw
+cp ~/EpigenomicsDataAnalysis_2023/data/tracks/RNAseq_WT_rep1_R64-1-1.fwd.CPM.bw ~/EpigenomicsDataAnalysis_2023/data/day5/RNAseq.fwd.bw
+cp ~/EpigenomicsDataAnalysis_2023/data/tracks/RNAseq_WT_rep1_R64-1-1.rev.CPM.bw ~/EpigenomicsDataAnalysis_2023/data/day5/RNAseq.rev.bw
+-->
+<section id="inspecting-data-in-igv" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="inspecting-data-in-igv"><span class="header-section-number">21.1</span> Inspecting data in IGV</h2>
 <ul>
-<li><p>Create a tibble containing the following information for the four RNA-seq samples (bam files provided in the shared Google Drive):</p>
+<li>Open <code>.bw</code> files and the Scc1 ChIP-seq peak file in IGV.</li>
+<li>Compare the signal of stranded RNA-seq coverage tracks with the location of Scc1 peaks. Comment.</li>
+<li>Compare the location of transcription start sites (TSSs) with nucleosome profiles. Comment.</li>
+</ul>
+</section>
+<section id="plotting-stranded-rna-seq-signal-over-scc1-chip-seq-peaks" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="plotting-stranded-rna-seq-signal-over-scc1-chip-seq-peaks"><span class="header-section-number">21.2</span> Plotting stranded RNA-seq signal over Scc1 ChIP-seq peaks</h2>
 <ul>
-<li>Path to local <code>bam</code> file</li>
-<li>The biological sample it corresponds to (e.g.&nbsp;<code>WT</code>, <code>HS</code>)</li>
-<li>The biological replicate it corresponds to (e.g.&nbsp;<code>rep1</code>, <code>rep2</code>, …)</li>
-</ul></li>
+<li>Load forward and reverse RNA-seq coverage as <code>Rle</code> in R</li>
+<li>Load Scc1 peaks in R</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
@@ -458,18 +462,18 @@ Answer
 <pre><strong>R</strong></pre>
 </div>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>samples <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-3"><a href="#cb1-3"></a>    <span class="at">bam =</span> <span class="fu">list.files</span>(<span class="st">'data/mapping'</span>, <span class="at">pattern =</span> <span class="st">'RNAseq.*_R64-1-1.bam$'</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb1-4"><a href="#cb1-4"></a>    <span class="at">sample =</span> <span class="fu">basename</span>(bam), </span>
-<span id="cb1-5"><a href="#cb1-5"></a>) <span class="sc">|&gt;</span> <span class="fu">separate</span>(sample, <span class="at">sep =</span> <span class="st">'_'</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">'type'</span>, <span class="st">'sample'</span>, <span class="st">'rep'</span>, <span class="st">'genome'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(GenomicRanges)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(rtracklayer)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>rna_fwd_track <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">'data/day5/RNAseq.fwd.bw'</span>, <span class="at">as =</span> <span class="st">'Rle'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>rna_rev_track <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">'data/day5/RNAseq.rev.bw'</span>, <span class="at">as =</span> <span class="st">'Rle'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6"></a>scc1_peaks <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">'data/day5/Scc1.narrowPeak'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Import gene annotations downloaded on Monday for yeast.</li>
-<li>Filter it out to only keep transcripts</li>
+<li>Resize Scc1 peaks so that they all are centered over their summit (check <code>peak</code> column from the <code>narrowPeak</code> file), and extend then ± 4000 bp</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
@@ -488,19 +492,19 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(rtracklayer)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>genes <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">'data/genome/R64-1-1.gtf'</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a>genes <span class="ot">&lt;-</span> genes[genes<span class="sc">$</span>type <span class="sc">==</span> <span class="st">'transcript'</span>]</span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">names</span>(genes) <span class="ot">&lt;-</span> genes<span class="sc">$</span>gene_name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(plyranges)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>scc1_peaks <span class="ot">&lt;-</span> scc1_peaks <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="fu">resize</span>(<span class="at">fix =</span> <span class="st">'start'</span>, <span class="at">width =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="fu">shift_right</span>(scc1_peaks<span class="sc">$</span>peak) <span class="sc">|&gt;</span> </span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="fu">resize</span>(<span class="at">fix =</span> <span class="st">'center'</span>, <span class="at">width =</span> <span class="dv">8000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Check the <code>summarizeOverlaps()</code> function from the <code>GenomicAlignments</code> package.</li>
-<li>Run it to compute transcript abundance for all transcripts across the four replicates of the two samples.</li>
-<li>Specify <code>BPPARAM</code> argument to perform RNA counting over multiple CPUs.</li>
+<li>Compute a <code>seqinfo</code> from the <code>rna_fwd_track</code> <code>Rle</code>, add <code>seqlengths</code> and convert it into a <code>GRanges</code> object.</li>
+<li>Remove the extended Scc1 peaks that lie outside of genome boundaries. To do this, check the operators <code>%over%</code> and <code>%within%</code>.</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
@@ -519,30 +523,22 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(Rsamtools)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">library</span>(GenomicAlignments)</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">library</span>(SummarizedExperiment)</span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="fu">library</span>(BiocParallel)</span>
-<span id="cb3-5"><a href="#cb3-5"></a>RNAseq_counts <span class="ot">&lt;-</span> <span class="fu">summarizeOverlaps</span>(</span>
-<span id="cb3-6"><a href="#cb3-6"></a>    <span class="at">reads =</span> <span class="fu">BamFileList</span>(samples<span class="sc">$</span>bam), </span>
-<span id="cb3-7"><a href="#cb3-7"></a>    <span class="at">features =</span> genes, </span>
-<span id="cb3-8"><a href="#cb3-8"></a>    <span class="at">singleEnd =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb3-9"><a href="#cb3-9"></a>    <span class="at">fragments =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-10"><a href="#cb3-10"></a>    <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="at">workers =</span> <span class="fu">length</span>(samples<span class="sc">$</span>bam), <span class="at">progressbar =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-11"><a href="#cb3-11"></a>)</span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="fu">colData</span>(RNAseq_counts) <span class="ot">&lt;-</span> <span class="fu">DataFrame</span>(samples)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>genome <span class="ot">&lt;-</span> <span class="fu">seqinfo</span>(rna_fwd_track)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">seqlengths</span>(genome) <span class="ot">&lt;-</span> <span class="fu">lengths</span>(rna_fwd_track)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>genome <span class="ot">&lt;-</span> <span class="fu">as</span>(genome, <span class="st">"GRanges"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="fu">table</span>(scc1_peaks <span class="sc">%over%</span> genome)</span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="fu">table</span>(scc1_peaks <span class="sc">%within%</span> genome)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>scc1_peaks <span class="ot">&lt;-</span> scc1_peaks[scc1_peaks <span class="sc">%within%</span> genome]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</section>
-<section id="differential-expression-analysis" class="level2" data-number="21.2">
-<h2 data-number="21.2" class="anchored" data-anchor-id="differential-expression-analysis"><span class="header-section-number">21.2</span> Differential expression analysis</h2>
 <ul>
-<li>Read <code>DESeq</code> documentation (<code>?DESeq</code>). What type of object does it require? How can you create one?</li>
-<li>Create a <code>DESeqDataSet</code> object from the RNA counts. Choose your <code>design</code> formula appropriately.</li>
-<li>Run <code>DESeq</code> workflow</li>
+<li>Extract the forward RNA-seq coverage signal over the first Scc1 peak</li>
+<li>Convert it into a tibble and add coordinates (± 4000 bp centered over Scc1 peak)</li>
+<li>Do the same for reverse RNA-seq coverage</li>
+<li>Plot the two stranded RNA-seq coverages together</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
@@ -561,18 +557,23 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(DESeq2)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSet</span>(RNAseq_counts, <span class="at">design =</span> <span class="sc">~</span> sample)</span>
-<span id="cb4-3"><a href="#cb4-3"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>rna_fwd_track[scc1_peaks][[<span class="dv">1</span>]]</span>
+<span id="cb4-2"><a href="#cb4-2"></a>df <span class="ot">&lt;-</span> rna_fwd_track[scc1_peaks][[<span class="dv">1</span>]] <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="fu">mutate</span>(<span class="at">position =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3999</span>, <span class="dv">4000</span>, <span class="dv">1</span>))</span>
+<span id="cb4-5"><a href="#cb4-5"></a>df<span class="sc">$</span>forward <span class="ot">&lt;-</span> df<span class="sc">$</span>value</span>
+<span id="cb4-6"><a href="#cb4-6"></a>df<span class="sc">$</span>reverse <span class="ot">&lt;-</span> rna_rev_track[scc1_peaks][[<span class="dv">1</span>]] <span class="sc">|&gt;</span> <span class="fu">as.vector</span>()</span>
+<span id="cb4-7"><a href="#cb4-7"></a>df<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>p <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(df, <span class="sc">-</span>pos, <span class="at">names_to =</span> <span class="st">'strandness'</span>, <span class="at">values_to =</span> <span class="st">'coverage'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pos, <span class="at">y =</span> coverage, <span class="at">col =</span> strandness)) <span class="sc">+</span> </span>
+<span id="cb4-10"><a href="#cb4-10"></a>    <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Check the documentation for the <code>results</code> function from <code>DESeq2</code> package.</li>
-<li>Extract the results of differential expression analysis, for the appropriate <code>contrast</code>.</li>
-<li>Recover genes over-expressed in heat-shock vs.&nbsp;control growth (fold-change &gt;= 2, p-value &lt;= 0.01)</li>
+<li>Iterate over all Scc1 peaks to extract stranded RNA-seq coverage around Scc1 peaks</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
@@ -591,23 +592,22 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">'sample'</span>, <span class="st">'HS'</span>, <span class="st">'WT'</span>))</span>
-<span id="cb5-2"><a href="#cb5-2"></a>upreg_genes <span class="ot">&lt;-</span> res <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href="#cb5-3"></a>    <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">'gene'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-4"><a href="#cb5-4"></a>    <span class="fu">filter</span>(log2FoldChange <span class="sc">&gt;</span> <span class="dv">1</span>, padj <span class="sc">&lt;=</span> <span class="fl">0.01</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-5"><a href="#cb5-5"></a>    <span class="fu">pull</span>(gene)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>df <span class="ot">&lt;-</span> rna_fwd_track[scc1_peaks] <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> <span class="do">## Convert into a data.frame</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="fu">mutate</span>(<span class="at">position =</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3999</span>, <span class="dv">4000</span>, <span class="dv">1</span>), <span class="fu">length</span>(scc1_peaks))) <span class="sc">|&gt;</span> <span class="do">## Repeat the position (± 4000bp) as many times as the number of Scc1 peaks</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="fu">mutate</span>(<span class="at">forward =</span> value) <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="fu">select</span>(group, position, forward) <span class="sc">|&gt;</span> <span class="do">## Tidy up columns</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="fu">mutate</span>(<span class="at">reverse =</span> rna_rev_track[scc1_peaks] <span class="sc">|&gt;</span> <span class="fu">unlist</span>() <span class="sc">|&gt;</span> <span class="fu">as.vector</span>()) <span class="sc">|&gt;</span> <span class="do">## Add reverse scores</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(group, position), <span class="at">names_to =</span> <span class="st">'strandness'</span>, <span class="at">values_to =</span> <span class="st">'coverage'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="fu">group_by</span>(position, strandness) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</section>
-<section id="gene-ontology-over-enrichment-analysis" class="level2" data-number="21.3">
-<h2 data-number="21.3" class="anchored" data-anchor-id="gene-ontology-over-enrichment-analysis"><span class="header-section-number">21.3</span> Gene ontology over-enrichment analysis</h2>
 <ul>
-<li>Perform gene ontology enrichment analysis using the <code>gprofiler2</code> package.</li>
-<li>From the results, recover GO terms from the <code>KEGG</code> database and extract the most enriched terms</li>
-<li>Comment</li>
+<li>Calculate mean, standard deviation and 95% confidence interval of forward and reverse RNA-seq coverage around Scc1 peaks</li>
+<li>Plot the average forward and reverse RNA-seq coverages, with a ribbon showing the 95% confidence interval.</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
@@ -626,8 +626,114 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>go <span class="ot">&lt;-</span> gprofiler2<span class="sc">::</span><span class="fu">gost</span>(genes, <span class="at">organism =</span> <span class="st">'scerevisiae'</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a>go<span class="sc">$</span>result <span class="sc">|&gt;</span> <span class="fu">filter</span>(source <span class="sc">==</span> <span class="st">'KEGG'</span>) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(p_value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>aggr_df <span class="ot">&lt;-</span> <span class="fu">summarize</span>(df, </span>
+<span id="cb6-2"><a href="#cb6-2"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(coverage), </span>
+<span id="cb6-3"><a href="#cb6-3"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(coverage, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>()</span>
+<span id="cb6-5"><a href="#cb6-5"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb6-7"><a href="#cb6-7"></a>        <span class="at">se =</span> sd <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb6-8"><a href="#cb6-8"></a>        <span class="at">CI =</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n<span class="dv">-1</span>) <span class="sc">*</span> se,</span>
+<span id="cb6-9"><a href="#cb6-9"></a>        <span class="at">topMargin =</span> mean <span class="sc">+</span> CI,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>        <span class="at">bottomMargin =</span> mean <span class="sc">-</span> CI</span>
+<span id="cb6-11"><a href="#cb6-11"></a>    )</span>
+<span id="cb6-12"><a href="#cb6-12"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aggr_df, <span class="fu">aes</span>(<span class="at">x =</span> position, <span class="at">y =</span> mean, <span class="at">col =</span> strandness, <span class="at">fill =</span> strandness)) <span class="sc">+</span> </span>
+<span id="cb6-13"><a href="#cb6-13"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb6-14"><a href="#cb6-14"></a>    <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymax =</span> mean <span class="sc">+</span> CI, <span class="at">ymin =</span> mean <span class="sc">-</span> CI), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-a-heaetmap-of-rna-seq-coverage-over-ordered-scc1-peaks" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="plot-a-heaetmap-of-rna-seq-coverage-over-ordered-scc1-peaks"><span class="header-section-number">21.3</span> Plot a heaetmap of RNA-seq coverage over ordered Scc1 peaks</h2>
+<ul>
+<li>Order peaks according to their Scc1 peak signal</li>
+<li>Re-compute the stranded RNA-seq coverages around <strong>ordered</strong> Scc1 peaks</li>
+<li>Plot a (rasterized) heatmap using <code>geom_tile()</code>, with the distance from Scc1 peak in abscisse and each row representing an individual Scc1 peak locus. You can split forward and reverse coverage with <code>facet_wrap(~ strandness)</code>.</li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>ordered_scc1_peaks <span class="ot">&lt;-</span> scc1_peaks[<span class="fu">order</span>(scc1_peaks<span class="sc">$</span>signalValue, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)]</span>
+<span id="cb7-2"><a href="#cb7-2"></a>df <span class="ot">&lt;-</span> rna_fwd_track[ordered_scc1_peaks] <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> <span class="do">## Convert into a data.frame</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="fu">mutate</span>(<span class="at">position =</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3999</span>, <span class="dv">4000</span>, <span class="dv">1</span>), <span class="fu">length</span>(ordered_scc1_peaks))) <span class="sc">|&gt;</span> <span class="do">## Repeat the position (± 4000bp) as many times as the number of Scc1 peaks</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="fu">mutate</span>(<span class="at">forward =</span> value) <span class="sc">|&gt;</span> </span>
+<span id="cb7-6"><a href="#cb7-6"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(group, position, forward) <span class="sc">|&gt;</span> <span class="do">## Tidy up columns</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="fu">mutate</span>(<span class="at">reverse =</span> rna_rev_track[ordered_scc1_peaks] <span class="sc">|&gt;</span> <span class="fu">unlist</span>() <span class="sc">|&gt;</span> <span class="fu">as.vector</span>()) <span class="sc">|&gt;</span> <span class="do">## Add reverse scores</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(group, position), <span class="at">names_to =</span> <span class="st">'strandness'</span>, <span class="at">values_to =</span> <span class="st">'coverage'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="fu">group_by</span>(position, strandness) </span>
+<span id="cb7-10"><a href="#cb7-10"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> position, <span class="at">y =</span> group, <span class="at">fill =</span> <span class="fu">log2</span>(coverage))) <span class="sc">+</span> </span>
+<span id="cb7-11"><a href="#cb7-11"></a>    <span class="fu">geom_tile</span>() <span class="sc">|&gt;</span> ggrastr<span class="sc">::</span><span class="fu">rasterise</span>() <span class="sc">+</span> </span>
+<span id="cb7-12"><a href="#cb7-12"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> strandness, <span class="at">scales =</span> <span class="st">'free'</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>    <span class="fu">scale_y_reverse</span>() <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="fu">scale_fill_gradientn</span>(</span>
+<span id="cb7-15"><a href="#cb7-15"></a>        <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">"#FFFEF9"</span>, <span class="st">"#FFCA67"</span>, <span class="st">"#ED3024"</span>, <span class="st">"#1A0A10"</span>), </span>
+<span id="cb7-16"><a href="#cb7-16"></a>        <span class="at">na.value =</span> <span class="st">'white'</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-stranded-rna-seq-coverages-for-scc1-peaks-grouped-by-their-strength" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="plot-stranded-rna-seq-coverages-for-scc1-peaks-grouped-by-their-strength"><span class="header-section-number">21.4</span> Plot stranded RNA-seq coverages for Scc1 peaks grouped by their strength</h2>
+<ul>
+<li>Group the coverage tibble in 4 groups, containing the 0-25% (weakest) peaks, then 25-50%, 50-75% and 75-100% (strongest) peaks. This can be done with the <code>ntile</code> function.</li>
+<li>Re-plot the average forward and reverse RNA-seq coverages, with a ribbon showing the 95% confidence interval, <strong>splitting the peaks from each group in a different facet (with <code>facet_wrap(~ group)</code>)</strong>.</li>
+</ul>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>df<span class="sc">$</span>signalValue <span class="ot">&lt;-</span> ordered_scc1_peaks<span class="sc">$</span>signalValue[df<span class="sc">$</span>group]</span>
+<span id="cb8-2"><a href="#cb8-2"></a>df<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ntile</span>(df<span class="sc">$</span>signalValue, <span class="dv">4</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>aggr_df <span class="ot">&lt;-</span> <span class="fu">group_by</span>(df, group, position, strandness) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="fu">summarize</span>( </span>
+<span id="cb8-5"><a href="#cb8-5"></a>        <span class="at">mean =</span> <span class="fu">mean</span>(coverage), </span>
+<span id="cb8-6"><a href="#cb8-6"></a>        <span class="at">sd =</span> <span class="fu">sd</span>(coverage, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb8-7"><a href="#cb8-7"></a>        <span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>()</span>
+<span id="cb8-8"><a href="#cb8-8"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb8-10"><a href="#cb8-10"></a>        <span class="at">se =</span> sd <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb8-11"><a href="#cb8-11"></a>        <span class="at">CI =</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n<span class="dv">-1</span>) <span class="sc">*</span> se,</span>
+<span id="cb8-12"><a href="#cb8-12"></a>        <span class="at">topMargin =</span> mean <span class="sc">+</span> CI,</span>
+<span id="cb8-13"><a href="#cb8-13"></a>        <span class="at">bottomMargin =</span> mean <span class="sc">-</span> CI</span>
+<span id="cb8-14"><a href="#cb8-14"></a>    )</span>
+<span id="cb8-15"><a href="#cb8-15"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aggr_df, <span class="fu">aes</span>(<span class="at">x =</span> position, <span class="at">y =</span> mean, <span class="at">col =</span> strandness, <span class="at">fill =</span> strandness)) <span class="sc">+</span> </span>
+<span id="cb8-16"><a href="#cb8-16"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb8-17"><a href="#cb8-17"></a>    <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymax =</span> mean <span class="sc">+</span> CI, <span class="at">ymin =</span> mean <span class="sc">-</span> CI), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
