@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Epigenomics Data Analysis",
     "section": "",
-    "text": "Welcome\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2023.\nAuthors: Jacques Serizay [aut, cre] Version: 1.0.0 Modified: 2023-06-14 Compiled: 2023-07-15 Environment: R version 4.3.1 (2023-06-16), Bioconductor 3.17 License: MIT + file LICENSE Copyright: J. Serizay"
+    "text": "Welcome\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2023.\nAuthors: Jacques Serizay [aut, cre] Version: 1.0.0 Modified: 2023-06-14 Compiled: 2023-07-19 Environment: R version 4.3.1 (2023-06-16), Bioconductor 3.17 License: MIT + file LICENSE Copyright: J. Serizay"
   },
   {
     "objectID": "index.html#what",
