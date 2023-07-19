@@ -326,7 +326,7 @@
     "href": "content/day4/Lab4_RNA-seq_analysis.html#gene-ontology-over-enrichment-analysis",
     "title": "17  Lab 4 - RNA-seq downstream analysis",
     "section": "17.3 Gene ontology over-enrichment analysis",
-    "text": "17.3 Gene ontology over-enrichment analysis\n\nPerform gene ontology enrichment analysis using the gprofiler2 package.\nFrom the results, recover GO terms from the KEGG database and extract the most enriched terms\nComment\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nR\n\ngo &lt;- gprofiler2::gost(genes, organism = 'scerevisiae')\ngo$result |&gt; filter(source == 'KEGG') |&gt; arrange(p_value)"
+    "text": "17.3 Gene ontology over-enrichment analysis\n\nPerform gene ontology enrichment analysis using the gprofiler2 package.\nFrom the results, recover GO terms from the KEGG database and extract the most enriched terms\nComment\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nR\n\ngo &lt;- gprofiler2::gost(upreg_genes, organism = 'scerevisiae')\ngo$result |&gt; filter(source == 'KEGG') |&gt; arrange(p_value)"
   },
   {
     "objectID": "content/day5/Lecture10_HiC.html",

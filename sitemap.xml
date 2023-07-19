@@ -2,106 +2,106 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/index.html</loc>
-    <lastmod>2023-07-19T06:56:46.394Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.891Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/program.html</loc>
-    <lastmod>2023-07-19T06:56:46.406Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.907Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/Rstudio.html</loc>
-    <lastmod>2023-07-19T06:56:46.414Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.915Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/prerequisites.html</loc>
-    <lastmod>2023-07-19T06:56:46.422Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.923Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Lecture1_introduction.html</loc>
-    <lastmod>2023-07-19T06:56:46.430Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.931Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Lecture2_processing.html</loc>
-    <lastmod>2023-07-19T06:56:46.438Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.935Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Demo1_MNase-seq_processing.html</loc>
-    <lastmod>2023-07-19T06:56:46.462Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.963Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day1/Lab1_MNase-seq_processing.html</loc>
-    <lastmod>2023-07-19T06:56:46.498Z</lastmod>
+    <lastmod>2023-07-19T06:59:15.987Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lecture3_workflows.html</loc>
-    <lastmod>2023-07-19T06:56:46.502Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.003Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lecture4_ATACseq.html</loc>
-    <lastmod>2023-07-19T06:56:46.510Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.007Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lecture5_R-101.html</loc>
-    <lastmod>2023-07-19T06:56:46.518Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.015Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Demo2_ATAC-seq_processing.html</loc>
-    <lastmod>2023-07-19T06:56:46.530Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.027Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day2/Lab2_ATAC-seq_analysis.html</loc>
-    <lastmod>2023-07-19T06:56:46.554Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.051Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day3/Lecture6_ChIPseq.html</loc>
-    <lastmod>2023-07-19T06:56:46.562Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.059Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day3/Lecture7_R-201.html</loc>
-    <lastmod>2023-07-19T06:56:46.566Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.067Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day3/Demo3_ChIP-seq_processing.html</loc>
-    <lastmod>2023-07-19T06:56:46.590Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.079Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day3/Lab3_ChIP-seq_analysis.html</loc>
-    <lastmod>2023-07-19T06:56:46.614Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.111Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day4/Lecture8_RNAseq.html</loc>
-    <lastmod>2023-07-19T06:56:46.622Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.119Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day4/Lecture9_R-301.html</loc>
-    <lastmod>2023-07-19T06:56:46.630Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.127Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day4/Demo4_RNA-seq_processing.html</loc>
-    <lastmod>2023-07-19T06:56:46.654Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.151Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day4/Lab4_RNA-seq_analysis.html</loc>
-    <lastmod>2023-07-19T06:56:46.670Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.163Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day5/Lecture10_HiC.html</loc>
-    <lastmod>2023-07-19T06:56:46.678Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.171Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day5/Lecture11_GO-GSEA.html</loc>
-    <lastmod>2023-07-19T06:56:46.694Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.175Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day5/Demo5_Bioc-resources.html</loc>
-    <lastmod>2023-07-19T06:56:46.730Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.199Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/day5/Lab5_data-integration.html</loc>
-    <lastmod>2023-07-19T06:56:46.778Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.223Z</lastmod>
   </url>
   <url>
     <loc>https://js2264.github.io/NGS_Physalia_2023/content/extra.html</loc>
-    <lastmod>2023-07-19T06:56:46.786Z</lastmod>
+    <lastmod>2023-07-19T06:59:16.239Z</lastmod>
   </url>
 </urlset>

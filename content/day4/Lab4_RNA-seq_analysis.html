@@ -626,7 +626,7 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>go <span class="ot">&lt;-</span> gprofiler2<span class="sc">::</span><span class="fu">gost</span>(genes, <span class="at">organism =</span> <span class="st">'scerevisiae'</span>)</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>go <span class="ot">&lt;-</span> gprofiler2<span class="sc">::</span><span class="fu">gost</span>(upreg_genes, <span class="at">organism =</span> <span class="st">'scerevisiae'</span>)</span>
 <span id="cb6-2"><a href="#cb6-2"></a>go<span class="sc">$</span>result <span class="sc">|&gt;</span> <span class="fu">filter</span>(source <span class="sc">==</span> <span class="st">'KEGG'</span>) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(p_value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
