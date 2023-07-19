@@ -121,7 +121,7 @@ upreg_genes <- res |>
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
-go <- gprofiler2::gost(genes, organism = 'scerevisiae')
+go <- gprofiler2::gost(upreg_genes, organism = 'scerevisiae')
 go$result |> filter(source == 'KEGG') |> arrange(p_value)
 ```
 :::
