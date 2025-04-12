@@ -23,12 +23,12 @@ book:
         - pages/Lab4.qmd
         - pages/Lab5.qmd
         - pages/Lab6.qmd
-        # - pages/Lab7.qmd
-        # - pages/Lab8.qmd
+        - pages/Lab7.qmd
+        - pages/Lab8.qmd
         # - pages/Lab9.qmd
   appendices:
     - pages/extra.qmd
-  # cover-image: inst/assets/cover.png
+  cover-image: inst/assets/cover.png
   favicon: inst/assets/favicon.png
   sidebar: 
     tools:

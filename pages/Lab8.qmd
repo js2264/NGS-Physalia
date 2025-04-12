@@ -1,0 +1,17 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 8: Investigating Hi-C contact maps
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Compute the distance-dependent contact probability for a Hi-C contact map
+- Annotate chromatin loops and borders 
+- Visualize Hi-C contact maps 
+- Visualize Hi-C maps aggregated over structural features
+:::
+

@@ -1,0 +1,150 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 7: Hi-C data processing 
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Manually process Hi-C reads into pairs file
+- Filter and deduplicate the pairs file
+- Generate a Hi-C contact map
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+We will process a data from the Koszul lab, generated in 2024 and published [in Science](https://www.science.org/doi/10.1126/science.adm9466).
+
+- [SRR22130072](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6703657)
+:::
+
+## Map reads with `bwa`
+
+`fastq` files have already been downloaded from SRA, using the following command: 
+
+```{sh, filename = 'bash'}
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR221/072/SRR22130072/SRR22130072_1.fastq.gz -o Share/reads/HiC_R1.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR221/072/SRR22130072/SRR22130072_2.fastq.gz -o Share/reads/HiC_R2.fq.gz
+```
+
+`bwa-mem2` allows faster mapping than `bowtie2`. We will use it for Hi-C mapping.
+
+- Check `bwa-mem2 index` help to understand how to use it.
+- Build a yeast genome index for `bwa-mem2`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+bwa-mem2
+bwa-mem2 index -p genomes/R64-1-1 Share/genome/R64-1-1.fa
+```
+:::
+
+- Check `bwa-mem2 mem` help to understand the different options available.
+- Map the reads to the yeast genome with `bwa-mem2 mem` , and the `-SP` option.
+- Check the content of the `HiC.sam` file with `samtools stats`.
+- How many reads were mapped? How many pairs (and total reads) were there originally? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+bwa-mem2 mem
+bwa-mem2 mem -SP5M -t 2 \
+    genomes/R64-1-1 \
+    Share/reads/HiC_R1.fq.gz \
+    Share/reads/HiC_R2.fq.gz > HiC.sam
+samtools stats HiC.sam | grep ^SN
+```
+:::
+
+## Parse `sam` file into pairs 
+
+- Check `pairtools parse` documentation 
+- Use `pairtools parse` to convert the `sam` file into a `pairs` file. Use the `--drop-seq` and `--drop-sam` options to lighten the output file. Also use `--output-stats test.stats` to generate a summary of the parsing.
+- Check the content of the `pairs` file with `head`.
+- How many pairs are there in the `pairs` file?
+- Check the content of the `test.stats` file. What is the average mapping quality of the pairs?
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+samtools view -H HiC.sam | grep @SQ | sed 's,.*SN:,,' | sed 's,LN:,,' > R64-1-1.chrom.sizes
+pairtools parse \
+    -c R64-1-1.chrom.sizes \
+    -o HiC.pairs \
+    --drop-seq --drop-sam \
+    --output-stats test.stats HiC.sam \
+    --nproc-in 2 --nproc-out 2
+head -n 50 HiC.pairs
+wc -l HiC.pairs
+cat test.stats
+```
+:::
+
+## Filter pairs
+
+The following filtering steps should be done to the `pairs` file:
+
+  - Sort the `pairs` file
+  - Remove duplicates
+  - Select only pairs with both ends mapped (ie `pair_type=="UU"`)
+
+- Process to pairs filtering with `pairtools` subcommands. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+pairtools sort --nproc 2 -o HiC.sorted.pairs HiC.pairs
+
+pairtools dedup \
+    --max-mismatch 3 \
+    --mark-dups \
+    --output HiC.sorted.dedup.pairs \
+    HiC.sorted.pairs
+
+pairtools select 'pair_type=="UU"' HiC.sorted.dedup.pairs -o HiC.sorted.dedup.UU.pairs
+```
+:::
+
+## Generate contact maps
+
+- Check `cooler cload` help to understand how to bin pairs into a contact map.
+- Use `cooler cload` to generate a contact map from the `pairs` file. Bin the data at 1kb resolution.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+cooler cload pairs \
+    -c1 2 -p1 3 -c2 4 -p2 5 \
+    R64-1-1.chrom.sizes:1000 \
+    HiC.sorted.dedup.UU.pairs \
+    HiC.cool
+```
+:::
+
+- Check the `cool` file structure with `cooler tree`.
+- Check the content of the `HiC.cool` metadata with `cooler info`.
+- How many pairs are in the `HiC.cool` file? How many non-zero values are there? Comment.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+cooler tree HiC.cool
+cooler info HiC.cool
+```
+:::
+
+## Generate a multi-resolution contact map
+
+- Check `cooler zoomify` help to understand how to generate a multi-resolution contact map.
+- Use `cooler zoomify` to generate a multi-resolution contact map. Don't forget to include normalization in the output maps.
+- Check the content of the `HiC.cool` file with `cooler info` and `cooler tree`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+cooler zoomify -r 1000N --balance -o HiC.mcool HiC.cool
+cooler info HiC.mcool::/resolutions/1000
+cooler info HiC.mcool::/resolutions/5000
+cooler tree HiC.mcool
+```
+:::
+
+
