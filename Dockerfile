@@ -6,7 +6,7 @@ COPY . /opt/BiocBook
 ## Install micromamba and required softwares
 RUN curl -L micro.mamba.pm/install.sh | bash && \
     echo -e "channels:\n  - bioconda\n  - conda-forge\n  - nodefaults\nchannel_priority: flexible" > ~/.condarc && \
-    source ~/.bashrc && \
+    source ~/.bashrc
 RUN micromamba shell init --shell bash --root-prefix=~/micromamba && \
     micromamba create --file /opt/BiocBook/requirements.yml --yes && \
     micromamba clean --yes --quiet && \
