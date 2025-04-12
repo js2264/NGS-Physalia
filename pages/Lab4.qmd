@@ -1,0 +1,196 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 4: ATAC-seq analysis
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Annotate ATAC-seq peaks
+- Import ATAC-seq peaks and fragments in R
+- Compare ATAC-seq and MNase-seq fragment sizes
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+We will process two datasets from the Koszul lab, generated in 2024 and published [in Science](https://www.science.org/doi/10.1126/science.adm9466).
+
+- [SRR31397086](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8640705)
+- [SRR31397088](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8640707)
+
+- A set of ATAC-seq peaks identified with `yapc`. 
+- Two ATAC-seq `bam` files used to generate tracks and call peaks.
+- A set of regulatory elements identified across development, aging and tissues of *C. elegans*, available [here](https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx).
+:::
+
+<!-- ## Process data
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM292_nxq_R1.fq.gz Share/reads/ATAC_rep1_R1.fq.gz
+rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM292_nxq_R2.fq.gz Share/reads/ATAC_rep1_R2.fq.gz
+rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM307_nxq_R1.fq.gz Share/reads/ATAC_rep2_R1.fq.gz
+rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM307_nxq_R2.fq.gz Share/reads/ATAC_rep2_R2.fq.gz
+tinyMapper.sh --mode ATAC --sample Share/reads/ATAC_rep1 --genome ~/genomes/S288c/S288c --output Share/tm/ --threads 16
+tinyMapper.sh --mode ATAC --sample Share/reads/ATAC_rep2 --genome ~/genomes/S288c/S288c --output Share/tm/ --threads 16
+```
+::: -->
+
+## Annotate ATAC-seq peaks with yapc 
+
+- Check documentation from the `yapc` package to see how to annotate peaks with `yapc`.
+- Annotate ATAC peaks from the two provided `bw` files. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+micromamba create -n yapc_env -c conda-forge -c bioconda -c nodefaults yapc "numpy<1.24"
+micromamba run -n yapc_env yapc -h 
+micromamba run -n yapc_env yapc atac \
+    wt Share/tracks/ATAC_rep1.bw Share/tracks/ATAC_rep2.bw
+```
+:::
+
+- Inspect in `IGV` the peak sets generated with different p-value thresholds.
+- Also check the `*d2smooth.bw` track. Can you understand how the peaks are identified? 
+
+## Import ATAC-seq peaks in R
+
+- Check documentation from the `rtacklayer` package to see how to import a `bed` file in `R`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(tidyverse)
+library(GenomicRanges)
+peaks <- read_tsv('Share/peaks/atac_0.05.bed', comment = "#", col_names = FALSE)
+colnames(peaks) <- c("chr", "start", "end", "annot", "score", "strand", ".start", ".end", "NA")
+peaks <- as(peaks, "GRanges")
+peaks
+```
+:::
+
+## Import ATAC-seq fragments in R
+
+- Check documentation from the `Rsamtools` package to see how to create a connection to disk-stored `bam` files. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(Rsamtools)
+atac_bam <- BamFileList(list(
+    rep1 = BamFile('Share/mapping/ATAC_rep1.bam'),
+    rep2 = BamFile('Share/mapping/ATAC_rep2.bam') 
+))
+atac_bam
+```
+:::
+
+- Read `GenomicAlignments` package documentation to see how to import fragments from a `BamFile` connection. 
+- Import fragments from **paired-end** reads, in **proper pairs**, **no duplicates** and **no secondary alignments**, with a **MAPQ >= 20**. The important `bam` column to recover is `isize` (insert size).
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(GenomicAlignments)
+library(purrr)
+param <- ScanBamParam(
+    flag=scanBamFlag(
+        isPaired = TRUE,
+        isProperPair = TRUE,
+        isDuplicate = FALSE,
+        isSecondaryAlignment = FALSE
+    ), 
+    mapqFilter = 20, 
+    what = c("isize")
+)
+atac_frags <- map(atac_bam, readGAlignmentPairs, param = param)
+atac_frags
+```
+:::
+
+## Check distribution of ATAC fragment sizes
+
+- Coerce fragments to `GRanges` with the `as` function.
+- Subset fragments to retain those overlapping imported ATAC-seq `peaks`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+atac_frags <- map(atac_frags, as, "GRanges")
+atac_frags <- map(atac_frags, subsetByOverlaps, peaks)
+```
+:::
+
+- Plot the width distribution for filtered ATAC-seq fragments. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+df <- map_dfr(atac_frags, as_tibble) |> 
+    group_by(width) |> 
+    tally()
+ggplot(df, aes(x = width, y = n)) + geom_line() + xlim(c(0, 600))
+```
+:::
+
+- How can you interpret the resulting distribution?
+
+## Compare ATAC-seq and MNase-seq fragment sizes
+
+- Repeat the same procedure for MNase-seq fragments.
+
+:::. {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+mnase_bam <- BamFile('Share/mapping/MNase_20_filtered_sorted.bam')
+mnase_frags <- readGAlignmentPairs(mnase_bam, param = param)
+mnase_frags <- as(mnase_frags, "GRanges")
+df_mnase <- as_tibble(mnase_frags) |> 
+    group_by(width) |> 
+    tally()
+df2 <- rbind(
+    df |> mutate(type = 'ATAC-seq'),
+    df_mnase |> mutate(type = 'MNase-seq')
+)
+ggplot(df2, aes(x = width, y = n, color = type)) + 
+    geom_line() + 
+    xlim(c(0, 600)) + 
+    theme_bw()
+```
+:::
+
+## Check distance from ATAC-seq to TSSs
+
+- In Lab 2, we have imported genomic annotations in R. Use the same file to extract TSS positions.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(rtracklayer)
+genes <- import('Share/genome/R64-1-1.gtf')
+genes <- genes[genes$type == 'transcript']
+mcols(genes) <- mcols(genes)[, c("gene_name", "gene_id", "gene_biotype")]
+tss <- genes |> resize(width = 1, fix = 'start')
+```
+:::
+
+- Check how many ATAC peaks overlap with TSSs.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+table(peaks %over% tss)
+```
+:::
+
+- Check the distance from each ATAC to the nearest TSS.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+seqlevels(tss) <- seqlevels(peaks)
+peaks <- plyranges::add_nearest_distance(peaks, tss)
+df <- as_tibble(peaks)
+quantile(df$distance, probs = c(0.1, 0.25, 0.5, 0.75, 0.9))
+p <- ggplot(df, aes(x = distance)) + 
+    geom_histogram(binwidth = 10) + 
+    xlim(c(0, 1000)) +
+    ylim(c(0, 250)) +
+    theme_bw()
+```
+:::

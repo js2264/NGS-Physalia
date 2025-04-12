@@ -19,14 +19,14 @@ the R scripting language.
 
 ### A `Docker` image is available for this workshop: 
 
-👉 [ghcr.io/js2264/biocbook.epigenomics](https://ghcr.io/js2264/biocbook.epigenomics) 🐳
+👉 [ghcr.io/js2264/ngs-physalia](https://ghcr.io/js2264/ngs-physalia) 🐳
 
 You can get access to all the packages used in this book in < 1 minute, 
 using this command in a terminal: 
 
 ```{sh "docker", filename="bash"}
 #| eval: false
-docker run -it ghcr.io/js2264/biocbook.epigenomics:devel R
+docker run -it ghcr.io/js2264/ngs-physalia:devel R
 ```
 
 :::

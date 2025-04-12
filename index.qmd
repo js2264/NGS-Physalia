@@ -22,66 +22,47 @@ intro <- glue::glue(
 `r intro`
 
 This is the landing page for the **"Epigenomics Data Analysis"** 
-workshop, ed. 2023.  
+workshop, ed. 2025.  
 
 ## What {-}
 
-This course will introduce biologists and bioinformaticians to the field of 
-regulatory epigenomics. We will cover a range of software and analysis 
-workflows for processing of next-generation sequencing datasets and 
-quantitative analysis ChIP-seq, ATAC-seq data and RNA-seq data. Towards the end of the workshop, 
-a brief introduction to chromatin conformation capture (Hi-C) experiments and analysis 
-will emphasize multi-omics data integration.
+This course will introduce biologists and bioinformaticians to the field of regulatory epigenomics. 
+We will cover a range of software and analysis workflows for processing and quantitative analysis of 
+ChIP-seq, MNase and ATAC-seq data, RNA-seq, and Hi-C data. We will start by introducing general 
+concepts about epigenomics. From there, we will then continue to describe the main analysis 
+steps to go from raw sequencing data to processed and usable data. We will present classical 
+analysis workflows, their output and the possible paths to investigate downstream of this. 
+Towards the end of the workshop, we will focus on multi-omics data integration. 
+Throughout the workshop, real-world datasets will be analysed using bash tools and R/Bioconductor packages.
 
-We will start by introducing general concepts about epigenomics. 
-From there, we will then continue to describe the main analysis steps to go 
-from raw sequencing data to processed and usable data. We will present 
-classical analysis workflows, their output and the possible paths to 
-investigate downstream of this.  
+## Target audience {-}
 
-Throughout the workshop, `bash` tools and `R/Bioconductor` packages will 
-be used to analyse datasets and learn new approaches. 
+This course is primarily targeting researchers who are relatively new to the field 
+of bioinformatics, with practical experience in the experimental side of epigenomics. 
+Attendees should have a background in biology as well as be familiar with genomic data 
+and common file formats from NGS sequencing experiments (fastq, BAM, BED).  
 
-## Who {-}
-
-The course is aimed at researchers interested in learning how to extract 
-biological insights from genomics data, such as ChIP-seq, ATAC-seq or Hi-C.  
-
-It is primarily targeting researchers who are new to the field 
-of bioinformatics, with practical experience in the experimental side of 
-epigenomics. 
-
-Attendees should have a background in biology as well as be somewhat familiar with 
-genomic data and common file formats from NGS sequencing experiments 
-(fastq, BAM, BED).
-
-Practical exercises will use command-line Linux and R code and will be presented 
-as notebooks to ensure reproducible coding.
+Practical exercises will use command-line Linux and R code and will be presented as notebooks to ensure reproducible coding.
+Attendees are expected to know the basics of the R programming language and have prior expe- rience with the Unix command line.
 
 ## Why {-}
 
-At the end of this course, you should be able to:
+By the end of the course, participants will be able to:
 
-- Understanding important genomic file formats
-- Process most types of genomic datasets (RNA-seq, ATAC-seq, Hi-C, ChIP-seq, ...)
-- Analyzing processed datasets to extract relevant information and answer biological questions
-- Good practices to avoid confounding variables and pitfalls in the processing.
-- Proper use of controls and normalization.
-- Integration of different sequencing "omics" datasets
-- Characterisation of the global 3D structures from the sequencing data
-- Detection of regulatory interactions and quantification of their changes between conditions.
-
-Throughout the course, we will also have a focus on reproducible research, documented content and interactive reports.
+- Understand the principles and experimental designs of key genomic assays.
+- Perform preprocessing, alignment, and quality control for RNA-seq, ATAC-seq, ChIP-seq, and Hi-C data.
+- Conduct downstream analyses such as differential expression, peak calling, motif analysis, and interaction visualization.
+- Integrate multiple genomic data types to derive biological insights.
 
 ## Instructors {-}
 
 [Jacques Serizay](mailto:jacques.serizay@pasteur.fr)
 
-# Docker image {-}
+<!-- # Docker image {-}
 
 A `Docker` image built from this repository is available here: 
 
-👉 [ghcr.io/js2264/biocbook.epigenomics](https://ghcr.io/js2264/biocbook.epigenomics) 🐳
+👉 [ghcr.io/js2264/ngs-physalia](https://ghcr.io/js2264/ngs-physalia) 🐳
 
 ::: {.callout-tip icon='true'}
 
@@ -92,12 +73,12 @@ using this command in a terminal:
 
 ```{sh "docker", filename="bash"}
 #| eval: false
-docker run -it ghcr.io/js2264/biocbook.epigenomics:devel R
+docker run -it ghcr.io/js2264/ngs-physalia:devel R
 ```
 
-:::
+::: -->
 
-# RStudio Server {-}
+<!-- # RStudio Server {-}
 
 An RStudio Server instance can be initiated from the `Docker` image as follows: 
 
@@ -107,11 +88,11 @@ docker run \
     --volume <local_folder>:<destination_folder> \
     -e PASSWORD=OHCA \
     -p 8787:8787 \
-    ghcr.io/js2264/biocbook.epigenomics:devel
+    ghcr.io/js2264/ngs-physalia:devel
 ```
 
 The initiated RStudio Server instance will be available at 
-[https://localhost:8787](https://localhost:8787).
+[https://localhost:8787](https://localhost:8787). -->
 
 # Session info {-}
 

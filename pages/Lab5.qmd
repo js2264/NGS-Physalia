@@ -4,14 +4,13 @@ execute:
     eval: false
 ---
 
-# Lab 3: ChIP-seq analysis
+# Lab 5: Comparing sets of ChIP-seq peaks
 
 ::: {.callout-note icon='true'}
 ## Aims
 
-- Find motifs enriched in a set of ChIP-seq peaks
 - Import a dozen of ChIP-seq peak sets in R
-- Check distribution of peaks comapred to genomic features
+- Check distribution of peaks compared to genomic features
 - Check peak occurrence over tissue-specific regulatory elements
 :::
 
@@ -34,61 +33,7 @@ Inspect the available datasets, by filtering e.g. using the following criteria:
 
 Peak files for 12 ChIP-seq datasets have been already downloaded from this database. 
 
-## Find motifs enriched in `xnd-1` ChIP-seq
-
-- Check the [`meme` website](https://meme-suite.org/) to identify which tool is best suited to identify a motif *de novo* in a set of peaks from a ChIP-seq experiment. 
-- What do you need to run `xstreme` on a set of peaks? 
-
-### Preparing `meme` input
-
-- Import `xnd-1` peaks in R as a `GRanges` object.
-- Recover `ce11` genome sequence using the `BSgenome.Celegans.UCSC.ce11` package.
-- Extract sequence over `xnd-1` peaks with the `Biostrings` package.
-- Export the sequences as a `fasta` file. 
-
-::: {.callout-answer .icon .callout-note collapse=true}
-```{r filename = 'r'}
-library(rtracklayer)
-library(Biostrings)
-library(BSgenome.Celegans.UCSC.ce11)
-xnd1 <- import('data/peaks/modENCODE/xnd-1.bed')
-genome <- BSgenome.Celegans.UCSC.ce11
-xnd1_seq <- getSeq(genome, xnd1)
-names(xnd1_seq) <- as.character(xnd1)
-writeXStringSet(xnd1_seq, 'data/peaks/modENCODE/xnd-1.fa')
-```
-:::
-
-### Running `meme`
-
-- Identify motifs enriched in `xnd-1` peaks with `xstreme` using the following options: 
-
-    - Zero or one occurence per sequence at most for `meme`
-    - At most 3 motifs
-    - A min motif width of 6 for `meme`
-    - A max motif width of 15 for `meme`
-    - No `streme` motifs
-    - Over multiple processors in parallel
-
-::: {.callout-answer .icon .callout-note collapse=true}
-```{bash filename = 'sh'}
-xstreme \
-    --p data/peaks/modENCODE/xnd-1.fa \
-    --o data/meme/ \
-    -minw 12 \
-    -maxw 16 \
-    --meme-nmotifs 3 \
-    --meme-p 12 \
-    --meme-mod zoops \
-    --streme-nmotifs 0
-```
-:::
-
-- Check the results. Do they make sense in the light of recent publications? (see [here](https://www.science.org/doi/10.1126/sciadv.abo4082))
-
-## Compare all peaks to genomic features
-
-### Import all peaks in R
+## Import all peaks in R
 
 - In R, list all the `bed` files available for the peaks. 
 - Import each file as a `GRanges` object. 
@@ -97,13 +42,13 @@ xstreme \
 ```{r filename = 'r'}
 library(rtracklayer)
 library(tidyverse)
-bedfiles <- list.files('data/peaks/modENCODE/', pattern = '*bed')
-peaks <- map(bedfiles, ~ import(file.path('data/peaks/modENCODE/', .x)))
+bedfiles <- list.files('Share/peaks/modENCODE/', pattern = '*bed')
+peaks <- map(bedfiles, ~ import(file.path('Share/peaks/modENCODE/', .x)))
 names(peaks) <- str_replace(bedfiles, '.bed', '')
 ```
 :::
 
-### Define genomic features in `ce11`
+## Define genomic features in `ce11`
 
 Genomic features can be easily annotated from a set of gene features. 
 `ChIPseeker` facilitates the annotation of ChIP-seq peaks using gene annotations 
@@ -114,14 +59,12 @@ directly provided in R by `TxDb` gene annotation packages, e.g. `TxDb.Celegans.U
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'r'}
-BiocManager::install('TxDb.Celegans.UCSC.ce11.ensGene')
-BiocManager::install('ChIPseeker')
 library(ChIPseeker)
 library(TxDb.Celegans.UCSC.ce11.ensGene)
 ```
 :::
 
-### ChIP-seq peak overlaps with genomic features 
+## ChIP-seq peak overlaps with genomic features 
 
 - Use `ChIPseeker` to annotate ChIP-seq peaks for a single ChIP-seq experiment. 
 - Extract 
@@ -151,7 +94,7 @@ annots
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'r'}
 library(ggplot2)
-ggplot(annots, aes(x = TF, y = Frequency, fill = Feature)) + 
+p <- ggplot(annots, aes(x = TF, y = Frequency, fill = Feature)) + 
     geom_col() + 
     guides(x =  guide_axis(angle = 90))
 ```
@@ -159,15 +102,15 @@ ggplot(annots, aes(x = TF, y = Frequency, fill = Feature)) +
 
 - Comment on the distribution of the 12 sets of peaks over genomic features. 
 
-### Peaks occurrence over tissue-specific regulatory elements
+## Peaks occurrence over tissue-specific regulatory elements
 
 - Import regulatory elements annotated in *C. elegans* in R, as seen in previous Lab. 
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
 library(readxl)
-download.file('https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx', 'data/WBcel235_REs.xlsx')
-REs <- read_xlsx('data/WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
+download.file('https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx', 'WBcel235_REs.xlsx')
+REs <- read_xlsx('WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
 REs <- makeGRangesFromDataFrame(
     REs, seqnames.field = 'chrom_ce11', 
     start.field = 'start_ce11', end.field = 'end_ce11',

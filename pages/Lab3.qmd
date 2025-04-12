@@ -1,0 +1,187 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 3: Processing MNase-seq data
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Trim adaptors from paired-end fastq files
+- Map MNase-seq reads with `bowtie2`
+- Filter mapped reads with `samtools`
+- Generate a nucleosome position track
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+We will process a data from the Koszul lab, generated in 2024 and published [in Science](https://www.science.org/doi/10.1126/science.adm9466).
+
+- [SRR31398330](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8640795)
+:::
+
+## Download MNase-seq reads from SRA
+
+We can download the paired-end reads (`R1` and `R2` fastq files) directly 
+from the internet. 
+
+- Find the download links associated with the `SRR31398330` SRR ID. You can go to [SRA-explorer](https://sra-explorer.info/) to easily recover links. 
+- Download the two fastq files for the `SRR31398330` SRR ID. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR313/030/SRR31398330/SRR31398330_1.fastq.gz -o MNase_20_R1.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR313/030/SRR31398330/SRR31398330_2.fastq.gz -o MNase_20_R2.fq.gz
+```
+:::
+
+## Trim adaptor sequences
+
+- Why is it important to trim adaptors from fastq files?
+- Why should it be done in a paired-end fashion?
+- Proceed to fastq trimming with `trim_galore`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+trim_galore \
+    --cores 2 \
+    --length 20 \
+    --gzip \
+    --paired \
+    --output_dir ./ \
+    Share/reads/MNase_20_R1.fq.gz Share/reads/MNase_20_R2.fq.gz
+```
+:::
+
+- Was it necessary? How many reads were trimmed? How many bases were trimmed?
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+head -n 40 MNase_20_R1.fq.gz_trimming_report.txt
+head -n 40 MNase_20_R1.fq.gz_trimming_report.txt
+```
+:::
+
+
+## Align reads to a genome reference 
+
+- Can and should `STAR` be used to map MNase-seq reads to a genome reference? 
+- Build *S. cerevisiae* genome (`R64-1-1`) index for `bowtie2`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+bowtie2-build Share/genome/R64-1-1.fa genomes/R64-1-1
+```
+:::
+
+- Map paired-end reads with `bowtie2`. 
+- What does the output `sam` file contain, in terms of reads? In term of un/aligned reads? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+bowtie2 \
+    --threads 2 \
+    -x genomes/R64-1-1 \
+    -1 MNase_20_R1_val_1.fq.gz \
+    -2 MNase_20_R2_val_2.fq.gz \
+    > MNase_20.sam
+```
+:::
+
+## Filter MNase-seq reads
+
+- Filter mapped pairs using the following procedure: 
+
+    - Fix mates
+    - Filter pairs: 
+
+        - Only keep paired reads (`0x001`)
+        - Only keep reads mapped in proper pair (`0x002`)
+        - Remove unmapped reads (`0x004`)
+        - Remove reads with unmapped mate (`0x008`)
+        - Reads mapped with a MAPQ >= 20
+
+    - Sort and index reads
+
+To better understand the combinations of information described by the SAM "flag", 
+check the [Decoding SAM flags page](https://broadinstitute.github.io/picard/explain-flags.html). 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+## Fixing mates
+#      -r: "Remove unmapped reads and secondary alignments"
+#      -m: "Add mate score tag"
+samtools fixmate \
+    -@ 2 \
+    --output-fmt bam \
+    -r -m \
+    MNase_20.sam MNase_20.bam
+
+## - Filter read pairs
+#       -f 0x001: "Keep read paired"
+#       -f 0x002: "Keep read mapped in proper pair"
+#       -F 0x004: "Remove read unmapped"
+#       -F 0x008: "Remove mate unmapped"
+#       -q 20: "MAPQ >= 20"
+#       --fast: "Use fast bam compression"
+samtools view \
+    -@ 2 \
+    --output-fmt bam \
+    -f 0x001 -f 0x002 -F 0x004 -F 0x008 -q 20 \
+    --fast \
+    MNase_20.bam \
+    -o MNase_20_filtered.bam
+
+## - Sorting read pairs
+#| -l 9: "Use best compression "
+samtools sort \
+    -@ 2 \
+    --output-fmt bam \
+    -l 9 \
+    --write-index \
+    MNase_20_filtered.bam \
+    -o MNase_20_filtered_sorted.bam
+```
+:::
+
+- Create a sequencing depth-normalized track, filling out fragments. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+bamCoverage \
+    --bam MNase_20_filtered_sorted.bam \
+    --outFileName MNase_20_filtered_sorted.CPM.bw \
+    --binSize 10 \
+    --numberOfProcessors 4 \
+    --normalizeUsing CPM \
+    --skipNonCoveredRegions \
+    --extendReads
+```
+:::
+
+## Create a nucleosome position track
+
+- Create a nucleosome position track by keeping the fragments between 130 and 165bp, and extending them to 40bp aligned at their center. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'sh'}
+bamCoverage \
+    --bam MNase_20_filtered_sorted.bam \
+    --outFileName MNase_20_filtered_sorted.135-160bp.nuc-center.CPM.bw \
+    --binSize 1 \
+    --smoothLength 10 \
+    --numberOfProcessors 4 \
+    --normalizeUsing CPM \
+    --skipNonCoveredRegions \
+    --MNase
+```
+:::
+
+## Visualize nucleosome positioning 
+
+- Load the nucleosome tracks together with the RNA-seq tracks from the previous lab in `IGV`.
+- Visualize the nucleosome positioning around the `HHO1` gene.
+- How do you interpret the observed nucleosome positioning?

@@ -1,13 +1,48 @@
 # Program {-}
 
-## Day 1 - Next-generation sequencing data processing
+## Day 1 - Gene expression analysis
 
-### Lectures
+* Lecture 1: General processing of NGS data
+* Lab 1: Hands-on processing of RNA-seq data using FastQC, trim_galore, and alignment.
+* Lecture 2: Quantification of gene expression
+* Lab 2: Quantification and differential gene expression by RNA-seq
 
-* Lecture 1: Epigenomics introduction
-* Lecture 2: General processing of NGS data
+## Day 2 - Chromatin accessibility
 
-### Labs
+* Lecture 3: Introduction to general epigenomics concepts
+* Lab 3: Processing ATAC-seq/MNase-seq data
+* Lecture 4: Peak calling and accessibility visualization
+* Lab 4: Peak calling and coverage visualization
+
+## Day 3 - Chromatin composition
+
+* Lecture 5: Introduction to ChIP-seq
+* Lab 5: Processing ChIP-seq data
+* Lecture 6: DNA motif methodologies and resources
+* Lab 6: Meme and TFBSTools for motif enrichment analysis in R
+
+## Day 4 - Chromatin interactions
+
+* Lecture 7: Profiling chromatin contacts and visualize Hi-C data
+* Lab 7: Alignments and quality assessment using hicstuff
+* Lecture 8: Identifying structural features from Hi-C data
+* Lab 8: Levering chromosight to study chromatin contacts
+
+## Day 5 - Data integration and multi-omics
+
+* Lecture 9: Integrating multi-omics data through GO analysis
+* Lab 9: Combining RNA-seq, ATAC-seq, ChIP-seq and Hi-C data with Bioconductor
+
+
+
+
+
+
+
+
+
+
+## Day 1 - RNA-seq
 
 - Fetching an MNase-seq dataset from GEO 
 - Indexing a genome with `bowtie2`

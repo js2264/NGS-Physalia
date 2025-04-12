@@ -1,4 +1,4 @@
-# ATAC-seq processing and analyis
+# DNA motif methodologies and resources
 
 ```{r, echo=FALSE}
 slides <- xfun::with_ext(knitr::current_input(), "qmd") |> 

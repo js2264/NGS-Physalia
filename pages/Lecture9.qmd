@@ -1,4 +1,4 @@
-# NGS processing workflows
+# Integrating multi-omics data through GO analysis
 
 ```{r, echo=FALSE}
 slides <- xfun::with_ext(knitr::current_input(), "qmd") |> 

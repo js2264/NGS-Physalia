@@ -1,4 +1,4 @@
-name: biocbook.epigenomics
+name: ngs-physalia
 
 on:
   push:

@@ -1,0 +1,166 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 6: Motif enrichment analysis from ChIP-seq data
+
+::: {.callout-note icon='true'}
+## Aims
+
+- Find motifs enriched in a set of ChIP-seq peaks
+- Scan genomic loci for de novo motifs
+- Compute statistical enrichment of motifs in sets of genomic annotations
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+- modENCODE/modERN TF ChIP-seq database, available [here](https://www.encodeproject.org/search/?type=Experiment&control_type!=*&status=released&replicates.library.biosample.donor.organism.scientific_name=Caenorhabditis+elegans&biosample_ontology.term_name=whole+organism&assay_title=TF+ChIP-seq&biosample_ontology.classification=whole%20organisms)
+:::
+
+## Find de novo motifs enriched in `xnd-1` ChIP-seq
+
+- Check the [`meme` website](https://meme-suite.org/) to identify which tool is best suited to identify a motif *de novo* in a set of peaks from a ChIP-seq experiment. 
+- What do you need to run `xstreme` on a set of peaks? 
+
+### Preparing `meme` input
+
+- Import `xnd-1` peaks in R as a `GRanges` object.
+- Recover `ce11` genome sequence using the `BSgenome.Celegans.UCSC.ce11` package.
+- Extract sequence over `xnd-1` peaks with the `Biostrings` package.
+- Export the sequences as a `fasta` file. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(rtracklayer)
+library(Biostrings)
+library(BSgenome.Celegans.UCSC.ce11)
+xnd1 <- import('Share/peaks/modENCODE/xnd-1.bed')
+genome <- BSgenome.Celegans.UCSC.ce11
+xnd1_seq <- getSeq(genome, xnd1)
+names(xnd1_seq) <- as.character(xnd1)
+writeXStringSet(xnd1_seq, 'xnd-1.fa')
+```
+:::
+
+### Running `meme`
+
+- Identify motifs enriched in `xnd-1` peaks with `xstreme` using the following options: 
+
+    - Zero or one occurence per sequence at most for `meme`
+    - At most 3 motifs
+    - A min motif width of 6 for `meme`
+    - A max motif width of 15 for `meme`
+    - No `streme` motifs
+    - Over multiple processors in parallel
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{bash filename = 'sh'}
+xstreme \
+    --p Share/peaks/modENCODE/xnd-1.fa \
+    --oc meme_out/ \
+    -minw 12 \
+    -maxw 16 \
+    --meme-nmotifs 3 \
+    --meme-p 12 \
+    --meme-mod zoops \
+    --streme-nmotifs 0
+```
+:::
+
+- Check the results. Do they make sense in the light of recent publications? (see [here](https://www.science.org/doi/10.1126/sciadv.abo4082))
+
+## Scan `ce11` regulatory elements for de novo motifs
+
+- Import `ce11` tissue-specific regulatory element annotations, as done in the previous lab.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(rtracklayer)
+library(GenomicRanges)
+REs <- readxl::read_xlsx('Share/WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
+REs <- makeGRangesFromDataFrame(
+    REs, seqnames.field = 'chrom_ce11', 
+    start.field = 'start_ce11', end.field = 'end_ce11',
+    keep.extra.columns = TRUE
+)
+```
+:::
+
+- Import the first `xnd-1` motif found by XSTREME in R using `universalmotif` package.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(universalmotif)
+xnd1_motifs <- read_meme('meme_out/xstreme.txt')
+names(xnd1_motifs) <- c('motif1', 'motif2', 'motif3')
+```
+:::
+
+
+- Read `motifmatchr::matchMotifs()` documentation. 
+- What class of objects the motifs should be stored into? Coerce `xnd1-` motifs to `PFMatrixList` class.
+- Map `xnd-1` motifs to regulatory elements.
+- What is the class of the generated object? Its dimensions? What are the features and what are the columns? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(motifmatchr)
+library(BiocParallel)
+register(MulticoreParam(workers = 2, progressbar = TRUE))
+xnd1_motifs_pfm <- map(xnd1_motifs, convert_motifs, "TFBSTools-PFMatrix") |> do.call(PFMatrixList, args = _)
+motif_mappings <- matchMotifs(xnd1_motifs_pfm, REs, genome = BSgenome.Celegans.UCSC.ce11::BSgenome.Celegans.UCSC.ce11)
+class(motif_mappings)
+dim(motif_mappings)
+```
+:::
+
+- Compute a fisher test of enrichment for `xnd-1` first motif over Intestine-specific regulatory elements.
+- Is `xnd-1` motif enriched in Intestine-specific regulatory elements?
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+has_xnd1 <- motifMatches(motif_mappings)[, 'motif1']
+is_intestine <- REs$Annotation == 'Intest.'
+tab <- table(is_intestine, has_xnd1)
+fisher_test <- fisher.test(tab)
+fisher_test
+```
+:::
+
+- Now do the same analysis for Germline specific regulatory elements.
+- Is `xnd-1` motif enriched in Germline-specific regulatory elements?
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+has_xnd1 <- motifMatches(motif_mappings)[, 'motif1']
+is_germline <- REs$Annotation == 'Germline'
+tab <- table(is_germline, has_xnd1)
+fisher_test <- fisher.test(tab)
+fisher_test
+```
+:::
+
+- For each motif, identify in which class of tissue-specific regulatory elements they are enriched. 
+- Comment on the results.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(purrr)
+library(broom)
+groups <- c("Hypod.", "Muscle", "Intest.", "Neurons",  "Germline", "Soma", "Ubiq.")
+pvals <- map_dfr(names(xnd1_motifs_pfm), function(motif) {
+    map_dfr(groups, function(group) {
+        tab <- table(REs$Annotation == group, motifMatches(motif_mappings)[, motif])
+        ftest <- fisher.test(tab) |> 
+            tidy() |> 
+            mutate(motif = motif, group = group) |> 
+            select(group, motif, estimate, p.value)
+    })
+})
+filter(pvals, p.value < 0.01, estimate > 2) |> print(n = 40)
+```
+:::
+

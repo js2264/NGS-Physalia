@@ -1,29 +1,31 @@
 book:
-  title: "BiocBook.Epigenomics"
+  title: "Epigenomics Workshop"
   chapters:
     - index.qmd
     - pages/program.qmd
     - pages/prerequisites.qmd
     - part: "Lecture slides"
       chapters: 
-        - pages/Lecture1_introduction.qmd
-        - pages/Lecture2_processing.qmd
-        - pages/Lecture3_workflows.qmd
-        - pages/Lecture4_ATACseq.qmd
-        - pages/Lecture5_R-101.qmd
-        - pages/Lecture6_ChIPseq.qmd
-        - pages/Lecture7_R-201.qmd
-        - pages/Lecture8_RNAseq.qmd
-        - pages/Lecture9_R-301.qmd
-        - pages/Lecture10_HiC.qmd
-        - pages/Lecture11_GO-GSEA.qmd
+        - pages/Lecture1.qmd
+        - pages/Lecture2.qmd
+        - pages/Lecture3.qmd
+        - pages/Lecture4.qmd
+        - pages/Lecture5.qmd
+        - pages/Lecture6.qmd
+        - pages/Lecture7.qmd
+        - pages/Lecture8.qmd
+        - pages/Lecture9.qmd
     - part: "Hands-on exercises"
       chapters: 
-        - pages/lab-1-mnase-seq-processing.qmd
-        - pages/lab-2-atac-seq-analysis.qmd
-        - pages/lab-3-chip-seq-analysis.qmd
-        - pages/lab-4-rna-seq-analysis.qmd
-        - pages/lab-5-data-integration.qmd
+        - pages/Lab1.qmd
+        - pages/Lab2.qmd
+        - pages/Lab3.qmd
+        - pages/Lab4.qmd
+        - pages/Lab5.qmd
+        - pages/Lab6.qmd
+        # - pages/Lab7.qmd
+        # - pages/Lab8.qmd
+        # - pages/Lab9.qmd
   appendices:
     - pages/extra.qmd
   # cover-image: inst/assets/cover.png
@@ -33,9 +35,9 @@ book:
       - icon: git
         menu:
           - text: Source Code
-            url:  https://github.com/js2264/BiocBook.Epigenomics/
+            url:  https://github.com/js2264/NGS-Physalia/
           - text: Browse version `devel`
-            url:  https://js2264.github.io/BiocBook.Epigenomics/devel/
+            url:  https://js2264.github.io/NGS-Physalia/devel/
     style: "docked"
     background: "light"
     collapse-level: 5

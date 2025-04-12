@@ -1,25 +1,20 @@
 name: 
-    BiocBook
+    epigenomics
 channels:
     - bioconda
     - conda-forge
-    - defaults
 dependencies:
-    - fastqc 
-    - trim-galore 
-    - bowtie2 
-    - deepTools 
-    - macs2 
-    - meme 
-    - subread 
-    - star 
-    - samtools 
-    - bedtools 
-    - pandas 
-    - numpy 
-    - pandas 
-    - matplotlib 
-    - cooler 
-    - cooltools 
-    - hicstuff 
+    - numpy>=2.0.0
+    - fastqc
+    - trim-galore
+    # - deeptools
+    - macs2
+    - meme
+    - subread
+    - star
+    - yapc
+    - bedtools
+    - hicstuff
     - chromosight
+    - pip: 
+        - deeptools

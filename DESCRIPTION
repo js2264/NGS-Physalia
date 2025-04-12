@@ -1,6 +1,6 @@
-Package: BiocBook.Epigenomics
-Title: What the Package Does (One Line, Title Case)
-Description: What the package does (one paragraph).
+Package: NGS-Physalia
+Title: Workshop on Epigenomics in R/Bioc
+Description: Workshop on Epigenomics in R/Bioc
 Version: 0.99.0
 Date: `r date()`
 Authors@R: 
@@ -8,8 +8,8 @@ Authors@R:
         "Jacques", "Serizay", , "jacquesserizay@gmail.com", 
         role = c("aut", "cre")
     )
-URL: https://github.com/js2264/BiocBook.Epigenomics
-BugReports: https://github.com/js2264/BiocBook.Epigenomics
+URL: https://github.com/js2264/NGS-Physalia
+BugReports: https://github.com/js2264/NGS-Physalia
 Depends:
     R (>= 4.3), 
     BiocBook
@@ -32,15 +32,15 @@ Imports:
     SummarizedExperiment, 
     BiocParallel, 
     DESeq2, 
-    plyranges
+    plyranges, 
+    tidyomics, 
+    tidyCoverage
 Suggests:
     glue,
     rebook,
     sessioninfo, 
     knitr, 
     quarto
-Remotes:
-    github::js2264/BiocBook
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

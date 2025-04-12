@@ -1,4 +1,4 @@
-# ChIP-seq processing and analyis
+# Introduction to ChIP-seq processing and analysis
 
 ```{r, echo=FALSE}
 slides <- xfun::with_ext(knitr::current_input(), "qmd") |> 
@@ -8,3 +8,4 @@ slides <- file.path("/inst", "docs", slides)
 ```
 
 <iframe height="800" width="100%" src="`r slides`">
+

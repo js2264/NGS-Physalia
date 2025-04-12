@@ -1,4 +1,4 @@
-# Introduction to epigenomics data analysis
+# Introduction to general epigenomics concepts
 
 ```{r, echo=FALSE}
 slides <- xfun::with_ext(knitr::current_input(), "qmd") |> 
@@ -8,3 +8,4 @@ slides <- file.path("/inst", "docs", slides)
 ```
 
 <iframe height="800" width="100%" src="`r slides`">
+
