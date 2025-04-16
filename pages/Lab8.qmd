@@ -15,3 +15,81 @@ execute:
 - Visualize Hi-C maps aggregated over structural features
 :::
 
+## Compute a distance-dependent contact probability from a pairs file
+
+We have a set of Hi-C pairs stored in the `~/Share/pairs/HiC.pairs` file. 
+
+- Use `vroom` to import the file in R 
+- Use `plyinteractions` to coerce the data frame into a `GInteractions` object
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(vroom)
+library(plyinteractions)
+df <- vroom("~/Share/pairs/HiC_filtered.pairs", col_names = c("readid", "seqnames1", "start1", "seqnames2", "start2", "strand1", "strand2", "pair_type"), comment = "#")
+gi <- as_ginteractions(df, end1 = start1, end2 = start2)
+```
+:::
+
+- Compute the `pairdist` distance between each anchor of every interaction in the `GInteractions` object. 
+- Tally the number of interactions at each distance, and convert it to a probability by dividing the number of interactions at each distance by the total number of interactions.
+- Plot the distance-dependent contact probability as a function of distance, using `HiContacts::plotPs`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(tidyverse)
+gi <- add_pairdist(gi)
+df <- as_tibble(gi) |> 
+    group_by(pairdist) |>
+    tally() |> 
+    mutate(prob = n / sum(n))
+plotPs(df, aes(x = pairdist, y = prob))
+```
+:::
+
+## Annotate chromatin loops and borders
+
+We will use the `chromosight` software in the **terminal** to annotate chromatin loops and borders.
+
+- Check `chromosight` help to understand how to use it.
+- Annotate separately `loops` and `borders` from the Hi-C contact map using `chromosight detect` with the `--pattern` option. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+chromosight detect --pattern loops Share/maps/HiC.cool HiC_loops
+chromosight detect --pattern borders Share/maps/HiC.cool HiC_borders
+```
+:::
+
+- Check the aggregated plots generated for loops and borders. 
+- Check the content of the `tsv` files generated for loops and borders.
+
+## Visualize Hi-C contact maps
+
+We will use the `HiContacts` package in `R` to visualize Hi-C contact maps.
+
+- Create a pointer to the `Share/maps/HiC.cool` file in R. 
+- Check the available chromosomes and resolutions stored in the `cool` file. 
+- Import data over the 4th chromosome. 
+- Use the `plotContactMap` function to visualize the Hi-C contact map.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+library(HiContacts)
+cf <- CoolFile("Share/maps/HiC.cool")
+availableChromosomes(cf)
+availableResolutions(cf)
+hic <- import(cf, focus = 'IV')
+plotMatrix(hic)
+```
+:::
+
+- Import loops and borders annotated by chromosight in R. 
+- Plot again the matrix, over a narrower region, and add the loops and borders as annotations.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r filename = 'r'}
+loops <- read_tsv("HiC_loops.tsv")
+
+```
+:::

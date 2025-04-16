@@ -69,13 +69,13 @@ samtools stats HiC.sam | grep ^SN
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-samtools view -H HiC.sam | grep @SQ | sed 's,.*SN:,,' | sed 's,LN:,,' > R64-1-1.chrom.sizes
 pairtools parse \
-    -c R64-1-1.chrom.sizes \
+    -c ~/Share/genome/R64-1-1.chrom.sizes \
     -o HiC.pairs \
     --drop-seq --drop-sam \
-    --output-stats test.stats HiC.sam \
-    --nproc-in 2 --nproc-out 2
+    --output-stats test.stats \
+    --nproc-in 2 --nproc-out 2 \
+    Share/mapping/HiC.sam
 head -n 50 HiC.pairs
 wc -l HiC.pairs
 cat test.stats
@@ -94,7 +94,7 @@ The following filtering steps should be done to the `pairs` file:
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-pairtools sort --nproc 2 -o HiC.sorted.pairs HiC.pairs
+pairtools sort --nproc 2 -o HiC.sorted.pairs Share/pairs/HiC.pairs
 
 pairtools dedup \
     --max-mismatch 3 \
@@ -102,7 +102,7 @@ pairtools dedup \
     --output HiC.sorted.dedup.pairs \
     HiC.sorted.pairs
 
-pairtools select 'pair_type=="UU"' HiC.sorted.dedup.pairs -o HiC.sorted.dedup.UU.pairs
+pairtools select 'pair_type=="UU"' HiC.sorted.dedup.pairs -o HiC_filtered.pairs
 ```
 :::
 
@@ -115,8 +115,8 @@ pairtools select 'pair_type=="UU"' HiC.sorted.dedup.pairs -o HiC.sorted.dedup.UU
 ```{sh, filename = 'bash'}
 cooler cload pairs \
     -c1 2 -p1 3 -c2 4 -p2 5 \
-    R64-1-1.chrom.sizes:1000 \
-    HiC.sorted.dedup.UU.pairs \
+    ~/Share/genome/R64-1-1.chrom.sizes:1000 \
+    Share/pairs/HiC_filtered.pairs \
     HiC.cool
 ```
 :::
@@ -127,8 +127,8 @@ cooler cload pairs \
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-cooler tree HiC.cool
-cooler info HiC.cool
+cooler tree ~/Share/maps/HiC.cool
+cooler info ~/Share/maps/HiC.cool
 ```
 :::
 
@@ -140,7 +140,7 @@ cooler info HiC.cool
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-cooler zoomify -r 1000N --balance -o HiC.mcool HiC.cool
+cooler zoomify -r 1000N --balance -o HiC.mcool ~/Share/maps/HiC.cool
 cooler info HiC.mcool::/resolutions/1000
 cooler info HiC.mcool::/resolutions/5000
 cooler tree HiC.mcool

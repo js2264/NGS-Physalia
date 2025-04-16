@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Epigenomics Workshop",
     "section": "",
-    "text": "Welcome\nPackage: NGS-PhysaliaAuthors: Jacques Serizay [aut, cre]Compiled: 2025-04-13Package version: 0.99.0R version: R Under development (unstable) (2025-03-14 r87973)BioC version: 3.21License: MIT + file LICENSE\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2025.",
+    "text": "Welcome\nPackage: NGS-PhysaliaAuthors: Jacques Serizay [aut, cre]Compiled: 2025-04-16Package version: 0.99.0R version: R Under development (unstable) (2025-03-14 r87973)BioC version: 3.21License: MIT + file LICENSE\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2025.",
     "crumbs": [
       "Welcome"
     ]
@@ -657,7 +657,7 @@
     "href": "pages/Lab7.html#parse-sam-file-into-pairs",
     "title": "\n16  Lab 7: Hi-C data processing\n",
     "section": "\n16.2 Parse sam file into pairs",
-    "text": "16.2 Parse sam file into pairs\n\nCheck pairtools parse documentation\nUse pairtools parse to convert the sam file into a pairs file. Use the --drop-seq and --drop-sam options to lighten the output file. Also use --output-stats test.stats to generate a summary of the parsing.\nCheck the content of the pairs file with head.\nHow many pairs are there in the pairs file?\nCheck the content of the test.stats file. What is the average mapping quality of the pairs?\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\nsamtools view -H HiC.sam | grep @SQ | sed 's,.*SN:,,' | sed 's,LN:,,' &gt; R64-1-1.chrom.sizes\npairtools parse \\\n    -c R64-1-1.chrom.sizes \\\n    -o HiC.pairs \\\n    --drop-seq --drop-sam \\\n    --output-stats test.stats HiC.sam \\\n    --nproc-in 2 --nproc-out 2\nhead -n 50 HiC.pairs\nwc -l HiC.pairs\ncat test.stats",
+    "text": "16.2 Parse sam file into pairs\n\nCheck pairtools parse documentation\nUse pairtools parse to convert the sam file into a pairs file. Use the --drop-seq and --drop-sam options to lighten the output file. Also use --output-stats test.stats to generate a summary of the parsing.\nCheck the content of the pairs file with head.\nHow many pairs are there in the pairs file?\nCheck the content of the test.stats file. What is the average mapping quality of the pairs?\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\npairtools parse \\\n    -c ~/Share/genome/R64-1-1.chrom.sizes \\\n    -o HiC.pairs \\\n    --drop-seq --drop-sam \\\n    --output-stats test.stats \\\n    --nproc-in 2 --nproc-out 2 \\\n    Share/mapping/HiC.sam\nhead -n 50 HiC.pairs\nwc -l HiC.pairs\ncat test.stats",
     "crumbs": [
       "Hands-on exercises",
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Lab 7: Hi-C data processing</span>"
@@ -668,7 +668,7 @@
     "href": "pages/Lab7.html#filter-pairs",
     "title": "\n16  Lab 7: Hi-C data processing\n",
     "section": "\n16.3 Filter pairs",
-    "text": "16.3 Filter pairs\nThe following filtering steps should be done to the pairs file:\n\nSort the pairs file\nRemove duplicates\nSelect only pairs with both ends mapped (ie pair_type==\"UU\")\nProcess to pairs filtering with pairtools subcommands.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\npairtools sort --nproc 2 -o HiC.sorted.pairs HiC.pairs\n\npairtools dedup \\\n    --max-mismatch 3 \\\n    --mark-dups \\\n    --output HiC.sorted.dedup.pairs \\\n    HiC.sorted.pairs\n\npairtools select 'pair_type==\"UU\"' HiC.sorted.dedup.pairs -o HiC.sorted.dedup.UU.pairs",
+    "text": "16.3 Filter pairs\nThe following filtering steps should be done to the pairs file:\n\nSort the pairs file\nRemove duplicates\nSelect only pairs with both ends mapped (ie pair_type==\"UU\")\nProcess to pairs filtering with pairtools subcommands.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\npairtools sort --nproc 2 -o HiC.sorted.pairs Share/pairs/HiC.pairs\n\npairtools dedup \\\n    --max-mismatch 3 \\\n    --mark-dups \\\n    --output HiC.sorted.dedup.pairs \\\n    HiC.sorted.pairs\n\npairtools select 'pair_type==\"UU\"' HiC.sorted.dedup.pairs -o HiC_filtered.pairs",
     "crumbs": [
       "Hands-on exercises",
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Lab 7: Hi-C data processing</span>"
@@ -679,7 +679,7 @@
     "href": "pages/Lab7.html#generate-contact-maps",
     "title": "\n16  Lab 7: Hi-C data processing\n",
     "section": "\n16.4 Generate contact maps",
-    "text": "16.4 Generate contact maps\n\nCheck cooler cload help to understand how to bin pairs into a contact map.\nUse cooler cload to generate a contact map from the pairs file. Bin the data at 1kb resolution.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\ncooler cload pairs \\\n    -c1 2 -p1 3 -c2 4 -p2 5 \\\n    R64-1-1.chrom.sizes:1000 \\\n    HiC.sorted.dedup.UU.pairs \\\n    HiC.cool\n\n\n\n\n\n\nCheck the cool file structure with cooler tree.\nCheck the content of the HiC.cool metadata with cooler info.\nHow many pairs are in the HiC.cool file? How many non-zero values are there? Comment.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\ncooler tree HiC.cool\ncooler info HiC.cool",
+    "text": "16.4 Generate contact maps\n\nCheck cooler cload help to understand how to bin pairs into a contact map.\nUse cooler cload to generate a contact map from the pairs file. Bin the data at 1kb resolution.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\ncooler cload pairs \\\n    -c1 2 -p1 3 -c2 4 -p2 5 \\\n    ~/Share/genome/R64-1-1.chrom.sizes:1000 \\\n    Share/pairs/HiC_filtered.pairs \\\n    HiC.cool\n\n\n\n\n\n\nCheck the cool file structure with cooler tree.\nCheck the content of the HiC.cool metadata with cooler info.\nHow many pairs are in the HiC.cool file? How many non-zero values are there? Comment.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\ncooler tree ~/Share/maps/HiC.cool\ncooler info ~/Share/maps/HiC.cool",
     "crumbs": [
       "Hands-on exercises",
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Lab 7: Hi-C data processing</span>"
@@ -690,7 +690,7 @@
     "href": "pages/Lab7.html#generate-a-multi-resolution-contact-map",
     "title": "\n16  Lab 7: Hi-C data processing\n",
     "section": "\n16.5 Generate a multi-resolution contact map",
-    "text": "16.5 Generate a multi-resolution contact map\n\nCheck cooler zoomify help to understand how to generate a multi-resolution contact map.\nUse cooler zoomify to generate a multi-resolution contact map. Don’t forget to include normalization in the output maps.\nCheck the content of the HiC.cool file with cooler info and cooler tree.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\ncooler zoomify -r 1000N --balance -o HiC.mcool HiC.cool\ncooler info HiC.mcool::/resolutions/1000\ncooler info HiC.mcool::/resolutions/5000\ncooler tree HiC.mcool",
+    "text": "16.5 Generate a multi-resolution contact map\n\nCheck cooler zoomify help to understand how to generate a multi-resolution contact map.\nUse cooler zoomify to generate a multi-resolution contact map. Don’t forget to include normalization in the output maps.\nCheck the content of the HiC.cool file with cooler info and cooler tree.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\ncooler zoomify -r 1000N --balance -o HiC.mcool ~/Share/maps/HiC.cool\ncooler info HiC.mcool::/resolutions/1000\ncooler info HiC.mcool::/resolutions/5000\ncooler tree HiC.mcool",
     "crumbs": [
       "Hands-on exercises",
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Lab 7: Hi-C data processing</span>"
@@ -701,7 +701,40 @@
     "href": "pages/Lab8.html",
     "title": "\n17  Lab 8: Investigating Hi-C contact maps\n",
     "section": "",
-    "text": "Aims\n\n\n\n\nCompute the distance-dependent contact probability for a Hi-C contact map\nAnnotate chromatin loops and borders\nVisualize Hi-C contact maps\nVisualize Hi-C maps aggregated over structural features\n\n\n\n\n\n\n Back to top",
+    "text": "17.1 Compute a distance-dependent contact probability from a pairs file\nWe have a set of Hi-C pairs stored in the ~/Share/pairs/HiC.pairs file.",
+    "crumbs": [
+      "Hands-on exercises",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Lab 8: Investigating Hi-C contact maps</span>"
+    ]
+  },
+  {
+    "objectID": "pages/Lab8.html#compute-a-distance-dependent-contact-probability-from-a-pairs-file",
+    "href": "pages/Lab8.html#compute-a-distance-dependent-contact-probability-from-a-pairs-file",
+    "title": "\n17  Lab 8: Investigating Hi-C contact maps\n",
+    "section": "",
+    "text": "Use vroom to import the file in R\nUse plyinteractions to coerce the data frame into a GInteractions object\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nr\n\nlibrary(vroom)\nlibrary(plyinteractions)\ndf &lt;- vroom(\"~/Share/pairs/HiC_filtered.pairs\", col_names = c(\"readid\", \"seqnames1\", \"start1\", \"seqnames2\", \"start2\", \"strand1\", \"strand2\", \"pair_type\"), comment = \"#\")\ngi &lt;- as_ginteractions(df, end1 = start1, end2 = start2)\n\n\n\n\n\n\nCompute the pairdist distance between each anchor of every interaction in the GInteractions object.\nTally the number of interactions at each distance, and convert it to a probability by dividing the number of interactions at each distance by the total number of interactions.\nPlot the distance-dependent contact probability as a function of distance, using HiContacts::plotPs.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nr\n\nlibrary(tidyverse)\ngi &lt;- add_pairdist(gi)\ndf &lt;- as_tibble(gi) |&gt; \n    group_by(pairdist) |&gt;\n    tally() |&gt; \n    mutate(prob = n / sum(n))\nplotPs(df, aes(x = pairdist, y = prob))",
+    "crumbs": [
+      "Hands-on exercises",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Lab 8: Investigating Hi-C contact maps</span>"
+    ]
+  },
+  {
+    "objectID": "pages/Lab8.html#annotate-chromatin-loops-and-borders",
+    "href": "pages/Lab8.html#annotate-chromatin-loops-and-borders",
+    "title": "\n17  Lab 8: Investigating Hi-C contact maps\n",
+    "section": "\n17.2 Annotate chromatin loops and borders",
+    "text": "17.2 Annotate chromatin loops and borders\nWe will use the chromosight software in the terminal to annotate chromatin loops and borders.\n\nCheck chromosight help to understand how to use it.\nAnnotate separately loops and borders from the Hi-C contact map using chromosight detect with the --pattern option.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nbash\n\nchromosight detect --pattern loops Share/maps/HiC.cool HiC_loops\nchromosight detect --pattern borders Share/maps/HiC.cool HiC_borders\n\n\n\n\n\n\nCheck the aggregated plots generated for loops and borders.\nCheck the content of the tsv files generated for loops and borders.",
+    "crumbs": [
+      "Hands-on exercises",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Lab 8: Investigating Hi-C contact maps</span>"
+    ]
+  },
+  {
+    "objectID": "pages/Lab8.html#visualize-hi-c-contact-maps",
+    "href": "pages/Lab8.html#visualize-hi-c-contact-maps",
+    "title": "\n17  Lab 8: Investigating Hi-C contact maps\n",
+    "section": "\n17.3 Visualize Hi-C contact maps",
+    "text": "17.3 Visualize Hi-C contact maps\nWe will use the HiContacts package in R to visualize Hi-C contact maps.\n\nCreate a pointer to the Share/maps/HiC.cool file in R.\nCheck the available chromosomes and resolutions stored in the cool file.\nImport data over the 4th chromosome.\nUse the plotContactMap function to visualize the Hi-C contact map.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\n\n\n\nr\n\nlibrary(HiContacts)\ncf &lt;- CoolFile(\"Share/maps/HiC.cool\")\navailableChromosomes(cf)\navailableResolutions(cf)\nhic &lt;- import(cf, focus = 'IV')\nplotMatrix(hic)\n\n\n\n\n\n\nImport loops and borders annotated by chromosight in R.\nPlot again the matrix, over a narrower region, and add the loops and borders as annotations.\n\n\n\n\n\n\n\nAnswer\n\n\n\n\n\nloops &lt;- read_tsv(“HiC_loops.tsv”)",
     "crumbs": [
       "Hands-on exercises",
       "<span class='chapter-number'>17</span>  <span class='chapter-title'>Lab 8: Investigating Hi-C contact maps</span>"
