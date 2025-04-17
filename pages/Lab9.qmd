@@ -1,0 +1,340 @@
+---
+engine: knitr
+execute:
+    eval: false
+---
+
+# Lab 9: Multi-omics data integration
+
+::: {.callout-note icon='true'}
+## Aims
+
+Cohesin is a ring-like protein complex that plays a crucial role in the organization of chromatin.
+it is involved in the formation of chromatin loops and the maintenance of sister chromatid cohesion during cell division. 
+Its activity is to extrude the DNA fiber through its ring structure, thereby creating chromatin loops 
+and organizing the chromatin into higher-order structures.
+
+In yeast, active gene transcription is thought to contribute to translocation of the cohesin 
+complex co-transcriptionally. Thus, cohesin complexes could eventually accumulate preferentially
+at convergent sites of active transcription, where they could stabilize chromatin loops.
+
+In this lab, we will analyze a dataset from the yeast *Saccharomyces cerevisiae* to study the
+role of cohesin in chromatin organization, in G1 and G2M phases of the cell cycle.
+
+The primary aims of this lab are to: 
+
+1. Identify active and inactive convergent transcription loci
+2. Understand whether cohesin is enriched at active convergent transcription loci, compared to inactive ones
+3. Assess the distribution of nucleosomes at convergent transcription loci occupied by cohesin
+4. Quantify chromatin looping over convergent transcription loci
+
+:::
+
+::: {.callout-tip icon='true'}
+## Datasets
+
+- RNAseq @ G1: 
+  - rep1
+  - rep2
+  - rep3
+
+- Hi-C:
+  - G1
+  - G2M
+
+- MNase: 
+  - 5'
+  - 10'
+  - 15'
+
+- Scc1 ChIP-seq
+  - IP
+  - Input
+:::
+
+
+## Identify active/inactive convergent transcription loci
+
+- Quantify gene expression using `featureCounts`. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+featureCounts \
+    -a Share/genome/R64-1-1.gtf \
+    -o RNAseq_counts.txt \
+    -t transcript \
+    -g gene_name \
+    -s 2 \
+    -p \
+    --countReadPairs \
+    -P -B -D 10000 -C \
+    -T 2 \
+    Share/day5/RNA/RNA_rep*.bam
+```
+:::
+
+- Import the gene annotations and counts into R 
+- Compute average `TPM` values for each gene across the three replicates
+- Annotate the genes with their `TPM` values
+
+`TPM` values can be computed using the following function:
+
+```{r, filename = 'R'}
+countToTpm <- function(counts, effLen) {
+    # effLen is the effective length of the gene, stored in the featureCounts output
+    rate <- log(counts) - log(effLen)
+    denom <- log(sum(exp(rate)))
+    exp(rate - denom + log(1e6))
+}
+```
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(rtracklayer)
+genes <- import('Share/genome/R64-1-1.gtf')
+genes <- genes[genes$type == 'transcript']
+names(genes) <- genes$gene_name
+mcols(genes) <- NULL
+
+library(tidyverse)
+cnts <- read_tsv('RNAseq_counts.txt', col_names = TRUE, comment = "#")
+genes$efflength <- cnts$Length
+cnts <- cnts |> 
+    select(-c(2:6)) |> 
+    column_to_rownames('Geneid') |> 
+    as.matrix()
+
+tpms <- apply(cnts, 2, function(x) countToTpm(x, genes$efflength)) |> rowMeans()
+genes$TPM <- tpms
+genes$TPM_next_gene <- lead(tpms)
+```
+:::
+
+- Identify convergent transcription loci (i.e. forward genes followed by reverse genes, which are less than 1kb apart)
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+gene_orientation <- as.vector(strand(genes))
+genes$is_convergent <- gene_orientation == '+' & lead(gene_orientation) == '-'
+
+intergenic_width <- lead(as.vector(start(genes))) - as.vector(end(genes))
+
+convergent_genes <- genes[genes$is_convergent & intergenic_width < 1000]
+```
+:::
+
+- Classify convergent transcription loci as active or inactive based on their `TPM` values (> 100 = active, < 100 = inactive)
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+convergent_genes$active <- case_when(
+    convergent_genes$TPM > 100 & convergent_genes$TPM_next_gene > 100 ~ 'active',
+    convergent_genes$TPM < 100 & convergent_genes$TPM_next_gene < 100 ~ 'inactive', 
+    TRUE ~ 'somewhat_active'
+)
+export(convergent_genes[convergent_genes$active == 'somewhat_active'] , 'somewhat_active_convergent_genes.bed')
+export(convergent_genes[convergent_genes$active == 'active'] , 'active_convergent_genes.bed')
+export(convergent_genes[convergent_genes$active == 'inactive'] , 'inactive_convergent_genes.bed')
+```
+:::
+
+## Annotate cohesin peaks at convergent transcription loci
+
+- Annotate cohesin peaks using `macs2` with the IP and Input files bam files. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{sh, filename = 'bash'}
+macs2 callpeak \
+    -t Share/day5/Scc1/Scc1_IP.bam \
+    -c Share/day5/Scc1/Scc1_input.bam \
+    -f BAMPE \
+    -n Scc1
+```
+:::
+
+- Import the peaks into R
+- Check whether convergent genes are enriched for cohesin peaks, compared to non-convergent genes
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+scc1_peaks <- import('Scc1_peaks.narrowPeak')
+seqlevels(scc1_peaks, pruning.mode="coarse")  <- seqlevels(genes)
+scc1_peaks$at_active_convergent_loci <- scc1_peaks %over% convergent_genes[convergent_genes$active == 'active']
+table(scc1_peaks$at_active_convergent_loci)
+
+table(
+    is_convergent = genes$is_convergent, 
+    is_bound_by_scc1 = resize(genes, 200, fix = 'end') %over% scc1_peaks
+) |> fisher.test()
+```
+:::
+
+## Plot epigenomics signal at convergent transcription loci
+
+- Group convergent genes by their `TPM` class and plot the average cohesin signal for each class using `tidyCoverage`.
+- Interpret the results. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(plyranges)
+library(tidyCoverage)
+features <- lapply(c('active', 'inactive', 'somewhat_active'), function(x) {
+    convergent_genes |> 
+        filter(active == x) |> 
+        resize(1, fix = 'end') |> 
+        resize(4000, fix = 'center') 
+})
+names(features) <- c('active', 'inactive', 'somewhat_active')
+
+tracks <- list(
+    RNA = import('RNA_rep1.bw', as = "Rle"), 
+    Scc1 = import('Scc1_IP.bw', as = "Rle")
+)
+
+covexp <- CoverageExperiment(tracks, features)
+aggcov <- aggregate(covexp)
+as_tibble(aggcov) |> 
+    ggplot(aes(col = features)) + 
+    geom_aggrcoverage() + 
+    facet_grid(~ track, scales = 'free')
+```
+:::
+
+- Import MNase fragments in R from the bam file of each timepoint
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(GenomicAlignments)
+mnase_frags <- c(
+    readGAlignmentPairs("Share/day5/MNase/MNase_5min.bam"), 
+    readGAlignmentPairs("Share/day5/MNase/MNase_10min.bam"),
+    readGAlignmentPairs("Share/day5/MNase/MNase_20min.bam")
+) |> granges()
+mnase_cov <- mnase_frags |> 
+    resize(40, fix = 'center') |>
+    coverage()
+```
+:::
+
+- Now only focusing on Scc1 peaks over convergent transcription loci, check the nucleosome distribution using the `MNase` data.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r}
+features <- scc1_peaks |> 
+    filter_by_overlaps(convergent_genes) |> 
+    mutate(start = start + peak, end = start) |> 
+    resize(2000, fix = 'center') 
+
+tracks <- list(
+    RNA = import('RNA_rep1.bw', as = "Rle"), 
+    Scc1 = import('Scc1_IP.bw', as = "Rle"), 
+    MNase = mnase_cov
+)
+
+covexp <- CoverageExperiment(tracks, features)
+aggcov <- aggregate(covexp)
+as_tibble(aggcov) |> 
+    ggplot(aes(col = track)) + 
+    geom_aggrcoverage() + 
+    facet_grid(~ track, scales = 'free')
+```
+:::
+
+## Sequence analysis of Scc1 peaks
+
+- Search for motifs in the Scc1 peaks, centered at their summit ± 150 using `STREME`.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(Biostrings)
+scc1_summits <- scc1_peaks |> 
+    filter_by_overlaps(convergent_genes) |> 
+    mutate(start = start + peak, end = start) |> 
+    resize(300, fix = 'center') 
+genome <- readDNAStringSet("Share/genome/R64-1-1.fa")
+seqs <- genome[scc1_summits]
+names(seqs) <- as.character(scc1_summits)
+writeXStringSet(seqs, 'scc1_summits.fasta')
+```
+
+```{sh, filename = 'bash'}
+xstreme \
+    --order 2 \
+    --oc streme_out \
+    --meme-nmotifs 0 \
+    --fimo-skip \
+    --p scc1_summits.fasta
+```
+:::
+
+- Extract the cut site positions from the MNase data and plot the MNase cut sites pile-up ± 100bp over Scc1 peaks.
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+mnase_cut_5p <- resize(mnase_frags, 1, fix = 'start')
+mnase_cut_3p <- resize(mnase_frags, 1, fix = 'end')
+mnase_cut <- c(mnase_cut_5p, mnase_cut_3p) |> coverage() 
+
+features <- scc1_peaks |> 
+    filter_by_overlaps(convergent_genes) |> 
+    mutate(start = start + peak, end = start) |> 
+    resize(200, fix = 'center') 
+
+tracks <- mnase_cut
+
+pileup <- CoverageExperiment(tracks, features) |> 
+    expand() |> 
+    group_by(track, features, coord.scaled) |>
+    tally(coverage)
+
+ggplot(pileup, aes(x = coord.scaled, y = n)) + 
+    geom_line() 
+```
+:::
+
+- Comment these results.
+
+## Quantify chromatin looping over Scc1-bound/free convergent transcription loci
+
+- Generate all possible pairs of Scc1 peaks overlapping convergent transcription loci
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(InteractionSet)
+library(plyinteractions)
+gi_with_scc1 <- GInteractions(
+    anchor1 = combn(1:length(scc1_summits), 2)[1, ], 
+    anchor2 = combn(1:length(scc1_summits), 2)[2, ], 
+    regions = scc1_summits
+) |> filter(seqnames1 == seqnames2, abs(start2-end1) >= 15000, abs(start2-end1) <= 30000)
+```
+:::
+
+- Import G1 and G2/M Hi-C data into R
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+library(HiContacts)
+cfs <- list(
+    G1 = CoolFile('Share/day5/HiC/HiC_G1.mcool'), 
+    G2M = CoolFile('Share/day5/HiC/HiC_G2M.mcool')
+)
+```
+:::
+
+- Compute the aggregated signal of Hi-C data over the Scc1-bound convergent transcription loci
+
+::: {.callout-answer .icon .callout-note collapse=true}
+```{r, filename = 'R'}
+hic <- import(cfs[['G1']], resolution = 1000)
+g1_aggr <- aggregate(hic, targets = gi_with_scc1, flankingBins = 9)
+hic <- import(cfs[['G2M']], resolution = 1000)
+g2m_aggr <- aggregate(hic, targets = gi_with_scc1, flankingBins = 9)
+p <- cowplot::plot_grid(
+    plotMatrix(g1_aggr, use.scores = 'detrended', scale = 'linear', limits = c(-0.25, 0.25), cmap = bgrColors()) + ggtitle("G1, Scc1 pairs"), 
+    plotMatrix(g2m_aggr, use.scores = 'detrended', scale = 'linear', limits = c(-0.25, 0.25), cmap = bgrColors()) + ggtitle("G2M, Scc1 pairs")
+)
+```
+:::
+
+- Comment the results, and propose a unified, multi-step model for how and when chromatin loops are formed in yeast. 
