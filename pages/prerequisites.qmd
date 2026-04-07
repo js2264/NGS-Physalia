@@ -50,6 +50,12 @@ docker run -it ghcr.io/js2264/ngs-physalia:devel R
     - [`macs2`](https://github.com/macs3-project/MACS/wiki/Install-macs2#easy-installation-through-pypi)
     - [`meme`](https://meme-suite.org/meme/doc/install.html?man_type=web)
     - [`subread`](https://subread.sourceforge.net/)
+    - [`star`](https://github.com/alexdobin/STAR)
+    - [`samtools`](https://github.com/samtools/samtools)
+    - [`bedtools`](https://bedtools.readthedocs.io/en/latest/content/installation.html)
+    - [`cooler`](https://cooler.readthedocs.io/en/latest/installation.html)
+    - [`cooltools`](https://cooltools.readthedocs.io/en/latest/installation.html)
+    - [`hicstuff`](https://hicstuff.readthedocs.io/en/latest/installation.html)
 
 ::: {.callout-tip icon='true'}
 
@@ -67,7 +73,7 @@ bash
 micromamba create -n epigenomics
 micromamba install --name epigenomics -c bioconda -c conda-forge \
     fastqc fastqc trim-galore bowtie2 deepTools macs2 meme subread star samtools bedtools \
-    pandas numpydoc matplotlib cooler cooltools hicstuff
+    cooler cooltools hicstuff
 ```
 
 :::
@@ -82,3 +88,16 @@ micromamba install --name epigenomics -c bioconda -c conda-forge \
     - `GenomicFeatures`
     - `DESeq2`
     - `gprofiler2`
+    - `HiContacts`
+    - `tidyverse`
+
+To install these packages, you can use the following code in R:
+
+```{r, filename = 'R'}
+install.packages("tidyverse")
+install.packages("BiocManager")
+BiocManager::install(
+    c("SummarizedExperiment", "rtracklayer", "GenomicRanges", "GenomicAlignments", "GenomicFeatures", "DESeq2", "gprofiler2", "HiContacts")
+)
+```
+

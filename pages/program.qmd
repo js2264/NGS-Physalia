@@ -10,14 +10,14 @@
 ## Day 2 - Chromatin accessibility
 
 * Lecture 3: Introduction to general epigenomics concepts
-* Lab 3: Processing ATAC-seq/MNase-seq data
+* Lab 3: Processing MNase-seq data
 * Lecture 4: Peak calling and accessibility visualization
-* Lab 4: Peak calling and coverage visualization
+* Lab 4: ATAC-seq peak calling and analysis
 
 ## Day 3 - Chromatin composition
 
 * Lecture 5: Introduction to ChIP-seq
-* Lab 5: Processing ChIP-seq data
+* Lab 5: Integrating ChIP-seq peaks and genomic annotations
 * Lecture 6: DNA motif methodologies and resources
 * Lab 6: Meme and TFBSTools for motif enrichment analysis in R
 
@@ -32,76 +32,3 @@
 
 * Lecture 9: Integrating multi-omics data through GO analysis
 * Lab 9: Combining RNA-seq, ATAC-seq, ChIP-seq and Hi-C data with Bioconductor
-
-
-
-
-
-
-
-
-
-
-## Day 1 - RNA-seq
-
-- Fetching an MNase-seq dataset from GEO 
-- Indexing a genome with `bowtie2`
-- Map paired-end reads with `bowtie2`
-- Generate sequencing-depth normalized track
-- Generate nucleosomes track
-- Check the relevance of filtering out duplicates
-
-## Day 2 - ATAC-seq
-
-### Lectures
-
-* Lecture 3: NGS worfklows: bash, Snakemake, Nextflow, ...
-* Lecture 4: ATAC-seq processing
-* Lecture 5: R/Bioconductor 101: Data import, manipulating genomic ranges, ...
-
-### Labs
-
-- Overlap ATAC-seq peaks with annotated REs
-- Check ATAC-seq fragment sizes
-- Overlap ATAC-seq peaks with annotated regulatory elements (REs)
-- Check tissue-specific enrichment of ATAC-seq peaks
-
-## Day 3 - ChIP-seq analysis
-
-### Lectures
-
-* Lecture 6: ChIP-seq processing
-* Lecture 7: R/Bioconductor 201: Rle, SummarizedExperiment, ...
-
-### Labs
-
-- Find motifs enriched in a set of ChIP-seq peaks
-- Import a dozen of ChIP-seq peak sets in R
-- Check distribution of peaks comapred to genomic features
-- Check peak occurrence over tissue-specific regulatory elements
-
-## Day 4 - RNA-seq analysis
-
-### Lectures
-
-* Lecture 8: RNA-seq processing
-* Lecture 9: R/Bioconductor 301: Databases, resources, ...
-
-### Labs
-
-- Manually process RNA-seq reads
-- Generate stranded RNA-seq tracks with `bamCoverage`
-- Estimate transcript abundance with `summarizeOverlaps`
-
-## Day 5 - Data integration and multi-omics
-
-### Lectures
-
-* Lecture 10: Hi-C processing
-* Lecture 11: GO and GSEA analyses
-
-### Labs
-
-- Visually inspect results from MNase-seq, Scc1 ChIP-seq and RNA-seq in yeast
-- Plot profiles of MNase-seq coverage @ TSSs
-- Plot profiles of RNA-seq @ Scc1 ChIP-seq 

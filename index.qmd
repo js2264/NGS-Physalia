@@ -22,7 +22,7 @@ intro <- glue::glue(
 `r intro`
 
 This is the landing page for the **"Epigenomics Data Analysis"** 
-workshop, ed. 2025.  
+workshop, ed. 2026.  
 
 ## What {-}
 
