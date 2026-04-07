@@ -81,6 +81,8 @@ jobs:
           apt-get update && apt-get install -y rsync
 
       - name: 🔧 Install quarto dependencies    
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           quarto install tinytex
           quarto check

@@ -1,4 +1,4 @@
-Package: NGS-Physalia
+Package: NGSPhysalia
 Title: Workshop on Epigenomics in R/Bioc
 Description: Workshop on Epigenomics in R/Bioc
 Version: 0.99.0
@@ -23,6 +23,7 @@ Imports:
     GenomicAlignments, 
     tidyverse, 
     GenomicRanges, 
+    GenomicFeatures, 
     readxl, 
     Biostrings, 
     BSgenome.Celegans.UCSC.ce11, 
@@ -33,6 +34,8 @@ Imports:
     BiocParallel, 
     DESeq2, 
     plyranges, 
+    HiContacts, 
+    tidyverse, 
     tidyomics, 
     tidyCoverage
 Suggests:
