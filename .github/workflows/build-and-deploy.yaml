@@ -70,11 +70,11 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: 📦 List installed packages
-        run: |
-          pkgs <- installed.packages()[,"Package"]
-          sessioninfo::session_info(pkgs, include_base = TRUE)
-        shell: /usr/local/bin/Rscript {0}
+      # - name: 📦 List installed packages
+      #   run: |
+      #     pkgs <- installed.packages()[,"Package"]
+      #     sessioninfo::session_info(pkgs, include_base = TRUE)
+      #   shell: /usr/local/bin/Rscript {0}
 
       - name: 📚 Install rsync
         run: |
