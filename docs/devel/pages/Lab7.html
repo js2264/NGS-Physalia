@@ -465,6 +465,9 @@ Answer
 <li>How many pairs are there in the <code>pairs</code> file?</li>
 <li>Check the content of the <code>hic.stats</code> file. What is the average mapping quality of the pairs?</li>
 </ul>
+<p>#::: {.callout-note icon=‘true’}</p>
+<p><code>pairtools</code> has been installed in a separate <code>micromamba</code> environment <code>pairtools_env</code>, because it is incompatible with other tools we will use in the workshop.</p>
+<p>:::</p>
 <div class="icon callout callout-style-default callout-answer callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -482,7 +485,7 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>bash</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pairtools</span> parse <span class="dt">\</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> run <span class="at">-n</span> pairtools_env pairtools parse <span class="dt">\</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">-c</span> ~/Share/genome/R64-1-1.chrom.sizes <span class="dt">\</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">-o</span> HiC.pairs <span class="dt">\</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--drop-seq</span> <span class="at">--drop-sam</span> <span class="dt">\</span></span>
@@ -523,15 +526,15 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>bash</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pairtools</span> sort <span class="at">--nproc</span> 2 <span class="at">-o</span> HiC.sorted.pairs HiC.pairs</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> run <span class="at">-n</span> pairtools_env pairtools sort <span class="at">--nproc</span> 2 <span class="at">-o</span> HiC.sorted.pairs HiC.pairs</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pairtools</span> dedup <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> run <span class="at">-n</span> pairtools_env pairtools dedup <span class="dt">\</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--max-mismatch</span> 3 <span class="dt">\</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--mark-dups</span> <span class="dt">\</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--output</span> HiC.sorted.dedup.pairs <span class="dt">\</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    HiC.sorted.pairs</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">pairtools</span> select <span class="st">'pair_type=="UU"'</span> HiC.sorted.dedup.pairs <span class="at">-o</span> HiC_filtered.pairs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> run <span class="at">-n</span> pairtools_env pairtools select <span class="st">'pair_type=="UU"'</span> HiC.sorted.dedup.pairs <span class="at">-o</span> HiC_filtered.pairs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
