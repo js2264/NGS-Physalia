@@ -137,7 +137,9 @@ df_mnase <- as_tibble(mnase_frags) |>
 df2 <- rbind(
     df |> mutate(type = 'ATAC-seq'),
     df_mnase |> mutate(type = 'MNase-seq')
-)
+) |> 
+    group_by(type) |>
+    mutate(n = n / sum(n))
 ggplot(df2, aes(x = width, y = n, color = type)) + 
     geom_line() + 
     xlim(c(0, 600)) + 

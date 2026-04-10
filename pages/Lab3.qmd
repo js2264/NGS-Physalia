@@ -119,7 +119,7 @@ samtools fixmate \
     -@ 2 \
     --output-fmt bam \
     -r -m \
-    MNase_20.sam MNase_20.bam
+    Share/MNase/MNase_20.sam MNase_20.bam
 
 ## - Filter read pairs
 #       -f 0x001: "Keep read paired"
