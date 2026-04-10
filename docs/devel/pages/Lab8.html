@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.9.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>17&nbsp; Lab 8: Investigating Hi-C contact maps – Epigenomics Workshop</title>
 <style>
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e5c0da90bde570b7566f6217e7c63da7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-4e5466e430b1db38349d513585fd1d59.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-d3933eb732e7ca8d4c0aa28bcb6a42d5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../site_libs/bootstrap/bootstrap-cf9dee8c300caccc3880964f43408263.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -322,8 +322,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#compute-a-distance-dependent-contact-probability-from-a-pairs-file" id="toc-compute-a-distance-dependent-contact-probability-from-a-pairs-file" class="nav-link active" data-scroll-target="#compute-a-distance-dependent-contact-probability-from-a-pairs-file"><span class="header-section-number">17.1</span> Compute a distance-dependent contact probability from a pairs file</a></li>
-  <li><a href="#annotate-chromatin-loops-and-borders" id="toc-annotate-chromatin-loops-and-borders" class="nav-link" data-scroll-target="#annotate-chromatin-loops-and-borders"><span class="header-section-number">17.2</span> Annotate chromatin loops and borders</a></li>
+<li><a href="#annotate-chromatin-loops-and-borders" id="toc-annotate-chromatin-loops-and-borders" class="nav-link active" data-scroll-target="#annotate-chromatin-loops-and-borders"><span class="header-section-number">17.1</span> Annotate chromatin loops and borders</a></li>
+  <li><a href="#compute-a-distance-dependent-contact-probability-from-a-pairs-file" id="toc-compute-a-distance-dependent-contact-probability-from-a-pairs-file" class="nav-link" data-scroll-target="#compute-a-distance-dependent-contact-probability-from-a-pairs-file"><span class="header-section-number">17.2</span> Compute a distance-dependent contact probability from a pairs file</a></li>
   <li><a href="#visualize-hi-c-contact-maps" id="toc-visualize-hi-c-contact-maps" class="nav-link" data-scroll-target="#visualize-hi-c-contact-maps"><span class="header-section-number">17.3</span> Visualize Hi-C contact maps</a></li>
   </ul></nav>
     </div>
@@ -363,12 +363,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </div>
 </div>
-<section id="compute-a-distance-dependent-contact-probability-from-a-pairs-file" class="level2" data-number="17.1"><h2 data-number="17.1" class="anchored" data-anchor-id="compute-a-distance-dependent-contact-probability-from-a-pairs-file">
-<span class="header-section-number">17.1</span> Compute a distance-dependent contact probability from a pairs file</h2>
-<p>We have a set of Hi-C pairs stored in the <code>~/Share/pairs/HiC.pairs</code> file.</p>
+<section id="annotate-chromatin-loops-and-borders" class="level2" data-number="17.1"><h2 data-number="17.1" class="anchored" data-anchor-id="annotate-chromatin-loops-and-borders">
+<span class="header-section-number">17.1</span> Annotate chromatin loops and borders</h2>
+<p>We will use the <code>chromosight</code> software in the <strong>terminal</strong> to annotate chromatin loops and borders.</p>
 <ul>
-<li>Use <code>vroom</code> to import the file in R</li>
-<li>Use <code>plyinteractions</code> to coerce the data frame into a <code>GInteractions</code> object</li>
+<li>Check <code>chromosight</code> help to understand how to use it.</li>
+<li>Annotate separately <code>loops</code> and <code>borders</code> from the Hi-C contact map in <code>Share/HiC/HiC_G2M.cool</code>using <code>chromosight detect</code> with the <code>--pattern</code> option.</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
@@ -385,21 +385,25 @@ Answer
 <div class="cell" data-layout-align="center">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>r</strong></pre>
+<pre><strong>bash</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vroom.tidyverse.org">vroom</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">plyinteractions</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://vroom.tidyverse.org/reference/vroom.html">vroom</a></span><span class="op">(</span><span class="st">"~/Share/pairs/HiC_filtered.pairs"</span>, col_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"readid"</span>, <span class="st">"seqnames1"</span>, <span class="st">"start1"</span>, <span class="st">"seqnames2"</span>, <span class="st">"start2"</span>, <span class="st">"strand1"</span>, <span class="st">"strand2"</span>, <span class="st">"pair_type"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
-<span><span class="va">gi</span> <span class="op">&lt;-</span> <span class="fu">as_ginteractions</span><span class="op">(</span><span class="va">df</span>, end1 <span class="op">=</span> <span class="va">start1</span>, end2 <span class="op">=</span> <span class="va">start2</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">chromosight</span> detect <span class="at">--pattern</span> loops Share/HiC/HiC_G2M.cool HiC_loops</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">chromosight</span> detect <span class="at">--pattern</span> borders Share/HiC/HiC_G2M.cool HiC_borders</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Compute the <code>pairdist</code> distance between each anchor of every interaction in the <code>GInteractions</code> object.</li>
-<li>Tally the number of interactions at each distance, and convert it to a probability by dividing the number of interactions at each distance by the total number of interactions.</li>
-<li>Plot the distance-dependent contact probability as a function of distance, using <code><a href="https://rdrr.io/pkg/HiContacts/man/plotPs.html">HiContacts::plotPs</a></code>.</li>
+<li>Check the aggregated plots generated for loops and borders.</li>
+<li>Check the content of the <code>tsv</code> files generated for loops and borders.</li>
+</ul></section><section id="compute-a-distance-dependent-contact-probability-from-a-pairs-file" class="level2" data-number="17.2"><h2 data-number="17.2" class="anchored" data-anchor-id="compute-a-distance-dependent-contact-probability-from-a-pairs-file">
+<span class="header-section-number">17.2</span> Compute a distance-dependent contact probability from a pairs file</h2>
+<p>We have a set of Hi-C pairs stored in the <code>~/Share/HiC/HiC.pairs</code> file.</p>
+<ul>
+<li>Use <code>vroom</code> package to import the file <strong>in R</strong>
+</li>
+<li>Use <code>plyinteractions</code> to coerce the data frame into a <code>GInteractions</code> object</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
@@ -418,24 +422,19 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>r</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="va">gi</span> <span class="op">&lt;-</span> <span class="fu">add_pairdist</span><span class="op">(</span><span class="va">gi</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">gi</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">pairdist</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prob <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">plotPs</span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pairdist</span>, y <span class="op">=</span> <span class="va">prob</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vroom.tidyverse.org">vroom</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/js2264/plyinteractions">plyinteractions</a></span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://vroom.tidyverse.org/reference/vroom.html">vroom</a></span><span class="op">(</span><span class="st">"~/Share/HiC/HiC_filtered.pairs"</span>, col_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"readid"</span>, <span class="st">"seqnames1"</span>, <span class="st">"start1"</span>, <span class="st">"seqnames2"</span>, <span class="st">"start2"</span>, <span class="st">"strand1"</span>, <span class="st">"strand2"</span>, <span class="st">"pair_type"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
+<span><span class="va">gi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plyinteractions/man/ginteractions-construct.html">as_ginteractions</a></span><span class="op">(</span><span class="va">df</span>, end1 <span class="op">=</span> <span class="va">start1</span>, end2 <span class="op">=</span> <span class="va">start2</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</section><section id="annotate-chromatin-loops-and-borders" class="level2" data-number="17.2"><h2 data-number="17.2" class="anchored" data-anchor-id="annotate-chromatin-loops-and-borders">
-<span class="header-section-number">17.2</span> Annotate chromatin loops and borders</h2>
-<p>We will use the <code>chromosight</code> software in the <strong>terminal</strong> to annotate chromatin loops and borders.</p>
 <ul>
-<li>Check <code>chromosight</code> help to understand how to use it.</li>
-<li>Annotate separately <code>loops</code> and <code>borders</code> from the Hi-C contact map using <code>chromosight detect</code> with the <code>--pattern</code> option.</li>
+<li>Compute the <code>pairdist</code> distance between each anchor of every interaction in the <code>GInteractions</code> object.</li>
+<li>Tally the number of interactions at each distance, and convert it to a probability by dividing the number of interactions at each distance by the total number of interactions.</li>
+<li>Plot the distance-dependent contact probability as a function of distance, using <code><a href="https://rdrr.io/pkg/HiContacts/man/plotPs.html">HiContacts::plotPs</a></code>.</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
@@ -452,23 +451,31 @@ Answer
 <div class="cell" data-layout-align="center">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>bash</strong></pre>
+<pre><strong>r</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">chromosight</span> detect <span class="at">--pattern</span> loops Share/maps/HiC.cool HiC_loops</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">chromosight</span> detect <span class="at">--pattern</span> borders Share/maps/HiC.cool HiC_borders</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="va">gi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plyinteractions/man/add-pairdist.html">add_pairdist</a></span><span class="op">(</span><span class="va">gi</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">gi</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>strands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">strand1</span>, <span class="va">strand2</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">strands</span>, <span class="va">pairdist</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prob <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pairdist</span>, y <span class="op">=</span> <span class="va">prob</span>, color <span class="op">=</span> <span class="va">strands</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_log10</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_log10</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<ul>
-<li>Check the aggregated plots generated for loops and borders.</li>
-<li>Check the content of the <code>tsv</code> files generated for loops and borders.</li>
-</ul></section><section id="visualize-hi-c-contact-maps" class="level2" data-number="17.3"><h2 data-number="17.3" class="anchored" data-anchor-id="visualize-hi-c-contact-maps">
+</section><section id="visualize-hi-c-contact-maps" class="level2" data-number="17.3"><h2 data-number="17.3" class="anchored" data-anchor-id="visualize-hi-c-contact-maps">
 <span class="header-section-number">17.3</span> Visualize Hi-C contact maps</h2>
 <p>We will use the <code>HiContacts</code> package in <code>R</code> to visualize Hi-C contact maps.</p>
 <ul>
-<li>Create a pointer to the <code>Share/maps/HiC.cool</code> file in R.</li>
+<li>Create a pointer to the <code>Share/HiC/HiC_G2M.cool</code> file in R.</li>
 <li>Check the available chromosomes and resolutions stored in the <code>cool</code> file.</li>
 <li>Import data over the 4th chromosome.</li>
 <li>Use the <code>plotContactMap</code> function to visualize the Hi-C contact map.</li>
@@ -491,38 +498,11 @@ Answer
 <pre><strong>r</strong></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/js2264/HiContacts">HiContacts</a></span><span class="op">)</span></span>
-<span><span class="va">cf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/CoolFile-class.html">CoolFile</a></span><span class="op">(</span><span class="st">"Share/maps/HiC.cool"</span><span class="op">)</span></span>
+<span><span class="va">cf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/CoolFile-class.html">CoolFile</a></span><span class="op">(</span><span class="st">"Share/HiC/HiC_G2M.cool"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/AllGenerics.html">availableChromosomes</a></span><span class="op">(</span><span class="va">cf</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/AllGenerics.html">availableResolutions</a></span><span class="op">(</span><span class="va">cf</span><span class="op">)</span></span>
 <span><span class="va">hic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocIO/man/IO.html">import</a></span><span class="op">(</span><span class="va">cf</span>, focus <span class="op">=</span> <span class="st">'IV'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/plotMatrix.html">plotMatrix</a></span><span class="op">(</span><span class="va">hic</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<ul>
-<li>Import loops and borders annotated by chromosight in R.</li>
-<li>Plot again the matrix, over a narrower region, and add the loops and borders as annotations.</li>
-</ul>
-<div class="icon callout callout-style-default callout-answer callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Answer
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell" data-layout-align="center">
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>r</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">loops</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_tsv</a></span><span class="op">(</span><span class="st">"HiC_loops.tsv"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
