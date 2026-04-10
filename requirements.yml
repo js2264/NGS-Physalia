@@ -9,6 +9,7 @@ dependencies:
     - trim-galore
     # - deeptools
     - macs2
+    - idr
     - meme
     - subread
     - star
@@ -16,5 +17,7 @@ dependencies:
     - bedtools
     - hicstuff
     - chromosight
+    - bwa-mem2
+    - pandas<3.0.0
     - pip: 
         - deeptools

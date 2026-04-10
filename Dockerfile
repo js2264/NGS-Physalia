@@ -9,6 +9,7 @@ RUN curl -L micro.mamba.pm/install.sh | bash && \
 ENV PATH="/root/.local/bin:${PATH}"
 RUN micromamba shell init --shell bash --root-prefix=~/micromamba && \
     micromamba create --file /opt/BiocBook/requirements.yml --yes && \
+    micromamba create --yes -n yapc_env yapc -c conda-forge -c bioconda -c nodefaults yapc "numpy<1.24" && \
     micromamba clean --yes --quiet && \
     micromamba shell init --shell bash --root-prefix=~/micromamba
 

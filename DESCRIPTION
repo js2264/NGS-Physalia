@@ -37,7 +37,10 @@ Imports:
     HiContacts, 
     tidyverse, 
     tidyomics, 
-    tidyCoverage
+    tidyCoverage, 
+    universalmotif, 
+    motifmatchr, 
+    plyinteractions
 Suggests:
     glue,
     rebook,
