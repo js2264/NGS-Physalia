@@ -77,6 +77,8 @@ featureCounts \
     -P -B -D 10000 -C \
     -T 2 \
     Share/RNA/RNAseq*R64-1-1.bam
+
+cat RNAseq_counts.txt.summary
 ```
 :::
 
@@ -160,7 +162,8 @@ dds <- DESeq(dds)
 res <- results(dds, contrast = c('condition', 'HS', 'WT'))
 upreg_genes <- res |> 
     as_tibble(rownames = 'gene') |> 
-    filter(log2FoldChange > 1, padj <= 0.001) |> 
-    pull(gene) |> writeLines()
+    filter(log2FoldChange > 1, padj <= 0.001)
+
+upreg_genes |> pull(gene) |> writeLines()
 ```
 :::
