@@ -26,7 +26,7 @@ RUN printf 'export MAMBA_ROOT_PREFIX=/opt/micromamba\nexport MAMBA_EXE=/usr/loca
 RUN mkdir -p /etc/rstudio && \
     printf 'export MAMBA_ROOT_PREFIX=/opt/micromamba\nexport MAMBA_EXE=/usr/local/bin/micromamba\neval "$(micromamba shell hook -s bash)"\nmicromamba activate epigenomics\n' \
     > /etc/rstudio/rsession-profile
-RUN printf '\n## Micromamba epigenomics env\nMAMBA_ROOT_PREFIX=/opt/micromamba\nPATH=/opt/micromamba/envs/epigenomics/bin:${PATH}\n' \
+RUN printf '\n## Micromamba epigenomics env (appended to PATH so system R takes precedence)\nMAMBA_ROOT_PREFIX=/opt/micromamba\nPATH=${PATH}:/opt/micromamba/envs/epigenomics/bin\n' \
     >> /usr/local/lib/R/etc/Renviron.site
 
 ## Install Quarto
@@ -36,8 +36,8 @@ RUN apt-get update && apt-get install gdebi-core -y && \
     rm quarto-linux-amd64.deb
 
 ## Install pak
-RUN Rscript -e 'install.packages("pak", repos = "https://r-lib.github.io/p/pak/devel/")'
+RUN /usr/local/bin/Rscript -e 'install.packages("pak", repos = "https://r-lib.github.io/p/pak/devel/")'
 
 ## Install BiocBook repo
-RUN Rscript -e 'pak::pkg_install("/opt/BiocBook/", ask = FALSE, dependencies = c("Depends", "Imports", "Suggests"))'
+RUN /usr/local/bin/Rscript -e 'pak::pkg_install("/opt/BiocBook/", ask = FALSE, dependencies = c("Depends", "Imports", "Suggests"))'
 
