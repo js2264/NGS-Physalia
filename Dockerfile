@@ -12,6 +12,7 @@ RUN curl -L micro.mamba.pm/install.sh | bash && \
 RUN micromamba shell init --shell bash --root-prefix=${MAMBA_ROOT_PREFIX} && \
     micromamba create --file /opt/BiocBook/requirements.yml --yes && \
     micromamba create --yes -n yapc_env yapc -c conda-forge -c bioconda -c nodefaults yapc "numpy<1.24" && \
+    micromamba create --yes -n pairtools_env -c conda-forge -c bioconda -c nodefaults pairtools && \
     micromamba clean --yes --quiet && \
     chmod -R a+rX ${MAMBA_ROOT_PREFIX}
 ENV PATH="${MAMBA_ROOT_PREFIX}/envs/epigenomics/bin:${PATH}"

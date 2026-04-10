@@ -47,6 +47,7 @@ sleep 5
 # 4. Verify micromamba is accessible (baked into image)
 # ============================================================
 sudo docker exec -u root ngs-workshop ls /opt/micromamba/envs/epigenomics/bin/ | grep samtools
+sudo docker exec -u root ngs-workshop ls /opt/micromamba/envs/pairtools_env/bin/ | grep pairtools
 sudo docker exec -u root ngs-workshop ls /opt/micromamba/envs/yapc_env/bin/ | grep yapc
 
 # ============================================================

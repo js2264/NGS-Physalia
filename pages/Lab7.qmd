@@ -67,9 +67,16 @@ samtools stats HiC.sam | grep ^SN
 - How many pairs are there in the `pairs` file?
 - Check the content of the `hic.stats` file. What is the average mapping quality of the pairs?
 
+#::: {.callout-note icon='true'}
+
+`pairtools` has been installed in a separate `micromamba` environment `pairtools_env`, because it is incompatible with other tools we will use in the workshop. 
+
+:::
+
+
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-pairtools parse \
+micromamba run -n pairtools_env pairtools parse \
     -c ~/Share/genome/R64-1-1.chrom.sizes \
     -o HiC.pairs \
     --drop-seq --drop-sam \
@@ -94,15 +101,15 @@ The following filtering steps should be done to the `pairs` file:
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-pairtools sort --nproc 2 -o HiC.sorted.pairs HiC.pairs
+micromamba run -n pairtools_env pairtools sort --nproc 2 -o HiC.sorted.pairs HiC.pairs
 
-pairtools dedup \
+micromamba run -n pairtools_env pairtools dedup \
     --max-mismatch 3 \
     --mark-dups \
     --output HiC.sorted.dedup.pairs \
     HiC.sorted.pairs
 
-pairtools select 'pair_type=="UU"' HiC.sorted.dedup.pairs -o HiC_filtered.pairs
+micromamba run -n pairtools_env pairtools select 'pair_type=="UU"' HiC.sorted.dedup.pairs -o HiC_filtered.pairs
 ```
 :::
 
