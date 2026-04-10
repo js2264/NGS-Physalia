@@ -29,12 +29,13 @@ We can download the paired-end reads (`R1` and `R2` fastq files) directly
 from the internet. 
 
 - Find the download links associated with the `SRR31398330` SRR ID. You can go to [SRA-explorer](https://sra-explorer.info/) to easily recover links. 
-- Download the two fastq files for the `SRR31398330` SRR ID. 
+
+This has already been done for you, with the following command:
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'sh'}
-curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR313/030/SRR31398330/SRR31398330_1.fastq.gz -o MNase_20_R1.fq.gz
-curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR313/030/SRR31398330/SRR31398330_2.fastq.gz -o MNase_20_R2.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR313/030/SRR31398330/SRR31398330_1.fastq.gz -o Share/reads/MNase_20_R1.fq.gz
+curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR313/030/SRR31398330/SRR31398330_2.fastq.gz -o Share/reads/MNase_20_R2.fq.gz
 ```
 :::
 

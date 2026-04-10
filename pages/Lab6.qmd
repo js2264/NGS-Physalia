@@ -27,21 +27,11 @@ execute:
 
 ### Preparing `meme` input
 
-- Import `xnd-1` peaks in R as a `GRanges` object.
-- Recover `ce11` genome sequence using the `BSgenome.Celegans.UCSC.ce11` package.
-- Extract sequence over `xnd-1` peaks with the `Biostrings` package.
-- Export the sequences as a `fasta` file. 
+Extract the genomic sequences for XND-1 peaks using `bedtools getfasta`. 
 
 ::: {.callout-answer .icon .callout-note collapse=true}
-```{r filename = 'r'}
-library(rtracklayer)
-library(Biostrings)
-library(BSgenome.Celegans.UCSC.ce11)
-xnd1 <- import('Share/peaks/modENCODE/xnd-1.bed')
-genome <- BSgenome.Celegans.UCSC.ce11
-xnd1_seq <- getSeq(genome, xnd1)
-names(xnd1_seq) <- as.character(xnd1)
-writeXStringSet(xnd1_seq, 'xnd-1.fa')
+```{bash filename = 'sh'}
+bedtools getfasta -fi Share/genome/ce11.fa -bed Share/modENCODE/xnd-1.bed -name > xnd-1.fa
 ```
 :::
 
@@ -59,7 +49,7 @@ writeXStringSet(xnd1_seq, 'xnd-1.fa')
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{bash filename = 'sh'}
 xstreme \
-    --p Share/peaks/modENCODE/xnd-1.fa \
+    --p Share/Celegans/xnd-1.fa \
     --oc meme_out/ \
     -minw 12 \
     -maxw 16 \
@@ -80,7 +70,7 @@ xstreme \
 ```{r filename = 'r'}
 library(rtracklayer)
 library(GenomicRanges)
-REs <- readxl::read_xlsx('Share/WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
+REs <- readxl::read_xlsx('Share/Celegans/WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
 REs <- makeGRangesFromDataFrame(
     REs, seqnames.field = 'chrom_ce11', 
     start.field = 'start_ce11', end.field = 'end_ce11',
@@ -99,7 +89,6 @@ names(xnd1_motifs) <- c('motif1', 'motif2', 'motif3')
 ```
 :::
 
-
 - Read `motifmatchr::matchMotifs()` documentation. 
 - What class of objects the motifs should be stored into? Coerce `xnd1-` motifs to `PFMatrixList` class.
 - Map `xnd-1` motifs to regulatory elements.
@@ -109,6 +98,7 @@ names(xnd1_motifs) <- c('motif1', 'motif2', 'motif3')
 ```{r filename = 'r'}
 library(motifmatchr)
 library(BiocParallel)
+library(TFBSTools)
 register(MulticoreParam(workers = 2, progressbar = TRUE))
 xnd1_motifs_pfm <- map(xnd1_motifs, convert_motifs, "TFBSTools-PFMatrix") |> do.call(PFMatrixList, args = _)
 motif_mappings <- matchMotifs(xnd1_motifs_pfm, REs, genome = BSgenome.Celegans.UCSC.ce11::BSgenome.Celegans.UCSC.ce11)

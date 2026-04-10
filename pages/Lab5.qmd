@@ -42,8 +42,8 @@ Peak files for 12 ChIP-seq datasets have been already downloaded from this datab
 ```{r filename = 'r'}
 library(rtracklayer)
 library(tidyverse)
-bedfiles <- list.files('Share/peaks/modENCODE/', pattern = '*bed')
-peaks <- map(bedfiles, ~ import(file.path('Share/peaks/modENCODE/', .x)))
+bedfiles <- list.files('Share/modENCODE/', pattern = '*bed')
+peaks <- map(bedfiles, ~ import(file.path('Share/modENCODE/', .x)))
 names(peaks) <- str_replace(bedfiles, '.bed', '')
 ```
 :::
@@ -109,8 +109,7 @@ p <- ggplot(annots, aes(x = TF, y = Frequency, fill = Feature)) +
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
 library(readxl)
-download.file('https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx', 'WBcel235_REs.xlsx')
-REs <- read_xlsx('WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
+REs <- read_xlsx('Share/Celegans/WBcel235_REs.xlsx', skip = 2, col_names = TRUE)
 REs <- makeGRangesFromDataFrame(
     REs, seqnames.field = 'chrom_ce11', 
     start.field = 'start_ce11', end.field = 'end_ce11',

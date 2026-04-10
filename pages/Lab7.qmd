@@ -62,10 +62,10 @@ samtools stats HiC.sam | grep ^SN
 ## Parse `sam` file into pairs 
 
 - Check `pairtools parse` documentation 
-- Use `pairtools parse` to convert the `sam` file into a `pairs` file. Use the `--drop-seq` and `--drop-sam` options to lighten the output file. Also use `--output-stats test.stats` to generate a summary of the parsing.
+- Use `pairtools parse` to convert the `sam` file into a `pairs` file. Use the `--drop-seq` and `--drop-sam` options to lighten the output file. Also use `--output-stats hic.stats` to generate a summary of the parsing.
 - Check the content of the `pairs` file with `head`.
 - How many pairs are there in the `pairs` file?
-- Check the content of the `test.stats` file. What is the average mapping quality of the pairs?
+- Check the content of the `hic.stats` file. What is the average mapping quality of the pairs?
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
@@ -73,12 +73,12 @@ pairtools parse \
     -c ~/Share/genome/R64-1-1.chrom.sizes \
     -o HiC.pairs \
     --drop-seq --drop-sam \
-    --output-stats test.stats \
+    --output-stats hic.stats \
     --nproc-in 2 --nproc-out 2 \
-    Share/mapping/HiC.sam
+    HiC.sam
 head -n 50 HiC.pairs
 wc -l HiC.pairs
-cat test.stats
+cat hic.stats
 ```
 :::
 
@@ -94,7 +94,7 @@ The following filtering steps should be done to the `pairs` file:
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-pairtools sort --nproc 2 -o HiC.sorted.pairs Share/pairs/HiC.pairs
+pairtools sort --nproc 2 -o HiC.sorted.pairs HiC.pairs
 
 pairtools dedup \
     --max-mismatch 3 \
@@ -116,7 +116,7 @@ pairtools select 'pair_type=="UU"' HiC.sorted.dedup.pairs -o HiC_filtered.pairs
 cooler cload pairs \
     -c1 2 -p1 3 -c2 4 -p2 5 \
     ~/Share/genome/R64-1-1.chrom.sizes:1000 \
-    Share/pairs/HiC_filtered.pairs \
+    HiC_filtered.pairs \
     HiC.cool
 ```
 :::
@@ -127,8 +127,8 @@ cooler cload pairs \
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-cooler tree ~/Share/maps/HiC.cool
-cooler info ~/Share/maps/HiC.cool
+cooler tree ~/Share/HiC/HiC.cool
+cooler info ~/Share/HiC/HiC.cool
 ```
 :::
 
@@ -140,10 +140,10 @@ cooler info ~/Share/maps/HiC.cool
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-cooler zoomify -r 1000N --balance -o HiC.mcool ~/Share/maps/HiC.cool
+cooler zoomify -r 1000,5000 --balance -o HiC.mcool ~/Share/HiC/HiC.cool
+cooler tree HiC.mcool
 cooler info HiC.mcool::/resolutions/1000
 cooler info HiC.mcool::/resolutions/5000
-cooler tree HiC.mcool
 ```
 :::
 

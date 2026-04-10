@@ -26,7 +26,7 @@ RNA-seq data was published in [Nuño-Cabanes et al., Scientific Data 2020](https
     - `SRR9929273`
     - `SRR9929282`
 
-- Heat shock RNA-seq @ 39 C, 20 min: `SRR2045248` & `SRR2045249`
+- Heat shock RNA-seq @ 39 C, 20 min:
 
     - `SRR9929271`
     - `SRR9929265`
@@ -37,11 +37,11 @@ RNA-seq data was published in [Nuño-Cabanes et al., Scientific Data 2020](https
 
 ## Count mapped fragments over a set of gene annotations 
 
-- Check the files in the `Share/mapping` directory.
+- Check the files in the `Share/RNA` directory.
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-ls -l Share/mapping/RNAseq*bam
+ls -l Share/RNA/RNAseq*bam
 ```
 :::
 
@@ -70,13 +70,13 @@ featureCounts \
     -a Share/genome/R64-1-1.gtf \
     -o RNAseq_counts.txt \
     -t transcript \
-    -g gene_name \
+    -g gene_id \
     -s 2 \
     -p \
     --countReadPairs \
     -P -B -D 10000 -C \
     -T 2 \
-    Share/mapping/RNAseq*R64-1-1.bam
+    Share/RNA/RNAseq*R64-1-1.bam
 ```
 :::
 
@@ -92,7 +92,7 @@ featureCounts \
 ```{r, filename = 'R'}
 library(tidyverse)
 samples <- tibble(
-    bam = list.files('Share/mapping', pattern = 'RNAseq.*_R64-1-1.bam$', full.names = TRUE), 
+    bam = list.files('Share/RNA', pattern = 'RNAseq.*_R64-1-1.bam$', full.names = TRUE), 
     sample = basename(bam), 
 ) |> separate(sample, sep = '_', into = c(NA, 'condition', 'rep', NA)) |> 
     mutate(sample = paste(condition, rep, sep = '_'))
@@ -107,7 +107,7 @@ samples <- tibble(
 library(rtracklayer)
 genes <- import('Share/genome/R64-1-1.gtf')
 genes <- genes[genes$type == 'transcript']
-names(genes) <- genes$gene_name
+names(genes) <- genes$gene_id
 ```
 :::
 

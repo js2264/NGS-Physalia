@@ -136,7 +136,8 @@ samtools view Ctl_rep1.Aligned.out.bam | cut -f 3 | sort | uniq -c
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'bash'}
-samtools stats Ctl_rep1.Aligned.out.bam | grep ^SN
+samtools stats Ctl_rep1.Aligned.out.bam > Ctl_rep1.stats
+grep ^SN Ctl_rep1.stats
 ```
 :::
 

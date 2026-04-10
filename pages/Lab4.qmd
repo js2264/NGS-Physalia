@@ -17,40 +17,28 @@ execute:
 ::: {.callout-tip icon='true'}
 ## Datasets
 
-We will process two datasets from the Koszul lab, generated in 2024 and published [in Science](https://www.science.org/doi/10.1126/science.adm9466).
+We will investigate two datasets from the Koszul lab, generated in 2024 and published [in Science](https://www.science.org/doi/10.1126/science.adm9466).
 
 - [SRR31397086](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8640705)
 - [SRR31397088](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8640707)
-
-- A set of ATAC-seq peaks identified with `yapc`. 
-- Two ATAC-seq `bam` files used to generate tracks and call peaks.
-- A set of regulatory elements identified across development, aging and tissues of *C. elegans*, available [here](https://genome.cshlp.org/content/suppl/2020/11/16/gr.265934.120.DC1/Supplemental_Table_S2.xlsx).
 :::
-
-<!-- ## Process data
-
-::: {.callout-answer .icon .callout-note collapse=true}
-```{sh, filename = 'sh'}
-rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM292_nxq_R1.fq.gz Share/reads/ATAC_rep1_R1.fq.gz
-rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM292_nxq_R2.fq.gz Share/reads/ATAC_rep1_R2.fq.gz
-rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM307_nxq_R1.fq.gz Share/reads/ATAC_rep2_R1.fq.gz
-rsync sftpcampus:Rsg_reads/3_YEAST/Mycoplasma/LM307_nxq_R2.fq.gz Share/reads/ATAC_rep2_R2.fq.gz
-tinyMapper.sh --mode ATAC --sample Share/reads/ATAC_rep1 --genome ~/genomes/S288c/S288c --output Share/tm/ --threads 16
-tinyMapper.sh --mode ATAC --sample Share/reads/ATAC_rep2 --genome ~/genomes/S288c/S288c --output Share/tm/ --threads 16
-```
-::: -->
 
 ## Annotate ATAC-seq peaks with yapc 
 
 - Check documentation from the `yapc` package to see how to annotate peaks with `yapc`.
 - Annotate ATAC peaks from the two provided `bw` files. 
 
+#::: {.callout-note icon='true'}
+
+`yapc` has been installed in a separate `micromamba` environment, because it is incompatible with other tools we will use in the workshop. 
+We will use it to annotate ATAC-seq peaks.
+
+:::
+
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{sh, filename = 'sh'}
-micromamba create -n yapc_env -c conda-forge -c bioconda -c nodefaults yapc "numpy<1.24"
 micromamba run -n yapc_env yapc -h 
-micromamba run -n yapc_env yapc atac \
-    wt Share/tracks/ATAC_rep1.bw Share/tracks/ATAC_rep2.bw
+micromamba run -n yapc_env yapc atac wt Share/ATAC/ATAC_rep1.bw Share/ATAC/ATAC_rep2.bw
 ```
 :::
 
@@ -65,7 +53,7 @@ micromamba run -n yapc_env yapc atac \
 ```{r, filename = 'R'}
 library(tidyverse)
 library(GenomicRanges)
-peaks <- read_tsv('Share/peaks/atac_0.05.bed', comment = "#", col_names = FALSE)
+peaks <- read_tsv('Share/ATAC/atac_0.05.bed', comment = "#", col_names = FALSE)
 colnames(peaks) <- c("chr", "start", "end", "annot", "score", "strand", ".start", ".end", "NA")
 peaks <- as(peaks, "GRanges")
 peaks
@@ -80,8 +68,8 @@ peaks
 ```{r, filename = 'R'}
 library(Rsamtools)
 atac_bam <- BamFileList(list(
-    rep1 = BamFile('Share/mapping/ATAC_rep1.bam'),
-    rep2 = BamFile('Share/mapping/ATAC_rep2.bam') 
+    rep1 = BamFile('Share/ATAC/ATAC_rep1.bam'),
+    rep2 = BamFile('Share/ATAC/ATAC_rep2.bam') 
 ))
 atac_bam
 ```
@@ -140,7 +128,7 @@ ggplot(df, aes(x = width, y = n)) + geom_line() + xlim(c(0, 600))
 
 :::. {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
-mnase_bam <- BamFile('Share/mapping/MNase_20_filtered_sorted.bam')
+mnase_bam <- BamFile('Share/MNase/MNase_20_filtered_sorted.bam')
 mnase_frags <- readGAlignmentPairs(mnase_bam, param = param)
 mnase_frags <- as(mnase_frags, "GRanges")
 df_mnase <- as_tibble(mnase_frags) |> 
@@ -183,14 +171,12 @@ table(peaks %over% tss)
 
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
-seqlevels(tss) <- seqlevels(peaks)
 peaks <- plyranges::add_nearest_distance(peaks, tss)
 df <- as_tibble(peaks)
 quantile(df$distance, probs = c(0.1, 0.25, 0.5, 0.75, 0.9))
 p <- ggplot(df, aes(x = distance)) + 
-    geom_histogram(binwidth = 10) + 
+    geom_density(fill = 'lightblue', alpha = 0.5) +
     xlim(c(0, 1000)) +
-    ylim(c(0, 250)) +
     theme_bw()
 ```
 :::

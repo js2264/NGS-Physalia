@@ -63,7 +63,7 @@ featureCounts \
     -a Share/genome/R64-1-1.gtf \
     -o RNAseq_counts.txt \
     -t transcript \
-    -g gene_name \
+    -g gene_id \
     -s 2 \
     -p \
     --countReadPairs \
@@ -93,7 +93,7 @@ countToTpm <- function(counts, effLen) {
 library(rtracklayer)
 genes <- import('Share/genome/R64-1-1.gtf')
 genes <- genes[genes$type == 'transcript']
-names(genes) <- genes$gene_name
+names(genes) <- genes$gene_id
 mcols(genes) <- NULL
 
 library(tidyverse)
