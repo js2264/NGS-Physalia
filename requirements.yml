@@ -7,18 +7,16 @@ dependencies:
     - numpy
     - fastqc
     - trim-galore
-    # - deeptools
     - macs2
     - idr
     - meme
     - subread
     - star
     - yapc
+    - pairtools
     - bedtools
     - hicstuff
     - chromosight
-    - pairtools
     - bwa-mem2
     - pandas<3.0.0
-    - pip: 
-        - deeptools
+    - deeptools
