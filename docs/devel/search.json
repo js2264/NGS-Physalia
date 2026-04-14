@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Epigenomics Workshop",
     "section": "",
-    "text": "Welcome\nPackage: NGSPhysaliaAuthors: Jacques Serizay [aut, cre]Compiled: 2026-04-10Package version: 0.99.0R version: R Under development (unstable) (2026-04-05 r89793)BioC version: 3.23License: MIT + file LICENSE\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2026.",
+    "text": "Welcome\nPackage: NGSPhysaliaAuthors: Jacques Serizay [aut, cre]Compiled: 2026-04-14Package version: 0.99.0R version: R Under development (unstable) (2026-04-12 r89873)BioC version: 3.23License: MIT + file LICENSE\nThis is the landing page for the “Epigenomics Data Analysis” workshop, ed. 2026.",
     "crumbs": [
       "Welcome"
     ]
