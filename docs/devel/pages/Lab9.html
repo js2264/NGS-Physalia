@@ -357,7 +357,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Cohesin is a ring-like protein complex that plays a crucial role in the organization of chromatin. it is involved in the formation of chromatin loops and the maintenance of sister chromatid cohesion during cell division. Its activity is to extrude the DNA fiber through its ring structure, thereby creating chromatin loops and organizing the chromatin into higher-order structures.</p>
+<p>Cohesin is a ring-like protein complex that plays a crucial role in the organization of chromatin. Scc1 is a key subunit of the cohesin complex, involved in the formation of chromatin loops and the maintenance of sister chromatid cohesion during cell division. Its activity is to extrude the DNA fiber through its ring structure, thereby creating chromatin loops and organizing the chromatin into higher-order structures.</p>
 <p>In yeast, active gene transcription is thought to contribute to translocation of the cohesin complex co-transcriptionally. Thus, cohesin complexes could eventually accumulate preferentially at convergent sites of active transcription, where they could stabilize chromatin loops.</p>
 <p>In this lab, we will analyze a dataset from the yeast <em>Saccharomyces cerevisiae</em> to study the role of cohesin in chromatin organization, in G1 and G2M phases of the cell cycle.</p>
 <p>The primary aims of this lab are to:</p>
@@ -670,8 +670,9 @@ Answer
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'active'</span>, <span class="st">'inactive'</span>, <span class="st">'somewhat_active'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tracks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
-<span>    RNA <span class="op">=</span> <span class="fu">import</span><span class="op">(</span><span class="st">'RNA_rep1.bw'</span>, as <span class="op">=</span> <span class="st">"Rle"</span><span class="op">)</span>, </span>
-<span>    Scc1 <span class="op">=</span> <span class="fu">import</span><span class="op">(</span><span class="st">'Scc1_IP.bw'</span>, as <span class="op">=</span> <span class="st">"Rle"</span><span class="op">)</span></span>
+<span>    RNA_fwd <span class="op">=</span> <span class="fu">import</span><span class="op">(</span><span class="st">'Share/day5/RNAseq.fwd.bw'</span>, as <span class="op">=</span> <span class="st">"Rle"</span><span class="op">)</span>, </span>
+<span>    RNA_rev <span class="op">=</span> <span class="fu">import</span><span class="op">(</span><span class="st">'Share/day5/RNAseq.rev.bw'</span>, as <span class="op">=</span> <span class="st">"Rle"</span><span class="op">)</span>,</span>
+<span>    Scc1 <span class="op">=</span> <span class="fu">import</span><span class="op">(</span><span class="st">'Share/day5/Scc1.bw'</span>, as <span class="op">=</span> <span class="st">"Rle"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">covexp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/CoverageExperiment.html">CoverageExperiment</a></span><span class="op">(</span><span class="va">tracks</span>, <span class="va">features</span><span class="op">)</span></span>
@@ -679,7 +680,7 @@ Answer
 <span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">aggcov</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html">geom_aggrcoverage</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">track</span>, scales <span class="op">=</span> <span class="st">'free'</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">track</span>, scales <span class="op">=</span> <span class="st">'free'</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -740,18 +741,14 @@ Answer
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>start <span class="op">=</span> <span class="va">start</span> <span class="op">+</span> <span class="va">peak</span>, end <span class="op">=</span> <span class="va">start</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">resize</a></span><span class="op">(</span><span class="fl">2000</span>, fix <span class="op">=</span> <span class="st">'center'</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="va">tracks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
-<span>    RNA <span class="op">=</span> <span class="fu">import</span><span class="op">(</span><span class="st">'RNA_rep1.bw'</span>, as <span class="op">=</span> <span class="st">"Rle"</span><span class="op">)</span>, </span>
-<span>    Scc1 <span class="op">=</span> <span class="fu">import</span><span class="op">(</span><span class="st">'Scc1_IP.bw'</span>, as <span class="op">=</span> <span class="st">"Rle"</span><span class="op">)</span>, </span>
-<span>    MNase <span class="op">=</span> <span class="va">mnase_cov</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">tracks</span><span class="op">[[</span><span class="st">'MNase'</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="va">mnase_cov</span></span>
 <span></span>
 <span><span class="va">covexp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/CoverageExperiment.html">CoverageExperiment</a></span><span class="op">(</span><span class="va">tracks</span>, <span class="va">features</span><span class="op">)</span></span>
 <span><span class="va">aggcov</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">covexp</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">aggcov</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">track</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/ggplot-tidyCoverage.html">geom_aggrcoverage</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">track</span>, scales <span class="op">=</span> <span class="st">'free'</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">track</span>, scales <span class="op">=</span> <span class="st">'free'</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -776,37 +773,30 @@ Answer
 <div class="cell" data-layout-align="center">
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>R</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biostrings">Biostrings</a></span><span class="op">)</span></span>
-<span><span class="va">scc1_summits</span> <span class="op">&lt;-</span> <span class="va">scc1_peaks</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://tidyomics.github.io/plyranges/reference/ranges-filter-overlaps.html">filter_by_overlaps</a></span><span class="op">(</span><span class="va">convergent_genes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>start <span class="op">=</span> <span class="va">start</span> <span class="op">+</span> <span class="va">peak</span>, end <span class="op">=</span> <span class="va">start</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">resize</a></span><span class="op">(</span><span class="fl">300</span>, fix <span class="op">=</span> <span class="st">'center'</span><span class="op">)</span> </span>
-<span><span class="va">genome</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biostrings/man/XStringSet-io.html">readDNAStringSet</a></span><span class="op">(</span><span class="st">"Share/genome/R64-1-1.fa"</span><span class="op">)</span></span>
-<span><span class="va">seqs</span> <span class="op">&lt;-</span> <span class="va">genome</span><span class="op">[</span><span class="va">scc1_summits</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">seqs</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">scc1_summits</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/Biostrings/man/XStringSet-io.html">writeXStringSet</a></span><span class="op">(</span><span class="va">seqs</span>, <span class="st">'scc1_summits.fasta'</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-with-filename">
-<div class="code-with-filename-file">
 <pre><strong>bash</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xstreme</span> <span class="dt">\</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--order</span> 2 <span class="dt">\</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--oc</span> streme_out <span class="dt">\</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--meme-nmotifs</span> 0 <span class="dt">\</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--fimo-skip</span> <span class="dt">\</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--p</span> scc1_summits.fasta</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> getfasta <span class="dt">\</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">-name</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">-fi</span> Share/genome/R64-1-1.fa <span class="dt">\</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">-bed</span> Scc1_peaks.narrowPeak <span class="dt">\</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">-fo</span> scc1_peaks.fasta</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">xstreme</span> <span class="dt">\</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--order</span> 2 <span class="dt">\</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--oc</span> streme_out <span class="dt">\</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--meme-nmotifs</span> 0 <span class="dt">\</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--fimo-skip</span> <span class="dt">\</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">--p</span> scc1_peaks.fasta</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Extract the cut site positions from the MNase data and plot the MNase cut sites pile-up ± 100bp over Scc1 peaks.</li>
+<li>Comment these results. Do you think Scc1 is recruited to chromatin through specific DNA motifs?</li>
+</ul></section><section id="quantify-chromatin-looping-over-scc1-boundfree-convergent-transcription-loci" class="level2" data-number="18.5"><h2 data-number="18.5" class="anchored" data-anchor-id="quantify-chromatin-looping-over-scc1-boundfree-convergent-transcription-loci">
+<span class="header-section-number">18.5</span> Quantify chromatin looping over Scc1-bound/free convergent transcription loci</h2>
+<ul>
+<li>Generate all possible pairs of Scc1 peaks overlapping convergent transcription loci</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
@@ -825,35 +815,20 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mnase_cut_5p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">resize</a></span><span class="op">(</span><span class="va">mnase_frags</span>, <span class="fl">1</span>, fix <span class="op">=</span> <span class="st">'start'</span><span class="op">)</span></span>
-<span><span class="va">mnase_cut_3p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">resize</a></span><span class="op">(</span><span class="va">mnase_frags</span>, <span class="fl">1</span>, fix <span class="op">=</span> <span class="st">'end'</span><span class="op">)</span></span>
-<span><span class="va">mnase_cut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">mnase_cut_5p</span>, <span class="va">mnase_cut_3p</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/coverage-methods.html">coverage</a></span><span class="op">(</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="va">features</span> <span class="op">&lt;-</span> <span class="va">scc1_peaks</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://tidyomics.github.io/plyranges/reference/ranges-filter-overlaps.html">filter_by_overlaps</a></span><span class="op">(</span><span class="va">convergent_genes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>start <span class="op">=</span> <span class="va">start</span> <span class="op">+</span> <span class="va">peak</span>, end <span class="op">=</span> <span class="va">start</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">resize</a></span><span class="op">(</span><span class="fl">200</span>, fix <span class="op">=</span> <span class="st">'center'</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="va">tracks</span> <span class="op">&lt;-</span> <span class="va">mnase_cut</span></span>
-<span></span>
-<span><span class="va">pileup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tidyCoverage/man/CoverageExperiment.html">CoverageExperiment</a></span><span class="op">(</span><span class="va">tracks</span>, <span class="va">features</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/expand-methods.html">expand</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">track</span>, <span class="va">features</span>, <span class="va">coord.scaled</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="va">coverage</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">pileup</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coord.scaled</span>, y <span class="op">=</span> <span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">InteractionSet</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/js2264/plyinteractions">plyinteractions</a></span><span class="op">)</span></span>
+<span><span class="va">gi_with_scc1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/InteractionSet/man/GInteractions-class.html">GInteractions</a></span><span class="op">(</span></span>
+<span>    anchor1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/combn.html">combn</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">scc1_peaks</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, </span>
+<span>    anchor2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/combn.html">combn</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">scc1_peaks</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>, <span class="op">]</span>, </span>
+<span>    regions <span class="op">=</span> <span class="va">scc1_peaks</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">seqnames1</span> <span class="op">==</span> <span class="va">seqnames2</span>, <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">start2</span><span class="op">-</span><span class="va">end1</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">15000</span>, <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">start2</span><span class="op">-</span><span class="va">end1</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">30000</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Comment these results.</li>
-</ul></section><section id="quantify-chromatin-looping-over-scc1-boundfree-convergent-transcription-loci" class="level2" data-number="18.5"><h2 data-number="18.5" class="anchored" data-anchor-id="quantify-chromatin-looping-over-scc1-boundfree-convergent-transcription-loci">
-<span class="header-section-number">18.5</span> Quantify chromatin looping over Scc1-bound/free convergent transcription loci</h2>
-<ul>
-<li>Generate all possible pairs of Scc1 peaks overlapping convergent transcription loci</li>
+<li>Import G1 and G2/M Hi-C data into R</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
@@ -872,20 +847,18 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">InteractionSet</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/js2264/plyinteractions">plyinteractions</a></span><span class="op">)</span></span>
-<span><span class="va">gi_with_scc1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/InteractionSet/man/GInteractions-class.html">GInteractions</a></span><span class="op">(</span></span>
-<span>    anchor1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/combn.html">combn</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">scc1_summits</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, </span>
-<span>    anchor2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/combn.html">combn</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">scc1_summits</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>, <span class="op">]</span>, </span>
-<span>    regions <span class="op">=</span> <span class="va">scc1_summits</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">seqnames1</span> <span class="op">==</span> <span class="va">seqnames2</span>, <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">start2</span><span class="op">-</span><span class="va">end1</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">15000</span>, <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">start2</span><span class="op">-</span><span class="va">end1</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">30000</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/js2264/HiContacts">HiContacts</a></span><span class="op">)</span></span>
+<span><span class="va">cfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    G1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/CoolFile-class.html">CoolFile</a></span><span class="op">(</span><span class="st">'Share/day5/HiC/HiC_G1.mcool'</span><span class="op">)</span>, </span>
+<span>    G2M <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/CoolFile-class.html">CoolFile</a></span><span class="op">(</span><span class="st">'Share/day5/HiC/HiC_G2M.mcool'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <ul>
-<li>Import G1 and G2/M Hi-C data into R</li>
+<li>Compute the aggregated signal of Hi-C data over the Scc1-bound convergent transcription loci</li>
 </ul>
 <div class="icon callout callout-style-default callout-answer callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
@@ -904,43 +877,13 @@ Answer
 <div class="code-with-filename-file">
 <pre><strong>R</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/js2264/HiContacts">HiContacts</a></span><span class="op">)</span></span>
-<span><span class="va">cfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
-<span>    G1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/CoolFile-class.html">CoolFile</a></span><span class="op">(</span><span class="st">'Share/day5/HiC/HiC_G1.mcool'</span><span class="op">)</span>, </span>
-<span>    G2M <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiCExperiment/man/CoolFile-class.html">CoolFile</a></span><span class="op">(</span><span class="st">'Share/day5/HiC/HiC_G2M.mcool'</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<ul>
-<li>Compute the aggregated signal of Hi-C data over the Scc1-bound convergent transcription loci</li>
-</ul>
-<div class="icon callout callout-style-default callout-answer callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Answer
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell" data-layout-align="center">
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>R</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">hic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocIO/man/IO.html">import</a></span><span class="op">(</span><span class="va">cfs</span><span class="op">[[</span><span class="st">'G1'</span><span class="op">]</span><span class="op">]</span>, resolution <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">g1_aggr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">hic</span>, targets <span class="op">=</span> <span class="va">gi_with_scc1</span>, flankingBins <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">hic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocIO/man/IO.html">import</a></span><span class="op">(</span><span class="va">cfs</span><span class="op">[[</span><span class="st">'G1'</span><span class="op">]</span><span class="op">]</span>, resolution <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="va">g1_aggr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">hic</span>, targets <span class="op">=</span> <span class="va">gi_with_scc1</span>, flankingBins <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="va">hic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocIO/man/IO.html">import</a></span><span class="op">(</span><span class="va">cfs</span><span class="op">[[</span><span class="st">'G2M'</span><span class="op">]</span><span class="op">]</span>, resolution <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">g2m_aggr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">hic</span>, targets <span class="op">=</span> <span class="va">gi_with_scc1</span>, flankingBins <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/plotMatrix.html">plotMatrix</a></span><span class="op">(</span><span class="va">g1_aggr</span>, use.scores <span class="op">=</span> <span class="st">'detrended'</span>, scale <span class="op">=</span> <span class="st">'linear'</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span>, cmap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/palettes.html">bgrColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"G1, Scc1 pairs"</span><span class="op">)</span>, </span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/plotMatrix.html">plotMatrix</a></span><span class="op">(</span><span class="va">g2m_aggr</span>, use.scores <span class="op">=</span> <span class="st">'detrended'</span>, scale <span class="op">=</span> <span class="st">'linear'</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span>, cmap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/palettes.html">bgrColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"G2M, Scc1 pairs"</span><span class="op">)</span></span>
+<span><span class="va">g2m_aggr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">hic</span>, targets <span class="op">=</span> <span class="va">gi_with_scc1</span>, flankingBins <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/plotMatrix.html">plotMatrix</a></span><span class="op">(</span><span class="va">g1_aggr</span>, use.scores <span class="op">=</span> <span class="st">'detrended'</span>, scale <span class="op">=</span> <span class="st">'linear'</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span>, cmap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/palettes.html">bwrColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"G1, Scc1 pairs"</span><span class="op">)</span>, </span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/plotMatrix.html">plotMatrix</a></span><span class="op">(</span><span class="va">g2m_aggr</span>, use.scores <span class="op">=</span> <span class="st">'detrended'</span>, scale <span class="op">=</span> <span class="st">'linear'</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span>, cmap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/HiContacts/man/palettes.html">bwrColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"G2M, Scc1 pairs"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
