@@ -10,7 +10,8 @@ execute:
 ## Aims
 
 Cohesin is a ring-like protein complex that plays a crucial role in the organization of chromatin.
-it is involved in the formation of chromatin loops and the maintenance of sister chromatid cohesion during cell division. 
+Scc1 is a key subunit of the cohesin complex, involved in the formation of chromatin 
+loops and the maintenance of sister chromatid cohesion during cell division. 
 Its activity is to extrude the DNA fiber through its ring structure, thereby creating chromatin loops 
 and organizing the chromatin into higher-order structures.
 
@@ -187,8 +188,9 @@ features <- lapply(c('active', 'inactive', 'somewhat_active'), function(x) {
 names(features) <- c('active', 'inactive', 'somewhat_active')
 
 tracks <- list(
-    RNA = import('RNA_rep1.bw', as = "Rle"), 
-    Scc1 = import('Scc1_IP.bw', as = "Rle")
+    RNA_fwd = import('Share/day5/RNAseq.fwd.bw', as = "Rle"), 
+    RNA_rev = import('Share/day5/RNAseq.rev.bw', as = "Rle"),
+    Scc1 = import('Share/day5/Scc1.bw', as = "Rle")
 )
 
 covexp <- CoverageExperiment(tracks, features)
@@ -196,7 +198,7 @@ aggcov <- aggregate(covexp)
 as_tibble(aggcov) |> 
     ggplot(aes(col = features)) + 
     geom_aggrcoverage() + 
-    facet_grid(~ track, scales = 'free')
+    facet_wrap(~ track, scales = 'free')
 ```
 :::
 
@@ -225,18 +227,14 @@ features <- scc1_peaks |>
     mutate(start = start + peak, end = start) |> 
     resize(2000, fix = 'center') 
 
-tracks <- list(
-    RNA = import('RNA_rep1.bw', as = "Rle"), 
-    Scc1 = import('Scc1_IP.bw', as = "Rle"), 
-    MNase = mnase_cov
-)
+tracks[['MNase']] = mnase_cov
 
 covexp <- CoverageExperiment(tracks, features)
 aggcov <- aggregate(covexp)
 as_tibble(aggcov) |> 
     ggplot(aes(col = track)) + 
     geom_aggrcoverage() + 
-    facet_grid(~ track, scales = 'free')
+    facet_wrap(~ track, scales = 'free')
 ```
 :::
 
@@ -245,54 +243,22 @@ as_tibble(aggcov) |>
 - Search for motifs in the Scc1 peaks, centered at their summit ± 150 using `STREME`.
 
 ::: {.callout-answer .icon .callout-note collapse=true}
-```{r, filename = 'R'}
-library(Biostrings)
-scc1_summits <- scc1_peaks |> 
-    filter_by_overlaps(convergent_genes) |> 
-    mutate(start = start + peak, end = start) |> 
-    resize(300, fix = 'center') 
-genome <- readDNAStringSet("Share/genome/R64-1-1.fa")
-seqs <- genome[scc1_summits]
-names(seqs) <- as.character(scc1_summits)
-writeXStringSet(seqs, 'scc1_summits.fasta')
-```
-
 ```{sh, filename = 'bash'}
+bedtools getfasta \
+    -name
+    -fi Share/genome/R64-1-1.fa \
+    -bed Scc1_peaks.narrowPeak \
+    -fo scc1_peaks.fasta
 xstreme \
     --order 2 \
     --oc streme_out \
     --meme-nmotifs 0 \
     --fimo-skip \
-    --p scc1_summits.fasta
+    --p scc1_peaks.fasta
 ```
 :::
 
-- Extract the cut site positions from the MNase data and plot the MNase cut sites pile-up ± 100bp over Scc1 peaks.
-
-::: {.callout-answer .icon .callout-note collapse=true}
-```{r, filename = 'R'}
-mnase_cut_5p <- resize(mnase_frags, 1, fix = 'start')
-mnase_cut_3p <- resize(mnase_frags, 1, fix = 'end')
-mnase_cut <- c(mnase_cut_5p, mnase_cut_3p) |> coverage() 
-
-features <- scc1_peaks |> 
-    filter_by_overlaps(convergent_genes) |> 
-    mutate(start = start + peak, end = start) |> 
-    resize(200, fix = 'center') 
-
-tracks <- mnase_cut
-
-pileup <- CoverageExperiment(tracks, features) |> 
-    expand() |> 
-    group_by(track, features, coord.scaled) |>
-    tally(coverage)
-
-ggplot(pileup, aes(x = coord.scaled, y = n)) + 
-    geom_line() 
-```
-:::
-
-- Comment these results.
+- Comment these results. Do you think Scc1 is recruited to chromatin through specific DNA motifs?
 
 ## Quantify chromatin looping over Scc1-bound/free convergent transcription loci
 
@@ -303,9 +269,9 @@ ggplot(pileup, aes(x = coord.scaled, y = n)) +
 library(InteractionSet)
 library(plyinteractions)
 gi_with_scc1 <- GInteractions(
-    anchor1 = combn(1:length(scc1_summits), 2)[1, ], 
-    anchor2 = combn(1:length(scc1_summits), 2)[2, ], 
-    regions = scc1_summits
+    anchor1 = combn(1:length(scc1_peaks), 2)[1, ], 
+    anchor2 = combn(1:length(scc1_peaks), 2)[2, ], 
+    regions = scc1_peaks
 ) |> filter(seqnames1 == seqnames2, abs(start2-end1) >= 15000, abs(start2-end1) <= 30000)
 ```
 :::
@@ -327,12 +293,12 @@ cfs <- list(
 ::: {.callout-answer .icon .callout-note collapse=true}
 ```{r, filename = 'R'}
 hic <- import(cfs[['G1']], resolution = 1000)
-g1_aggr <- aggregate(hic, targets = gi_with_scc1, flankingBins = 9)
+g1_aggr <- aggregate(hic, targets = gi_with_scc1, flankingBins = 15)
 hic <- import(cfs[['G2M']], resolution = 1000)
-g2m_aggr <- aggregate(hic, targets = gi_with_scc1, flankingBins = 9)
-p <- cowplot::plot_grid(
-    plotMatrix(g1_aggr, use.scores = 'detrended', scale = 'linear', limits = c(-0.25, 0.25), cmap = bgrColors()) + ggtitle("G1, Scc1 pairs"), 
-    plotMatrix(g2m_aggr, use.scores = 'detrended', scale = 'linear', limits = c(-0.25, 0.25), cmap = bgrColors()) + ggtitle("G2M, Scc1 pairs")
+g2m_aggr <- aggregate(hic, targets = gi_with_scc1, flankingBins = 15)
+cowplot::plot_grid(
+    plotMatrix(g1_aggr, use.scores = 'detrended', scale = 'linear', limits = c(-0.25, 0.25), cmap = bwrColors()) + ggtitle("G1, Scc1 pairs"), 
+    plotMatrix(g2m_aggr, use.scores = 'detrended', scale = 'linear', limits = c(-0.25, 0.25), cmap = bwrColors()) + ggtitle("G2M, Scc1 pairs")
 )
 ```
 :::

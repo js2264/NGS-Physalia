@@ -342,3 +342,9 @@ wget "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM6703657&format=file&file
 cooler cp HiC_G2M.mcool::/resolutions/1000 HiC_G2M.cool
 cp HiC_G2M.mcool Share/HiC/
 ```
+
+# Lab 9
+
+```sh
+rsync --progress --partial --archive --verbose alcide:/data/EpigenomicsDataAnalysis_2023/data/day5 Share/day5
+```

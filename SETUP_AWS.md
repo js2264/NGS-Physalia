@@ -105,6 +105,12 @@ echo "--- Checking R sees the right PATH ---"
 sudo docker exec -u root ngs-workshop su - user1 -c \
     'R --vanilla -e "system(\"echo \$CONDA_DEFAULT_ENV\", intern=TRUE)"'
 
+echo "--- Checking different softares as user20 ---"
+for tool in samtools bowtie2 bamCoverage trim_galore yapc pairtools hicstuff chromosight bwa-mem2 xstreme bedtools; do
+    sudo docker exec -u root ngs-workshop su - user20 -c \
+        "echo -n \Checking $tool: \ && ${tool} --help 2>&1 | head"
+done
+
 echo ""
 echo "============================================"
 echo " Done! Access RStudio at:"
